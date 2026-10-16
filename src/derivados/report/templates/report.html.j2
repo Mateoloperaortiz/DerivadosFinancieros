@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forward de divisas · Crédito en USD para maquinaria amarilla</title>
+<meta name="description" content="Instrumentos derivados financieros: crédito en dólares, riesgo cambiario COP/USD y cobertura con forwards (informe interactivo).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<script src="{{ plotly_js }}" charset="utf-8"></script>
+<script>
+Plotly.register({moduleType: 'locale', name: 'es', dictionary: {
+  'Autoscale': 'Autoescalar', 'Box Select': 'Selección rectangular', 'Download plot as a png': 'Descargar gráfico como PNG',
+  'Pan': 'Desplazar', 'Reset axes': 'Restablecer ejes', 'Zoom': 'Zoom', 'Zoom in': 'Acercar', 'Zoom out': 'Alejar',
+  'Toggle Spike Lines': 'Líneas guía', 'Show closest data on hover': 'Dato más cercano', 'Compare data on hover': 'Comparar datos',
+  'Reset view': 'Restablecer vista'},
+  format: {days: ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
+    shortDays: ['dom','lun','mar','mié','jue','vie','sáb'],
+    months: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+    shortMonths: ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],
+    date: '%d/%m/%Y', decimal: ',', thousands: '.'}});
+</script>
+<style>
+:root{--navy:#0f3d5e;--navy2:#13507a;--amber:#e3a21a;--green:#2a9d8f;--red:#c8553d;--ink:#1f2937;--muted:#5b6b7f;
+--line:#e2e8f0;--bg:#f6f8fb;--card:#ffffff;--soft:#eef4fa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.62;font-size:16px}
+a{color:var(--navy2)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:272px;background:#0b2c44;color:#dbe7f3;padding:26px 20px;overflow-y:auto;z-index:10}
+.sidebar .brand{font-family:"Source Serif 4",Georgia,serif;font-size:19px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:4px}
+.sidebar .brand-sub{font-size:12px;color:#9fb6cc;margin-bottom:22px}
+.sidebar a{display:block;color:#cfe0f0;text-decoration:none;padding:6px 10px;border-radius:7px;font-size:14px}
+.sidebar a:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar .grp{margin:16px 0 4px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#7f9bb5;padding-left:10px}
+.sidebar .sub{padding-left:22px;font-size:13.5px}
+.sidebar .stamp{margin-top:24px;font-size:11.5px;color:#8fa9c2;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+main{margin-left:272px;padding:0 0 80px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 40px}
+.hero{background:linear-gradient(135deg,#0b2c44 0%,#0f3d5e 55%,#1d5a85 100%);color:#fff;padding:54px 0 40px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(227,162,26,.35),rgba(227,162,26,0) 70%)}
+.eyebrow{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:#f5c862;font-weight:600}
+.hero h1{font-family:"Source Serif 4",Georgia,serif;font-size:38px;line-height:1.15;margin:12px 0 14px;max-width:880px}
+.hero .lead{font-size:17.5px;color:#d6e4f1;max-width:860px;margin:0 0 22px}
+.meta{display:flex;flex-wrap:wrap;gap:12px 34px;font-size:14px;color:#e6eef7;margin-bottom:28px}
+.meta span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#9fb6cc}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative;z-index:1}
+.kpi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:14px 16px}
+.kpi .l{font-size:12px;color:#b9cde0;text-transform:uppercase;letter-spacing:.06em}
+.kpi .v{font-size:24px;font-weight:700;margin:2px 0}
+.kpi .s{font-size:12.5px;color:#cfdeed}
+section{padding:44px 0 6px}
+section.part{padding-top:56px}
+.part-label{display:inline-block;background:var(--amber);color:#1b1b1b;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+h2{font-family:"Source Serif 4",Georgia,serif;font-size:30px;line-height:1.2;margin:14px 0 8px;color:#0b2c44}
+h2 .num{color:var(--amber);margin-right:8px}
+h3{font-size:19px;margin:30px 0 8px;color:#0f3d5e}
+h4{font-size:16px;margin:20px 0 6px;color:#0f3d5e}
+p{margin:10px 0}
+.intro{font-size:17px;color:#334155}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0;box-shadow:0 1px 2px rgba(15,61,94,.04)}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px 8px;margin:20px 0}
+.fig .cap{font-size:13.5px;color:var(--muted);padding:2px 6px 6px}
+.fig .cap b{color:#0b2c44}
+.callout{border-left:4px solid var(--amber);background:#fffaf0;padding:14px 18px;border-radius:0 12px 12px 0;margin:18px 0}
+.callout.blue{border-color:var(--navy2);background:#f0f6fc}
+.callout.green{border-color:var(--green);background:#effaf8}
+.callout.red{border-color:var(--red);background:#fdf3f1}
+.callout .t{font-weight:700;color:#0b2c44;display:block;margin-bottom:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mini{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.mini .l{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.mini .v{font-size:22px;font-weight:700;color:#0b2c44}
+.mini .s{font-size:13px;color:var(--muted)}
+.table-wrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:12px;background:#fff}
+table.data{border-collapse:collapse;width:100%;font-size:13.5px}
+table.data caption{caption-side:bottom;text-align:left;font-size:12.5px;color:var(--muted);padding:8px 12px}
+table.data th{background:#0f3d5e;color:#fff;font-weight:600;padding:9px 10px;font-size:12.5px;vertical-align:bottom}
+table.data td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:top}
+table.data tbody tr:nth-child(even){background:#f9fbfd}
+table.data tr.hl td{background:#fff6dd}
+table.compact td,table.compact th{padding:6px 8px;font-size:12.8px}
+table.kv td:first-child{font-weight:600;color:#0b2c44;width:30%}
+table.narrow{max-width:640px}
+.up{color:var(--red);font-weight:600;white-space:nowrap}
+.down{color:var(--green);font-weight:600;white-space:nowrap}
+.flat{color:#a16207;font-weight:600;white-space:nowrap}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:var(--soft);color:var(--navy)}
+ul.tight li{margin:4px 0}
+.formula{background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:6px 14px;margin:14px 0;overflow-x:auto}
+.timeline{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:16px 0 6px}
+.timeline div{text-align:center;font-size:12px;padding:8px 2px;border-radius:6px;background:#e2e8f0;color:#334155}
+.timeline div.h{background:#2a9d8f;color:#fff;font-weight:600}
+.timeline-legend{font-size:12.5px;color:var(--muted)}
+.toc-mobile{display:none}
+footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media (max-width:1100px){.sidebar{display:none}main{margin-left:0}.kpis{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:720px){.wrap{padding:0 18px}.hero h1{font-size:28px}.kpis,.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">Forward de divisas COP/USD</div>
+  <div class="brand-sub">Crédito en USD para maquinaria amarilla</div>
+  <a href="#inicio">Inicio</a>
+  <a href="#resumen">Resumen ejecutivo</a>
+  <div class="grp">Parte A · Crédito y riesgo (35 %)</div>
+  <a class="sub" href="#a1">A.1 Análisis fundamental de la TRM</a>
+  <a class="sub" href="#a2">A.2 Simulación del crédito en USD</a>
+  <a class="sub" href="#a3">A.3 Conversión a pesos</a>
+  <div class="grp">Parte B · Cobertura forward (65 %)</div>
+  <a class="sub" href="#b1">B.1 Cotización y valoración</a>
+  <a class="sub" href="#b2">B.2 Protección y costo de oportunidad</a>
+  <a class="sub" href="#b3">B.3 Flujo consolidado y evaluación</a>
+  <a class="sub" href="#conclusion">Conclusión y recomendaciones</a>
+  <div class="grp">Anexos</div>
+  <a class="sub" href="#metodologia">Metodología</a>
+  <a class="sub" href="#supuestos">Supuestos y limitaciones</a>
+  <a class="sub" href="#fuentes">Fuentes y fechas de consulta</a>
+  <div class="stamp">Valoración: {{ k.fecha_val }}<br>TRM: {{ k.s0 }} COP/USD<br>{{ k.n_paths }} trayectorias por escenario</div>
+</nav>
+
+<main>
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div class="eyebrow">Instrumentos derivados financieros · Desarrollo semestral de aprendizaje · Parte 1</div>
+    <h1>Crédito en dólares para maquinaria amarilla y cobertura con forwards de divisas COP/USD</h1>
+    <p class="lead">Financiación de una inversión de {{ k.machine }} con un crédito comercial en Estados Unidos, medición del riesgo de devaluación del peso y evaluación de una estrategia de cuatro forwards anuales sobre el 75 % de la exposición pendiente al terminar el sexto año.</p>
+    <div class="meta">
+      <div><span>Integrantes</span>{{ k.members | join(" · ") }}</div>
+      <div><span>Fecha de valoración</span>{{ k.fecha_val }}</div>
+      <div><span>Convención</span>Año comercial de 252 días hábiles</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">TRM de valoración</div><div class="v">{{ k.s0 }}</div><div class="s">Vigente el 15-oct-2026 (SFC)</div></div>
+      <div class="kpi"><div class="l">Monto del crédito</div><div class="v">{{ k.p_usd }}</div><div class="s">90 % de {{ k.machine }}</div></div>
+      <div class="kpi"><div class="l">Tasa (Wells Fargo)</div><div class="v">{{ k.rate }} N.T.V.</div><div class="s">Prime {{ k.prime }} + {{ k.spread_pb }} pb · {{ k.ea }} E.A.</div></div>
+      <div class="kpi"><div class="l">Cuota trimestral</div><div class="v">{{ k.cuota_usd }}</div><div class="s">40 cuotas · sistema francés</div></div>
+      <div class="kpi"><div class="l">Nominal cubierto</div><div class="v">{{ k.hedged_total }}</div><div class="s">4 NDF × {{ k.per_forward }} (años 7–10)</div></div>
+      <div class="kpi"><div class="l">Costo esperado en pesos</div><div class="v">{{ k.b3_central_normal.tir_u }} E.A.</div><div class="s">Central sin cobertura · P5–P95: {{ k.b3_central_normal.tir_u_p5 }} a {{ k.b3_central_normal.tir_u_p95 }}</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ======================================================= RESUMEN -->
+<section id="resumen">
+  <h2>Resumen ejecutivo</h2>
+  <p class="intro">El trabajo financia el 90 % de una inversión en maquinaria amarilla con un crédito en dólares de Wells Fargo y cuantifica cómo la tasa de cambio transforma una obligación estable en dólares en un costo variable en pesos. Después evalúa si cuatro forwards sin entrega (NDF), contratados de forma consecutiva desde el cierre del año 6, estabilizan el flujo de caja y a qué costo.</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Lo que encontramos</h4>
+      <ul class="tight">
+        <li><b>El peso está fuerte, pero sus fundamentales se debilitan.</b> La TRM cayó {{ k.var_anio_abs }} en 2026 por el carry trade, el resultado electoral y un petróleo alto. Sin embargo, el déficit de cuenta corriente (3,5 % del PIB en el 2T26), el desequilibrio fiscal (déficit cercano a 7,4 % del PIB) y una Fed que sube tasas apuntan a una corrección. Nuestra expectativa a 12 meses es de {{ k.expected_12m }} (ponderada; escenario central {{ k.scen.central.trm }}), a {{ k.exp_vs_fwd }} del forward a un año ({{ k.f_1y_val }}).</li>
+        <li><b>El crédito en dólares parece barato, pero su costo en pesos no está fijado.</b> Con spot constante cuesta {{ k.ea }} E.A. En el escenario central la última cuota sube a {{ k.a3_central.ultima }} ({{ k.a3_central.cuota_var }} frente al spot) y el costo efectivo llega a {{ k.a3_central.tir }}. La diferencia frente a la base ({{ k.a3_central.fx_total }}) se explica en su totalidad por la tasa de cambio, y {{ k.a3_central.share_fxk_of_fx }} de ella corresponde a la revaluación del capital.</li>
+        <li><b>El mercado cotiza el forward cerca de la paridad.</b> Los 257 puntos a un año implican una devaluación de {{ k.dev_1y }}, solo {{ k.cip[0].pb }} pb por encima de la paridad cubierta BanRep–SOFR.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Lo que concluimos</h4>
+      <ul class="tight">
+        <li><b>El forward protege en {{ k.b2_central_normal.prot }} de los escenarios y genera costo de oportunidad en {{ k.b2_central_normal.opp }}</b> (escenario central). Su costo esperado ({{ k.b3_central_normal.fwd_abs }}) equivale a {{ k.b3_central_normal.fwd_share_abs }} del costo total del crédito: un seguro barato.</li>
+        <li><b>Cumple su función presupuestal.</b> La desviación del costo anual frente al presupuesto pasa de {{ k.b2_central_normal.dev_u }} a {{ k.b2_central_normal.dev_h }}, y la probabilidad de un sobrecosto superior al 10 % cae de {{ k.b2_central_normal.dev_u10 }} a {{ k.b2_central_normal.dev_h10 }}.</li>
+        <li><b>Pero reduce poco el riesgo total.</b> La volatilidad del costo de los años 7–10 baja solo {{ k.b3_central_normal.y710_sd_chg_abs }}, y la del crédito completo {{ k.b3_central_normal.sd_chg_abs }}. Hay tres razones: los años 1–6 quedan abiertos, el esquema rolling no fija el nivel de la TRM entre años y la liquidación anual no coincide con las cuotas trimestrales.</li>
+        <li><b>Normal y t de Student dan casi lo mismo a un año</b>, porque al agregar choques mensuales las colas se diluyen. La t sí pesa en las colas mensuales y en los sobrecostos extremos.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><span class="t">Veredicto</span>La estrategia es financieramente razonable como <b>seguro presupuestal de bajo costo</b> y coherente con la obligación (nunca cubre más del 100 % de los pagos). Es insuficiente como gestión integral del riesgo cambiario: deja expuesto el tramo de mayor riesgo acumulado. Recomendamos empezar a cubrir desde el año 1, con vencimientos trimestrales alineados a las cuotas o con un swap de monedas, si la prioridad es la certeza en pesos (sección B.3).</div>
+</section>
+
+<!-- ======================================================= A.1 -->
+<section class="part" id="a1">
+  <span class="part-label">Parte A · 35 %</span>
+  <h2><span class="num">A.1</span>Análisis fundamental de la TRM y expectativa a un año</h2>
+  <p class="intro">El análisis no busca adivinar un número exacto. Busca ordenar las fuerzas que mueven el peso para construir un escenario central y sus alternativas, cada uno con su narrativa económica. Esos escenarios alimentan las simulaciones de las partes A.3 y B.</p>
+
+  <h3>Punto de partida: un peso fuerte sobre bases que se debilitan</h3>
+  <p>El 15 de octubre de 2026 la TRM es de <b>{{ k.s0 }}</b> pesos por dólar. Inició el año en {{ k.inicio_2026 }} y hace doce meses estaba en {{ k.hace_1_anio }}, lo que equivale a una apreciación de {{ k.var_anio_abs }} en el año y de {{ k.var_12m_abs }} a doce meses. El recorrido fue volátil: alcanzó {{ k.max_2026 }} el {{ k.fecha_max_2026 }}, con el estallido de la guerra en el golfo Pérsico, y tocó un mínimo de {{ k.min_2026 }} el {{ k.fecha_min_2026 }}. Desde la posesión presidencial del 7 de agosto ({{ k.posesion }}) se ha movido {{ k.var_posesion }}. A septiembre, el peso acumulaba la mayor apreciación entre las monedas emergentes en 2026 (12,5 %, según Banco Agrario), pero en ese mes rebotó hasta niveles no vistos desde julio. La volatilidad trimestral anualizada subió a 15,3 %.</p>
+  <div class="fig">{{ fig.trm_history }}<div class="cap"><b>Gráfico A.1.1.</b> TRM diaria y Brent (promedio mensual), 2015–2026. Use los botones para cambiar el horizonte. Fuente: SFC (datos.gov.co) y EIA/FRED. Eventos: elaboración propia.</div></div>
+
+  <h3>1. Diferencial de tasas de interés: el ancla del carry trade se estrecha</h3>
+  <p>El Banco de la República subió la tasa de política <b>300 pb en 2026</b> (enero +100, marzo +100, junio +75 y septiembre +25), hasta {{ k.banrep }}. Respondió a expectativas de inflación desancladas tras el alza de 23 % del salario mínimo y a la presión de los combustibles. La Fed, con Kevin Warsh como presidente, subió el 16 de septiembre por primera vez desde 2023, a {{ k.fed }}, y su mediana anticipa un alza más en 2026 (4,1 %). Los mercados descuentan hasta 75 pb adicionales en doce meses. El diferencial de política de {{ k.diff_policy }} es el más alto del periodo 2021–2026 y explica buena parte de la apreciación: los inversionistas se endeudan en dólares para comprar TES y ganar el diferencial.</p>
+  <p>Hacia adelante, el diferencial tiende a estrecharse. Los analistas esperan una tasa terminal de BanRep entre 12,25 % y 12,5 %, con recortes hacia 11,0 %–11,5 % al cierre de 2027 (Itaú, Bancolombia, BTG Pactual), mientras la Fed sube. Además, el bono del Tesoro a 10 años en {{ k.ust10 }} (máximos de dos décadas) encarece el dólar global. Un diferencial menor reduce el atractivo del carry y es un factor de depreciación moderada en el horizonte de doce meses.</p>
+  <div class="fig">{{ fig.policy_rates }}<div class="cap"><b>Gráfico A.1.2.</b> Tasa de política de BanRep, techo del rango de la Fed y diferencial (pp), 2021–2026. Fuente: comunicados de BanRep y FRED (DFEDTARU).</div></div>
+
+  <h3>2. Inflación y política monetaria: dos bancos centrales restrictivos</h3>
+  <p>La inflación anual en Colombia fue de <b>{{ k.infl_col }}</b> en septiembre de 2026, el nivel más alto desde julio de 2024. La empujan los servicios indexados al salario mínimo (servicios sin arriendo: 9,2 %), los alimentos ante El Niño y los regulados. La inflación básica sin alimentos ni regulados cedió a 6,03 %, y la de bienes bajó a 2,9 % gracias a la apreciación: el peso fuerte está "importando" desinflación. Las proyecciones ubican la inflación de cierre de 2026 entre 6,7 % y 7,0 % (BanRep 6,9 %; FMI 6,0 % en promedio) y la de 2027 entre 4,3 % (BanRep) y 5,7 % (FMI). En Estados Unidos, el IPC subió a {{ k.infl_us }} por la gasolina, y la Fed proyecta un PCE de 3,7 % en 2026 y 2,3 % en 2027.</p>
+  <p>Dos lecturas para la TRM. Primero, un diferencial de inflación de 2 a 3 pp a favor de Estados Unidos implica, por paridad del poder adquisitivo, una depreciación tendencial del peso de esa magnitud en el largo plazo. Segundo, si la inflación cede en 2027 y BanRep recorta antes que la Fed, el diferencial nominal se estrecha justo cuando desaparece el efecto desinflacionario de la apreciación.</p>
+  <div class="grid2">
+    <div class="fig">{{ fig.inflation }}<div class="cap"><b>Gráfico A.1.3.</b> Inflación anual a septiembre de cada año. Fuente: DANE (anexo IPC sep-2026) y BLS vía FRED (CPIAUCNS).</div></div>
+    <div class="fig">{{ fig.oil_correlation }}<div class="cap"><b>Gráfico A.1.4.</b> Correlación móvil a 24 meses entre los cambios mensuales de la TRM y del Brent. Fuente: cálculos propios.</div></div>
+  </div>
+
+  <h3>3. Petróleo: un choque de oferta que hoy no aprecia al peso como antes</h3>
+  <p>La guerra en Medio Oriente y las restricciones en el estrecho de Ormuz llevaron el Brent spot (EIA) a <b>{{ k.brent }}</b> ({{ k.brent_fecha }}), mientras el futuro de diciembre cotiza cerca de USD 106. Esa curva en fuerte backwardation indica que el mercado ve el choque como transitorio. Tradicionalmente, un petróleo caro fortalece el peso: entre 2010 y 2026 la correlación mensual fue de {{ k.corr_2010 }}, y de {{ k.corr_2014_16 }} en el desplome de 2014–2016. En 2026 el signo se invirtió ({{ k.corr_2026 }}) porque el choque llegó con aversión al riesgo y fortaleza global del dólar. El mayor ingreso petrolero no ha bastado para compensar.</p>
+  <p>Para los próximos doce meses, la EIA proyecta que el Brent bajará a un promedio de USD 84 en 2027 (USD 74 en el 4T27), a medida que se normalicen los flujos del golfo. Si el canal tradicional se recupera, la caída del crudo reducirá el ingreso de divisas y presionará la TRM al alza. Si persiste la correlación positiva, un desescalamiento del conflicto podría convivir con un peso estable. El petróleo es el factor más incierto del balance.</p>
+
+  <h3>4. Balanza de pagos y flujos de inversión</h3>
+  <p>El déficit de cuenta corriente se amplió a <b>USD 4.702 millones (3,5 % del PIB) en el 2T26</b>, el mayor en tres años. Lo explican un déficit comercial de bienes récord (USD 2.798 millones solo en julio; USD 18.462 millones en doce meses, 3,6 % del PIB), impulsado por la propia apreciación y una demanda interna dinámica, y la remisión de utilidades. La inversión extranjera directa es sólida (USD 8.138 millones en el primer semestre, +31 %), pero la inversión de portafolio registró salidas por USD 7.352 millones en el 2T26. En el mercado de derivados, los extranjeros redujeron posiciones largas en forwards por USD 1.261 millones en septiembre.</p>
+  <p>Hay dos factores que amortiguan. Las reservas internacionales están en un máximo histórico (USD 67.831 millones). Además, BanRep acumula reservas mediante opciones put (programa de USD 4.000 millones), lo que retira dólares del mercado y le pone un piso a la TRM. En conjunto, la necesidad de financiamiento externo creciente es un argumento de fondo a favor de la depreciación.</p>
+
+  <h3>5. Riesgo país, condiciones fiscales y políticas</h3>
+  <p>El frente fiscal es la principal vulnerabilidad. El CARF estima un déficit de 7,4 % del PIB en 2026, y Ofiscal advierte 8,2 % sin ajustes adicionales. La deuda neta llegaría a 61 % del PIB, un máximo histórico, y la regla fiscal está suspendida. A esto se suma el terremoto del 10 de agosto (magnitud 7,4), con daños directos estimados en COP 42,1 billones (2,3 % del PIB). El presupuesto 2027 de COP 635 billones destina 24 % al servicio de la deuda. Las calificadoras ya reaccionaron: S&P bajó a BB- en abril de 2026, Fitch está en BB y Moody's sostiene el último grado de inversión (Baa3). Los TES a 10 años rondan 12,9 %, con un diferencial de 764 pb frente a los Tesoros.</p>
+  <p>En lo político, el gobierno de Abelardo De La Espriella (desde el 7 de agosto) prometió un ajuste: recorte de COP 21,9 billones y una "Ley Fiscal" sin nuevos impuestos. La reacción inicial de los mercados fue favorable: el CDS a 5 años está en 159 pb, lejos de su máximo de 241 pb en el último año. Sin embargo, el estrecho margen electoral (49,7 % frente a 48,7 %) anticipa dificultades de gobernabilidad para aprobar las reformas. Si el ajuste no se materializa, aumenta el riesgo de que Colombia pierda el último grado de inversión, lo que forzaría ventas de inversionistas institucionales.</p>
+  {{ tab.fundamentals }}
+
+  <h3>6. Proyecciones de mercado y organismos</h3>
+  <p>Las proyecciones recientes para el cierre de 2026 van de 3.150 (Bank of America) a 3.460 (BTG Pactual), con un consenso entre 3.240 y 3.300 (encuestas de BanRep, Fedesarrollo y Citi). Para 2027, los promedios esperados son de 3.330 (Bancolombia) y 3.405 (Corficolombiana), y ANIF proyecta 3.324 al cierre. Banco Agrario es la voz más bajista para el peso: ve "altamente probable" un rango de 3.600 a 3.700 a comienzos de 2027, con un valor de equilibrio estructural de 3.590. Salvo Bank of America, todas las proyecciones están por encima del spot actual, y los modelos de valor justo de Banco Agrario (3.269 de corto plazo y 3.590 estructural) también ubican la TRM de hoy por debajo de su nivel de equilibrio.</p>
+  <div class="fig">{{ fig.projections }}<div class="cap"><b>Gráfico A.1.5.</b> Proyecciones de la TRM por entidad frente al spot, el forward a un año y los escenarios propios. Pase el cursor para ver la fuente y la fecha.</div></div>
+
+  <h3>Expectativa a doce meses y escenarios</h3>
+  <p>El balance de fuerzas favorece una <b>depreciación moderada</b>. Apoyan al peso el carry, el petróleo alto de corto plazo, la IED, las reservas y la credibilidad inicial del nuevo gobierno. En contra pesan el déficit externo, el deterioro fiscal, la normalización esperada del crudo, una Fed restrictiva con dólar fuerte, la salida de portafolio y una TRM por debajo de su valor justo. Por eso construimos tres escenarios. La deriva de largo plazo (años 2 a 10) se ancla en la distribución histórica de los cambios anualizados de la TRM en ventanas de 9 años desde 2005: percentil 25 de {{ k.roll9_P25 }}, mediana de {{ k.roll9_P50 }} y percentil 75 de {{ k.roll9_P75 }}.</p>
+  {{ tab.scenarios }}
+  <div class="callout blue"><span class="t">Expectativa formulada</span>TRM de <b>{{ k.scen.central.trm }}</b> a octubre de 2027 en el escenario central ({{ k.scen.central.var }}) y una esperanza ponderada de <b>{{ k.expected_12m }}</b> ({{ k.expected_12m_var }}). El sesgo de riesgo es asimétrico: el escenario adverso se aleja más del spot que el favorable porque los choques fiscales y de aversión al riesgo suelen ser abruptos. La cifra está a {{ k.exp_vs_fwd }} del forward a un año ({{ k.f_1y_val }}), lo que sugiere que el mercado ya incorpora una depreciación de magnitud similar. Esto anticipa que el forward no es ni caro ni barato frente a nuestra visión del primer año.</div>
+</section>
+
+<!-- ======================================================= A.2 -->
+<section id="a2">
+  <h2><span class="num">A.2</span>Simulación del crédito en dólares</h2>
+  <h3>Entidad, tasa y forma de cotización</h3>
+  <p>Seleccionamos un <b>préstamo comercial a plazo para equipo de Wells Fargo Bank, N.A.</b>, uno de los mayores bancos comerciales y financiadores de equipo de Estados Unidos, indexado a su tasa Prime. Wells Fargo subió su Prime de 6,75 % a <b>{{ k.prime }}</b> con efecto desde el 17 de septiembre de 2026 (comunicado del 16 de septiembre). El dato coincide con la "Bank prime loan rate" del H.15 de la Reserva Federal, que la define como "una de las tasas base que usan los bancos para valorar préstamos comerciales". Sobre ella aplicamos un spread de <b>{{ k.spread_pb }} pb</b>, de modo que la tasa queda en <b>{{ k.rate }} nominal anual pagadera trimestre vencido</b>. La tasa periódica es {{ k.rate }}/4 = {{ k.iq }} por trimestre (63 de 252 días hábiles), equivalente a {{ k.ea }} efectivo anual. Fecha de consulta: 15 de octubre de 2026.</p>
+  <p><b>¿Por qué es pertinente para maquinaria?</b></p>
+  <ul class="tight">
+    <li>Los préstamos para equipo indexados a Prime son el estándar bancario en Estados Unidos. La maquinaria sirve de garantía, lo que abarata el crédito frente a un préstamo sin respaldo.</li>
+    <li>El plazo de 10 años es coherente con la vida útil de la maquinaria amarilla: la SBA permite hasta 10 años para financiar equipo, y la debenture SBA 504 a 10 años existe precisamente para activos fijos.</li>
+    <li>El spread de 250 pb ubica la tasa en un punto intermedio entre la referencia subsidiada (SBA 504: {{ k.sba504 }}, solo para empresas estadounidenses) y el techo regulatorio para un préstamo de este tamaño (SBA 7(a): {{ k.sba7a }}). También está dentro de los rangos de mercado para equipo (6 %–13 % en bancos; 7 %–16 % para construcción y equipo pesado). El spread intermedio reconoce que el deudor es una pyme colombiana: riesgo país BB, garantía ubicada fuera de Estados Unidos y mayor costo de verificación.</li>
+    <li><b>Supuesto:</b> la tasa se fija durante los 10 años, condición necesaria para la cuota constante del sistema francés. Un crédito indexado a Prime sería variable en la práctica: con la nueva alza que anticipa la Fed, Prime pasaría a 7,25 % y la tasa a {{ k.prime_plus_hike }}. Ese riesgo se cuantifica en la sensibilidad de B.3.</li>
+  </ul>
+  {{ tab.loan_params }}
+  <div class="fig">{{ fig.rate_benchmarks }}<div class="cap"><b>Gráfico A.2.1.</b> Tasa elegida frente a referencias verificables para financiar equipo en Estados Unidos (octubre de 2026). Pase el cursor sobre los rangos para ver la fuente.</div></div>
+  <div class="formula">$$A = P\,\frac{i}{1-(1+i)^{-n}} = {{ k.p_usd_num | texnum }}\times\frac{0{,}02375}{1-(1{,}02375)^{-40}} = \text{USD }{{ k.cuota_num | texnum }}$$</div>
+
+  <h3>Tabla de amortización</h3>
+  <p>El sistema francés produce una cuota constante de <b>{{ k.cuota_usd }}</b>, pero su composición cambia. El interés representa {{ k.int_share_q1 }} de la primera cuota y apenas {{ k.int_share_q40 }} de la última. En total se pagan {{ k.total_usd }}, de los cuales {{ k.int_usd }} son intereses ({{ k.int_over_p }} del capital). Al cierre del año 6 el saldo es {{ k.balance_y6 }} ({{ k.balance_y6_share }} del principal), y quedan por pagar 16 cuotas por {{ k.remaining_y6 }}. Esta es la exposición pendiente sobre la que se calcula la cobertura del 75 %.</p>
+  <div class="fig">{{ fig.amortization }}<div class="cap"><b>Gráfico A.2.2.</b> Composición de la cuota trimestral y saldo del crédito (USD). La banda verde marca el tramo que cubrirán los forwards.</div></div>
+  <div class="fig">{{ fig.amortization_table }}<div class="cap"><b>Tabla A.2.1.</b> Tabla de amortización en USD (desplace para ver las 40 cuotas).</div></div>
+  <p class="intro">Nota regulatoria: un crédito externo de un residente colombiano debe canalizarse por el mercado cambiario e informarse al Banco de la República (régimen cambiario de la Resolución Externa 1 de 2018). Los pagos de intereses al exterior pueden estar sujetos a retención en la fuente. Estos efectos no se modelan, pero elevarían el costo efectivo.</p>
+</section>
+
+<!-- ======================================================= A.3 -->
+<section id="a3">
+  <h2><span class="num">A.3</span>Conversión del crédito a pesos colombianos</h2>
+  <h3>Escenario base: spot constante</h3>
+  <p>Con la TRM fija en {{ k.s0 }}, cada cuota equivale a <b>{{ k.base_cuota }}</b> y el total pagado a {{ k.a3_base.total }}. El costo financiero ({{ k.a3_base.costo }}) es solo interés, y el costo efectivo en pesos coincide con el del dólar ({{ k.ea }} E.A.). Es el único caso en que la obligación en pesos es tan estable como la obligación en dólares, y el más improbable: supone que la TRM no se mueve en diez años.</p>
+
+  <h3>Trayectorias proyectadas y simuladas</h3>
+  <p>Sustituimos el spot constante por la trayectoria trimestral esperada de cada escenario (A.1) y por la distribución simulada del escenario central (B.2). En el <b>escenario central</b>, la TRM esperada sube a {{ k.scen.central.trm }} en un año y a {{ k.a3_central.trm_final }} en 2036. La cuota en pesos pasa de {{ k.base_cuota }} a <b>{{ k.a3_central.ultima }}</b> en la última fecha ({{ k.a3_central.cuota_var }}). El total pagado asciende a {{ k.a3_central.total }} ({{ k.a3_central.var_total }} frente a la base), y el costo efectivo en pesos sube a <b>{{ k.a3_central.tir }}</b> E.A. En el escenario <b>adverso</b>, el total llega a {{ k.a3_adverso.total }} y el costo a {{ k.a3_adverso.tir }}. En el <b>favorable</b>, la apreciación abarata el crédito a {{ k.a3_favorable.tir }}. La banda simulada muestra la dispersión: en 2036 la cuota central tiene una mediana de {{ k.fan_last_p50 }}, pero un intervalo P5–P95 entre {{ k.fan_last_p5 }} y {{ k.fan_last_p95 }}.</p>
+  <div class="fig">{{ fig.cop_installments }}<div class="cap"><b>Gráfico A.3.1.</b> Cuota trimestral en pesos: base, trayectorias esperadas y bandas de la simulación central (seleccione normal o t de Student).</div></div>
+
+  <h3>¿Qué parte de la variación proviene de los intereses y qué parte de la tasa de cambio?</h3>
+  <p>Cada cuota en pesos se descompone exactamente en cuatro partes:</p>
+  <div class="formula">$$\underbrace{A\,S_t}_{\text{cuota COP}} = \underbrace{K_t S_0}_{\text{capital a TRM base}} + \underbrace{I_t S_0}_{\text{interés a TRM base}} + \underbrace{K_t (S_t - S_0)}_{\text{efecto cambiario s/ capital}} + \underbrace{I_t (S_t - S_0)}_{\text{efecto cambiario s/ interés}}$$</div>
+  <p>En el escenario central, el costo financiero total en pesos ({{ k.a3_central.costo }}) se divide en {{ k.a3_central.int }} de intereses a TRM base ({{ k.a3_central.share_int }}) y {{ k.a3_central.fx_total }} de efecto cambiario ({{ k.a3_central.share_fx }}). Del efecto cambiario, {{ k.a3_central.fxk }} corresponden a la diferencia en cambio sobre el capital ({{ k.a3_central.share_fxk_of_fx }}) y {{ k.a3_central.fxi }} a la mayor carga de intereses. Conclusión: los intereses del crédito determinan el costo base ({{ k.a3_base.costo }}), que es igual en todos los escenarios, mientras que <b>toda la variación entre escenarios proviene de la tasa de cambio</b>, sobre todo porque el capital prestado a {{ k.s0 }} se devuelve a una TRM mayor. El efecto se concentra al final del crédito, cuando las cuotas son casi solo capital y la TRM acumula más depreciación.</p>
+  <div class="grid2">
+    <div class="fig">{{ fig.decomposition }}<div class="cap"><b>Gráfico A.3.2.</b> Descomposición trimestral de la cuota en pesos (seleccione el escenario).</div></div>
+    <div class="fig">{{ fig.waterfall }}<div class="cap"><b>Gráfico A.3.3.</b> Del capital desembolsado al total pagado en pesos (COP millones).</div></div>
+  </div>
+  {{ tab.a3_summary }}
+
+  <h3>Obligación estable en dólares frente a obligación variable en pesos</h3>
+  <p>En dólares, la empresa conoce desde hoy sus 40 pagos: {{ k.cuota_usd }} cada trimestre. En pesos, la moneda en que recibe sus ingresos, esa certeza desaparece. La cuota en pesos hereda toda la volatilidad de la TRM (cerca de {{ k.sigma }} anual), y su efecto se amplifica en el tiempo porque la incertidumbre de la TRM crece con la raíz del plazo. Ya en el primer año la cuota puede oscilar entre {{ k.fan_y1_p5 }} y {{ k.fan_y1_p95 }} (P5–P95). Hay tres efectos sobre el flujo de caja:</p>
+  <ol>
+    <li><b>Presión de liquidez:</b> un presupuesto calculado con la TRM de hoy queda corto si el peso se deprecia. En el escenario central, la cuota de 2036 es {{ k.a3_central.cuota_var_abs }} mayor que la presupuestada.</li>
+    <li><b>Cobertura del servicio de deuda:</b> los ingresos en pesos de la maquinaria no se ajustan automáticamente con la TRM, de modo que el margen para cubrir el servicio de la deuda se deteriora justo cuando el peso se debilita.</li>
+    <li><b>Efecto contable:</b> el saldo en dólares se reexpresa a la TRM de cierre y genera diferencias en cambio en el estado de resultados, aunque no haya salida de caja.</li>
+  </ol>
+  <p>El crédito en dólares parece barato: {{ k.ea }}, frente a un costo en pesos de {{ k.synth_3y }} E.A. si se eliminara el riesgo cambiario con forwards (ver B.3). Esa diferencia es real solo en promedio y a cambio de asumir el riesgo. Por paridad cubierta, fijar hoy el costo en pesos de todas las cuotas equivaldría a endeudarse en pesos.</p>
+</section>
+
+<!-- ======================================================= B.1 -->
+<section class="part" id="b1">
+  <span class="part-label">Parte B · 65 %</span>
+  <h2><span class="num">B.1</span>Cotización y valoración de los forwards</h2>
+  <h3>Diseño de la cobertura exigida</h3>
+  <p>Al cierre del año 6 (octubre de 2032) quedan 16 cuotas por {{ k.remaining_y6 }}. La cobertura es del <b>75 %</b> de esa exposición, es decir {{ k.hedged_total }}, repartidos en cuatro forwards según los pagos programados de cada año: {{ k.per_forward }} por forward, frente a una obligación anual de {{ k.obligation_year }}. Cada forward es un <b>NDF a 252 días hábiles</b> que se pacta al inicio del año que cubre (esquema rolling): el primero al cierre del año 6, el segundo al cierre del año 7, y así sucesivamente. Se liquida por diferencia contra la TRM en la fecha de la cuarta cuota del año: la empresa recibe \(N\,(S_T - F)\) si la TRM supera la tasa pactada y paga si queda por debajo. El 25 % restante ({{ k.open_year }} por año) paga al spot.</p>
+  <div class="timeline">{% for y in range(1, 11) %}<div class="{{ 'h' if y > 6 else '' }}">Año {{ y }}</div>{% endfor %}</div>
+  <div class="timeline-legend">Gris: cuotas sin cobertura (24 cuotas). Verde: años con forward anual sobre el 75 % de las cuatro cuotas (16 cuotas).</div>
+  {{ tab.coherence }}
+  <p>El nominal cubierto <b>nunca supera la obligación real</b>: es el 75 % de los pagos de cada año, y en total ({{ k.hedged_total }}) es menor que el saldo de capital al cierre del año 6 ({{ k.balance_y6 }}) y que los pagos pendientes ({{ k.remaining_y6 }}). No hay posición especulativa en sentido contable. Hay un matiz que retomamos en B.3: como cada forward liquida una sola vez al año y las cuotas son trimestrales, el nominal que minimiza la varianza del costo anual es {{ k.minvar }} de los pagos del año, no 75 %.</p>
+
+  <h3>Cotización de mercado (plazo superior a seis meses)</h3>
+  <p>El informe de cierre diario de la mesa NDF de SET-ICAP FX, con puntos forward por plazo y devaluación, es un servicio por suscripción. Por eso usamos dos fuentes verificables del mercado colombiano. La primera es la <b>curva forward COP del informe "Cierre de mercado" de Itaú Colombia</b> (13-oct-2026), referida al cierre spot de SET-ICAP FX de ese día ({{ k.spot_ref }}). La segunda son las <b>estadísticas del broker Tradition</b> para la sesión del 15 de octubre. Los <b>257 puntos a un año</b> implican un forward de {{ k.f_1y_mkt }} y una devaluación implícita de <b>{{ k.dev_1y }}</b>. Los puntos a un año eran {{ k.pts_hist["Inicio de año"] }} al inicio de 2026 (devaluación implícita cercana a 9,4 %) y {{ k.pts_hist["Hace 6 meses"] }} hace seis meses. Se comprimieron por dos razones: un spot más bajo y la desaparición de la prima sobre la paridad de comienzos de año. En enero, la devaluación implícita de los contratos a más de 180 días (8,74 %) superaba ampliamente el diferencial IBR–SOFR a un mes (5,43 %), según el informe de derivados de BanRep.</p>
+  <div class="grid2">
+    <div>{{ tab.market_quote }}</div>
+    <div>{{ tab.tradition }}<p class="intro">Tradition no registró operaciones entre 6 y 12 meses en la sesión. La liquidez se concentra en plazos cortos, de modo que los precios a un año se forman por cotizaciones de broker y por paridad, no por volumen negociado.</p></div>
+  </div>
+
+  <h3>Forward teórico por paridad cubierta de tasas</h3>
+  <p>Para una cotización \(S\) en COP por USD, tasas efectivas anuales y la convención de 252 días:</p>
+  <div class="formula">$$F = S\left(\frac{1+i_{COP}}{1+i_{USD}}\right)^{n/252} \qquad\Rightarrow\qquad \text{devaluación implícita} = \left(\frac{F}{S}\right)^{252/n}-1$$</div>
+  <p>Calculamos la paridad con tres pares de tasas observadas y con el par de largo plazo que usamos para pactar los forwards de 2032 a 2036. Todas las tasas se convierten a efectivas anuales: IBR nominal base 360, SOFR Act/360 y el Tesoro en base semestral.</p>
+  {{ tab.cip }}
+  <div class="grid2">
+    <div class="fig">{{ fig.forward_curve }}<div class="cap"><b>Gráfico B.1.1.</b> Puntos forward de mercado frente a la paridad teórica por plazo.</div></div>
+    <div class="fig">{{ fig.cip_heatmap }}<div class="cap"><b>Gráfico B.1.2.</b> Forward teórico a un año (spot {{ k.s0 }}) según las tasas en pesos y en dólares.</div></div>
+  </div>
+
+  <h3>¿Por qué difieren el forward observado y el teórico?</h3>
+  <p>El forward de mercado ({{ k.f_1y_mkt }}) está apenas {{ k.cip[0].dif }} pesos ({{ k.cip[0].pb }} pb) por encima de la paridad con la tasa de BanRep y la SOFR, a {{ k.cip[1].dif }} pesos de la paridad IBR–swap SOFR y a {{ k.cip[2].dif }} pesos de la paridad con TES y Tesoros. Las diferencias son coherentes con la ausencia de arbitraje y se explican por:</p>
+  <ul class="tight">
+    <li><b>Desalineación de tasas y plazos:</b> la IBR a un mes y la SOFR overnight no incorporan las alzas esperadas en doce meses. Los TES de 2027 tienen un plazo algo mayor y llevan primas de liquidez y crédito soberano distintas a las del mercado interbancario. El mercado forward se arbitra contra el fondeo bancario (simultáneas, IBR, swaps), por eso la paridad BanRep–SOFR es la más cercana.</li>
+    <li><b>Spread de negociación:</b> los puntos de Itaú son una referencia de cierre del interbancario. Una empresa mediana pagaría un margen adicional, comprando dólares a plazo más caros.</li>
+    <li><b>Liquidez:</b> sin operaciones entre 6 y 12 meses en la sesión, la prima a un año incorpora el costo de inventario del intermediario. Además, la liquidez de contado mueve los puntos: en septiembre, la posición propia de contado de los intermediarios cayó a −USD 212 millones (mínimo desde 2020), y esa escasez de dólares presionó a la baja las devaluaciones implícitas de corto plazo (el nodo de 7 días bajó a 5,59 %).</li>
+    <li><b>Riesgo de crédito:</b> un NDF a uno o cuatro años expone al banco al incumplimiento del cliente. Ese riesgo se traslada a la tasa pactada o se cubre con garantías y cupos de crédito.</li>
+    <li><b>Convenciones de mercado:</b> el mercado cotiza en días calendario (base 360/365) y en días de liquidación T+2; nosotros usamos 252 días hábiles. Para un año ambas coinciden, pero en plazos irregulares generan diferencias de algunos pesos.</li>
+    <li><b>Flujos offshore:</b> la curva de devaluaciones implícitas cayó 156 pb en septiembre y se ubicó 149 pb por debajo de la teórica cuando los extranjeros desarmaron coberturas de TES (Banco Agrario). Con los puntos del 13 de octubre, la brecha frente a la paridad BanRep–SOFR es de solo {{ k.cip[0].pb }} pb: la prima del forward se mueve con la oferta y la demanda de cobertura, no solo con las tasas.</li>
+  </ul>
+  <p>Sensibilidad: con el spot actual, +25 pb en la tasa en pesos elevan el forward teórico a un año en {{ k.dF_rcop }} pesos, y +25 pb en la tasa en dólares lo reducen en {{ k.dF_rusd }} pesos.</p>
+
+  <h3>Valoración de los cuatro forwards</h3>
+  <p>Los forwards de la estrategia se pactarán en el futuro, con la TRM y las tasas de ese momento. Al pactarse por paridad, su valor inicial es cero. Para 2032–2036 suponemos tasas a un año de {{ k.r_cop_lr }} en pesos (meta de 3 % + tasa real neutral cercana a 2,5 % + prima fiscal y de plazo de 2 pp) y {{ k.r_usd_lr }} en dólares (mediana de largo plazo de la Fed, 3,2 %, + prima de plazo). Eso implica una prima forward de <b>{{ k.d_lr }}</b> anual. Es una normalización parcial frente al {{ k.dev_1y }} de hoy y al {{ k.dev_lt }} implícito en los bonos a 10 años (TES {{ k.tes10 }} frente al Tesoro {{ k.ust10 }}). La prima se sensibiliza en B.3. En el escenario central, la tasa pactada esperada va de {{ k.f7_mean }} (forward 1, intervalo P5–P95 de {{ k.f7_p5 }} a {{ k.f7_p95 }}) a {{ k.f10_mean }} (forward 4). La amplitud del intervalo confirma que el nivel de la tasa pactada es incierto hoy: depende de la TRM al inicio de cada año.</p>
+  {{ tab.valuation }}
+  <div class="fig">{{ fig.forwards_valuation }}<div class="cap"><b>Gráfico B.1.3.</b> Tasa forward pactada (media e intervalo P5–P95) frente a la TRM esperada al vencimiento. Escenario central, innovaciones normales.</div></div>
+  <p>El valor esperado de cada forward es ligeramente negativo en el escenario central, porque la prima pactada ({{ k.d_lr }}) supera la depreciación esperada de largo plazo ({{ k.scen.central.drift }}). Esa diferencia es el costo del seguro. En el escenario adverso el valor esperado es positivo, y en el neutral al riesgo es prácticamente cero, como corresponde a un precio justo.</p>
+</section>
+
+<!-- ======================================================= B.2 -->
+<section id="b2">
+  <h2><span class="num">B.2</span>Escenarios de protección y costo de oportunidad</h2>
+  <h3>Simulación de la TRM</h3>
+  <p>Simulamos {{ k.n_paths }} trayectorias mensuales por escenario y distribución, con un movimiento browniano geométrico de paso mensual (21 de 252 días). La volatilidad es de {{ k.sigma }} anual y se estima con {{ k.n_obs }} retornos logarítmicos mensuales de la TRM ({{ k.cal_start }} a {{ k.cal_end }}). La deriva del primer año lleva la TRM esperada al objetivo de cada escenario, y desde el segundo año se aplica la deriva de largo plazo. Comparamos dos distribuciones de innovaciones con la misma varianza:</p>
+  <ul class="tight">
+    <li><b>Normal estándar.</b></li>
+    <li><b>t de Student estandarizada</b> con \(\nu\) = {{ k.nu }} grados de libertad, estimados por máxima verosimilitud sobre los retornos mensuales. Su exceso de curtosis es {{ k.exkurt_m }}. En datos diarios las colas son mucho más pesadas: la t ajustada tiene apenas \(\nu\) = {{ k.nu_d }} y el exceso de curtosis es {{ k.exkurt_d }}.</li>
+  </ul>
+  <p>Se usan los mismos números aleatorios en todos los escenarios, de modo que las diferencias entre ellos se deben solo a la deriva. Incluimos un escenario <b>neutral al riesgo</b> (deriva igual a la prima forward) como control: en él, el forward debe tener un valor esperado nulo.</p>
+
+  <h3>Resultado de cada forward: S<sub>T</sub> frente a F</h3>
+  <p>Para cada trayectoria y cada forward comparamos la tasa pactada \(F_k = S_{k-1}(1+d)\) con la TRM al vencimiento \(S_k\). Clasificamos el resultado así:</p>
+  <ul class="tight">
+    <li><b>Protección</b> si \(S_k > F_k\): el forward compensa la depreciación.</li>
+    <li><b>Costo de oportunidad</b> si \(S_k < F_k\): sin cobertura se habría comprado más barato.</li>
+    <li><b>Pérdida cambiaria extrema</b> si \(S_k > 1{,}2F_k\): la exposición abierta habría perdido más de 20 %, y el forward evita la mayor parte de esa pérdida.</li>
+    <li><b>Pérdida extrema del derivado</b> si \(S_k < 0{,}8F_k\).</li>
+  </ul>
+  <div class="fig">{{ fig.ratio_hist }}<div class="cap"><b>Gráfico B.2.1.</b> Distribución de \(S_T/F-1\) en los cuatro forwards (escenario central). Cambie a escala logarítmica para comparar las colas de la normal y la t.</div></div>
+  {{ tab.proportions }}
+  <div class="fig">{{ fig.proportions }}<div class="cap"><b>Gráfico B.2.2.</b> Proporción de escenarios por tipo de resultado (promedio de los cuatro forwards).</div></div>
+  <p>En el <b>escenario central</b>, el forward protege en {{ k.b2_central_normal.prot }} de los casos (normal) y en {{ k.b2_central_t.prot }} (t), y genera costo de oportunidad en {{ k.b2_central_normal.opp }}. La razón es que la prima pactada ({{ k.d_lr }}) supera la depreciación esperada ({{ k.scen.central.drift }}): la empresa paga un pequeño sobreprecio por fijar la tasa. En el escenario <b>adverso</b> la protección sube a {{ k.b2_adverso_normal.prot }}, y en el <b>favorable</b> baja a {{ k.b2_favorable_normal.prot }}. En el <b>neutral al riesgo</b> es de {{ k.b2_neutral_normal.prot }}: algo menos de la mitad, por la asimetría lognormal, con una liquidación esperada prácticamente nula ({{ k.b2_neutral_normal.payoff }} por forward). Esto valida que el precio por paridad es justo. Las pérdidas cambiarias extremas evitadas ocurren en {{ k.b2_central_normal.ext_up }} de los casos centrales y en {{ k.b2_adverso_normal.ext_up }} de los adversos. Ahí es donde el forward demuestra su valor.</p>
+
+  <h3>Costo combinado: 75 % cubierto y 25 % abierto</h3>
+  <p>El costo en pesos de las cuotas del año \(k\) con cobertura es:</p>
+  <div class="formula">$$C^{H}_k = \underbrace{A\sum_{q=1}^{4} S_{q}}_{\text{cuotas al spot}} - \underbrace{0{,}75\cdot 4A\,(S_k - F_k)}_{\text{liquidación del NDF}} \quad\text{y la desviación presupuestal es } \frac{C_k}{4A\,F_k}-1$$</div>
+  <p>El presupuesto del año \(4A\,F_k\) se conoce al pactar el forward. Con cobertura, la desviación frente a ese presupuesto tiene una desviación estándar de {{ k.b2_central_normal.dev_h }}, frente a {{ k.b2_central_normal.dev_u }} sin cobertura. La probabilidad de que el costo del año supere el presupuesto en más de 10 % cae de {{ k.b2_central_normal.dev_u10 }} a {{ k.b2_central_normal.dev_h10 }}. La tasa efectiva media pagada sube apenas unos pesos por dólar (el costo esperado del seguro). El P95 de la tasa efectiva casi no cambia, porque está dominado por el nivel de la TRM al inicio de cada año, que el forward rolling no controla.</p>
+  {{ tab.combined_cost }}
+  <div class="fig">{{ fig.budget_box }}<div class="cap"><b>Gráfico B.2.3.</b> Costo anual de las cuotas frente al presupuesto de inicio de año, con y sin forward. Caja P25–P75, bigotes P5–P95.</div></div>
+
+  <h3>"Pérdida del derivado" no es "fracaso de la cobertura"</h3>
+  <p>Un forward con liquidación negativa no fracasa si el costo total de las cuotas quedó cerca del presupuesto. La pérdida del derivado se compensa con cuotas más baratas al spot. Para separar ambos conceptos cruzamos el signo de la liquidación con el desempeño de la exposición (TRM promedio de las cuotas frente a \(F\)):</p>
+  {{ tab.quadrants }}
+  <div class="fig">{{ fig.budget_scatter }}<div class="cap"><b>Gráfico B.2.4.</b> Desviación presupuestal del año 7 con y sin cobertura (2.500 trayectorias del escenario central). Si la cobertura no estabilizara, los puntos estarían sobre la diagonal.</div></div>
+  <p>En {{ k.b2_central_normal.opp_pure }} de los escenarios el forward pierde dinero y, aun así, la cobertura funciona: las cuotas se pagaron por debajo del presupuesto y el costo combinado quedó fijado. Es la definición de costo de oportunidad, no de fracaso. El <b>fracaso de la cobertura</b> (la TRM sube durante el año, encarece las cuotas y cae bajo \(F\) justo al vencimiento) ocurre en {{ k.b2_central_normal.fail }} de los casos, y se debe al desfase entre una liquidación anual y cuatro pagos trimestrales. La nube de puntos lo muestra: la cobertura comprime la desviación hacia la línea de cobertura perfecta (\(y = 0{,}25x\)), sin alcanzarla por ese desfase.</p>
+
+  <h3>Normal frente a t de Student: por qué se parecen a un año</h3>
+  <p>Las proporciones bajo ambas distribuciones difieren en décimas de punto porcentual. No es un error: al sumar doce choques mensuales independientes, el teorema central del límite diluye las colas gruesas. El exceso de curtosis de las innovaciones t baja de {{ k.tail_t1.kurt }} a un mes a {{ k.tail_t3.kurt }} a tres meses y a {{ k.tail_t12.kurt }} a doce meses. La probabilidad de un choque superior a 3σ es de {{ k.tail_t1.p3 }} con t frente a {{ k.tail_n1.p3 }} con normal a un mes, y converge a doce meses. En consecuencia, la forma de la distribución importa poco para forwards anuales y mucho para los riesgos de corto plazo: una cuota trimestral puede sufrir un salto de la TRM más extremo de lo que sugiere la normal. También importa en los eventos raros: la probabilidad de un sobrecosto anual superior al 10 % con cobertura es {{ k.b2_central_t.dev_h10 }} con t frente a {{ k.b2_central_normal.dev_h10 }} con normal. Si la volatilidad se agrupara (algo que este modelo i.i.d. no captura), las diferencias persistirían a plazos más largos.</p>
+  <div class="grid2">
+    <div>{{ tab.tails }}</div>
+    <div class="fig">{{ fig.tails }}<div class="cap"><b>Gráfico B.2.5.</b> Colas por horizonte de agregación (innovaciones estandarizadas).</div></div>
+  </div>
+</section>
+
+<!-- ======================================================= B.3 -->
+<section id="b3">
+  <h2><span class="num">B.3</span>Flujo consolidado y evaluación financiera</h2>
+  <h3>Flujo consolidado</h3>
+  <p>El flujo integra la compra de la maquinaria ({{ k.machine }}), el aporte propio ({{ k.equity }}), el desembolso del crédito ({{ k.p_usd }} × {{ k.s0 }} = {{ k.financed }}), las 40 cuotas en dólares y su conversión a pesos, y la liquidación de los cuatro forwards en las cuotas 28, 32, 36 y 40. La tabla muestra el valor esperado de cada flujo. Use el menú para cambiar de escenario, distribución y estrategia.</p>
+  <div class="fig">{{ fig.consolidated_table }}<div class="cap"><b>Tabla B.3.1.</b> Flujo consolidado esperado en pesos (signo negativo = salida). Las filas verdes incluyen la liquidación del forward.</div></div>
+  <div class="fig">{{ fig.annual_service }}<div class="cap"><b>Gráfico B.3.1.</b> Servicio de deuda anual en pesos, con y sin cobertura (media e intervalo P5–P95).</div></div>
+
+  <h3>Resultados por escenario y distribución</h3>
+  {{ tab.b3_summary }}
+  <div class="fig">{{ fig.irr_box }}<div class="cap"><b>Gráfico B.3.2.</b> Distribución del costo efectivo anual del crédito en pesos (TIR) por escenario y estrategia. La línea roja indica el costo en pesos si se cubriera el 100 % desde hoy (forward a tres años).</div></div>
+  <p>En el <b>escenario central</b>, el crédito cuesta en promedio {{ k.b3_central_normal.tot_u }} sin cobertura y {{ k.b3_central_normal.tot_h }} con ella. La TIR en pesos pasa de {{ k.b3_central_normal.tir_u }} a {{ k.b3_central_normal.tir_h }}, con un rango P5–P95 de {{ k.b3_central_normal.tir_h_p5 }} a {{ k.b3_central_normal.tir_h_p95 }} prácticamente igual al de la estrategia sin cobertura. Como la TIR no es una función lineal de la TRM, la TIR promedio de las {{ k.n_paths }} trayectorias difiere de la TIR de la trayectoria promedio ({{ k.a3_central.tir }}, sección A.3), aunque el total pagado promedio coincide. En el <b>adverso</b>, los forwards aportan {{ k.b3_adverso_normal.fwd }} y reducen el CVaR 95 % del costo de los años 7–10 de {{ k.b3_adverso_normal.y710_cvar_u }} a {{ k.b3_adverso_normal.y710_cvar_h }}. En el <b>favorable</b> cuestan {{ k.b3_favorable_normal.fwd_abs }}. Normal y t producen resultados casi idénticos: las medias difieren en menos de 0,5 % y la t muestra colas apenas más pesadas.</p>
+  {{ tab.b3_years710 }}
+
+  <h3>Reducción de volatilidad, estabilidad presupuestal y riesgo residual</h3>
+  <p>Hay dos formas de medir el riesgo, y la estrategia luce muy distinta en cada una:</p>
+  <div class="grid2">
+    <div class="callout green"><span class="t">Lente presupuestal (dentro de cada año)</span>Al inicio de cada año el forward fija el 75 % del costo a una tasa conocida. La desviación estándar frente al presupuesto cae de {{ k.b3_central_normal.dev_u }} a {{ k.b3_central_normal.dev_h }}, y el sobrecosto superior al 10 % pasa de {{ k.b3_central_normal.dev10_u }} a {{ k.b3_central_normal.dev10_h }}. Para la tesorería, que presupuesta año a año, la mejora es sustancial.</div>
+    <div class="callout red"><span class="t">Lente de riesgo total (desde hoy)</span>La volatilidad del costo de los años 7–10 apenas baja de {{ k.b3_central_normal.y710_sd_u }} a {{ k.b3_central_normal.y710_sd_h }} (una reducción de {{ k.b3_central_normal.y710_sd_chg_abs }}), y la del crédito total solo {{ k.b3_central_normal.sd_chg_abs }}. Los años 1–6 aportan una volatilidad de {{ k.b3_central_normal.y16_sd }} sin ninguna protección. Además, cada forward se pacta al spot del momento, de modo que la depreciación acumulada hasta el año 6 queda incorporada en la tasa pactada.</div>
+  </div>
+  <p>El <b>riesgo residual</b> tiene cuatro fuentes:</p>
+  <ol>
+    <li><b>Los años 1–6, totalmente abiertos:</b> son 24 de las 40 cuotas.</li>
+    <li><b>El nivel de la TRM entre años:</b> condicionado a la TRM del año 6, la cobertura reduce la volatilidad de {{ k.b3_central_normal.y710_cond_u }} a {{ k.b3_central_normal.y710_cond_h }} (una reducción de {{ k.b3_central_normal.y710_cond_chg_abs }}), pero cada renovación resetea la tasa pactada.</li>
+    <li><b>El 25 % abierto.</b></li>
+    <li><b>El desfase temporal:</b> la liquidación es anual y los pagos son trimestrales.</li>
+  </ol>
+  <p>La comparación con estructuras alternativas cuantifica cada fuente:</p>
+  {{ tab.strategies }}
+  <div class="fig">{{ fig.frontier }}<div class="cap"><b>Gráfico B.3.3.</b> Izquierda: desviación presupuestal según el porcentaje cubierto con un NDF anual. Derecha: costo esperado frente a riesgo de cada estructura (escenario central, normal).</div></div>
+  <ul class="tight">
+    <li><b>Strip pactado al cierre del año 6</b> (los cuatro forwards con plazos de 1 a 4 años): reduce la volatilidad condicional a {{ k.strip_cond }} (una caída de {{ k.strip_cond_chg }}) a cambio de un costo esperado de {{ k.strip_cost }}, porque paga la prima forward compuesta y elimina el riesgo de nivel de los años 7–10. Su desviación presupuestal ({{ k.strip_dev }}) se mide frente a un presupuesto fijado en el año 6 para los cuatro años, una exigencia mayor que la del presupuesto anual.</li>
+    <li><b>Rolling con cuatro vencimientos trimestrales:</b> elimina el desfase y lleva la desviación presupuestal a {{ k.qm_dev }} con un costo esperado de {{ k.qm_cost }}.</li>
+    <li><b>Coherencia del nominal:</b> con un único vencimiento anual, la exposición efectiva a la TRM de cierre equivale a \(\beta = \tfrac{3+6+9+12}{12}\div 4 = 0{,}625\), es decir, {{ k.minvar }} de los pagos del año. Cubrir 75 % deja la desviación en {{ k.roll_dev }}, frente a {{ k.dev_hr625 }} en el mínimo; cubrir 100 % la empeoraría a {{ k.dev_hr100 }}. El 75 % no supera la obligación ni es especulativo en sentido contable, pero sí sobrecubre ligeramente la TRM de fin de año. Ese exceso tiene un efecto lateral útil: como la TRM de cierre de un año es la base del forward siguiente, el sobrecubrimiento compensa parte del riesgo de nivel del año que viene. Por eso el diseño anual reduce más la volatilidad condicional ({{ k.roll_cond }}) que la versión trimestral ({{ k.qm_cond }}), aunque estabiliza menos el presupuesto de cada año. Si el crédito se prepagara, los forwards vigentes quedarían como posición especulativa y habría que cerrarlos.</li>
+  </ul>
+
+  <h3>Costo de oportunidad y sensibilidad a las tasas de interés</h3>
+  <p>El costo de oportunidad depende sobre todo de la prima forward que se pague en 2032–2036, es decir, del diferencial de tasas de ese momento. Con una prima de {{ k.sens_d_min }}, los forwards tendrían un resultado esperado de {{ k.sens_fwd_min_d }} y protegerían en {{ k.sens_prot_min_d }} de los casos. Con la prima de hoy ({{ k.sens_d_max }}), el costo esperado sería de {{ k.sens_fwd_max_d_abs }} y la protección de apenas {{ k.sens_prot_max_d }}. Si el diferencial no se normaliza, cubrir una moneda de alto rendimiento resulta caro: es el costo de renunciar al carry. Por el lado del crédito, cada 100 pb adicionales en la tasa (por ejemplo, si la Fed sigue subiendo y Prime acompaña) elevan la cuota en cerca de {{ k.cuota_slope }} y la TIR en pesos en unos {{ k.tir_slope_pb }} pb. La TIR va de {{ k.tir_r85 }} con una tasa de 8,5 % a {{ k.tir_r13 }} con el techo SBA de 13 %. Como la tasa del crédito y la devaluación se componen de forma multiplicativa, el riesgo de tasa y el riesgo cambiario se refuerzan entre sí.</p>
+  <div class="grid2">
+    <div class="fig">{{ fig.sens_d }}<div class="cap"><b>Gráfico B.3.4.</b> Resultado esperado de los forwards y probabilidad de protección según la prima forward futura.</div></div>
+    <div class="fig">{{ fig.sens_rate }}<div class="cap"><b>Gráfico B.3.5.</b> Costo efectivo en pesos según la tasa del crédito en dólares.</div></div>
+  </div>
+  {{ tab.sens_d }}
+  {{ tab.sens_rate }}
+</section>
+
+<!-- ======================================================= CONCLUSIÓN -->
+<section id="conclusion">
+  <h2>Conclusión: ¿fue financieramente conveniente la estrategia?</h2>
+  <p class="intro">La respuesta depende de qué se le pide a la cobertura. Si el objetivo es <b>estabilizar el presupuesto anual en pesos de los años 7 a 10 a bajo costo</b>, la estrategia es conveniente. Si el objetivo es <b>proteger el costo total del crédito frente a la devaluación</b>, es insuficiente.</p>
+  <div class="grid3">
+    <div class="mini"><div class="l">Costo de oportunidad esperado</div><div class="v">{{ k.b3_central_normal.fwd_abs }}</div><div class="s">{{ k.b3_central_normal.fwd_share_abs }} del costo total (central). En el adverso los forwards aportan {{ k.b3_adverso_normal.fwd }}</div></div>
+    <div class="mini"><div class="l">Estabilidad presupuestal</div><div class="v">{{ k.b3_central_normal.dev_u }} → {{ k.b3_central_normal.dev_h }}</div><div class="s">σ de la desviación anual; sobrecosto &gt; 10 %: {{ k.b3_central_normal.dev10_u }} → {{ k.b3_central_normal.dev10_h }}</div></div>
+    <div class="mini"><div class="l">Reducción de volatilidad</div><div class="v">{{ k.b3_central_normal.y710_sd_chg_abs }}</div><div class="s">Costo de los años 7–10 (crédito total: {{ k.b3_central_normal.sd_chg_abs }})</div></div>
+  </div>
+  <ol>
+    <li><b>Conveniencia financiera:</b> el escenario de menor costo no basta como criterio. Sin cobertura, el costo esperado es algo menor en los escenarios central y favorable porque la prima forward supera la depreciación esperada; con cobertura, es menor en el adverso. Lo relevante es que el seguro cuesta poco ({{ k.b3_central_normal.fwd_share_abs }} del costo total) y paga cuando más se necesita.</li>
+    <li><b>Reducción de volatilidad:</b> es marginal en el costo total, porque el diseño solo actúa sobre 16 de las 40 cuotas (el tramo final), cubre el 75 % de ellas y lo hace con contratos que se renuevan al spot vigente.</li>
+    <li><b>Estabilidad presupuestal:</b> es el gran logro. Prácticamente elimina los sobrecostos anuales mayores al 10 % en los años cubiertos.</li>
+    <li><b>Riesgo residual:</b> lo dominan los años 1–6 y la incertidumbre sobre la TRM del año 6. La pérdida extrema sin cobertura (CVaR 95 % del crédito total de {{ k.b3_central_normal.cvar_u }}) apenas se mueve ({{ k.b3_central_normal.cvar_h }}).</li>
+    <li><b>Costo de oportunidad:</b> el forward pierde en {{ k.b2_central_normal.opp }} de los escenarios centrales. Eso no es un fracaso: es el precio de fijar la tasa. El fracaso genuino, por desfase temporal, es de {{ k.b2_central_normal.fail }}.</li>
+    <li><b>Coherencia entre nominal y obligación:</b> se cumple, porque cada forward cubre el 75 % de pagos ciertos de un crédito a tasa fija. El nominal de mínima varianza para una liquidación anual es {{ k.minvar }}.</li>
+    <li><b>Sensibilidad a tasas:</b> la conveniencia se deteriora si el diferencial de tasas en 2032 sigue en niveles actuales (costo esperado de {{ k.sens_fwd_d1y_abs }}). Si la Fed eleva Prime, el costo del crédito también sube.</li>
+  </ol>
+  <div class="callout"><span class="t">Recomendaciones</span>
+    <ol style="margin:4px 0 0 18px;padding:0">
+      <li><b>Adelantar la cobertura.</b> Un programa escalonado desde el año 1 (por ejemplo, 50 %–75 % de las cuotas de los próximos 12 meses, renovado trimestralmente) atacaría el tramo de mayor riesgo.</li>
+      <li><b>Alinear vencimientos con las cuotas</b> (cuatro NDF trimestrales por año) para eliminar el fracaso por desfase.</li>
+      <li>Si la prioridad es la <b>certeza total en pesos</b>, evaluar un swap de monedas (cross-currency swap) o refinanciar en pesos. Por paridad, el costo equivalente es de {{ k.synth_3y }} E.A. (forward a 3 años; {{ k.synth_1y }} con el de 1 año), frente a {{ k.b3_central_normal.tir_u }} esperado sin cobertura pero con un P95 de {{ k.b3_central_normal.tir_u_p95 }}.</li>
+      <li>Considerar <b>opciones call o collars</b> en el tramo abierto, para limitar las pérdidas extremas sin renunciar del todo a una apreciación.</li>
+      <li>Formalizar una <b>política de coberturas</b> con límites de desviación presupuestal, seguimiento de los puntos forward y reglas de cierre ante prepagos.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ======================================================= ANEXOS -->
+<section id="metodologia">
+  <h2>Anexo A. Metodología</h2>
+  <div class="card">
+    <h4>Convenciones</h4>
+    <p>Año comercial de 252 días hábiles: mes = 21 días (\(\Delta t = 21/252\)), trimestre = 63 días, año = 252 días. Los forwards se pactan a \(n = 252\) días. Tasas en efectivo anual (E.A.) salvo indicación.</p>
+    <h4>Crédito</h4>
+    <p>Sistema francés con \(i = 9{,}50\%/4\) y \(n = 40\): \(A = P\,i/[1-(1+i)^{-n}]\), \(I_t = i\,B_{t-1}\), \(K_t = A - I_t\), \(B_t = B_{t-1} - K_t\).</p>
+    <h4>Dinámica de la TRM</h4>
+    <div class="formula">$$\ln S_{t+\Delta t} = \ln S_t + \left(\mu_t - \tfrac{1}{2}\sigma^2\right)\Delta t + \sigma\sqrt{\Delta t}\,\varepsilon_t,\qquad \varepsilon_t \sim N(0,1)\ \text{ó}\ \varepsilon_t = T_\nu\sqrt{\tfrac{\nu-2}{\nu}}$$</div>
+    <p>\(\sigma\) = {{ k.sigma }} y \(\nu\) = {{ k.nu }} se estiman con retornos mensuales {{ k.cal_start }}–{{ k.cal_end }}. \(\mu_t = \ln(S^{*}_{12}/S_0)\) en el año 1 y \(\ln(1+g)\) después, donde \(S^{*}_{12}\) es la TRM esperada a 12 meses y \(g\) la deriva de largo plazo del escenario. Así \(E[S_t]\) sigue la trayectoria esperada. Se simulan {{ k.n_paths }} trayectorias por escenario y distribución con números aleatorios comunes.</p>
+    <h4>Forwards y métricas</h4>
+    <p>Paridad cubierta: \(F = S\,[(1+i_{COP})/(1+i_{USD})]^{n/252}\). Estrategia rolling: \(F_k = S_{k-1}(1+d)\) con \(d\) = {{ k.d_lr }}, nominal \(N = 0{,}75 \times 4A\) y liquidación \(N(S_k - F_k)\). Costo cubierto del año: \(C^H_k = A\sum_q S_q - N(S_k-F_k)\). Presupuesto: \(4A\,F_k\). TIR en pesos: tasa que iguala el desembolso en COP con el valor presente de los pagos netos. Valor presente con TES a 10 años ({{ k.disc }}). CVaR 95 %: promedio del 5 % de los costos más altos. Volatilidad condicional: desviación estándar de los residuos de regresar el costo sobre la TRM del año 6.</p>
+  </div>
+</section>
+
+<section id="supuestos">
+  <h2>Anexo B. Supuestos y limitaciones</h2>
+  <ul class="tight">
+    <li>Tasa del crédito fija (Prime de octubre de 2026 + 250 pb). Sin comisiones, seguros, retención en la fuente sobre intereses al exterior ni GMF.</li>
+    <li>El desembolso y las cuotas se convierten a la TRM, sin margen cambiario. Un margen de compra de divisas elevaría todos los costos en pesos.</li>
+    <li>Volatilidad constante e innovaciones independientes: el modelo no captura la agrupación de volatilidad (GARCH) ni saltos, de modo que tiende a subestimar las colas multiperiodo.</li>
+    <li>La prima forward futura es constante ({{ k.d_lr }}) en todos los escenarios. En un escenario adverso real, las tasas en pesos probablemente subirían y encarecerían la cobertura.</li>
+    <li>Los forwards se pactan a mitad de mercado, sin spread ni ajuste por riesgo de crédito (CVA). No se modelan llamados al margen ni cupos de crédito.</li>
+    <li>Las probabilidades de los escenarios son subjetivas, y las derivas de largo plazo se apoyan en la historia de la TRM, que no garantiza el futuro.</li>
+    <li>Los datos de mercado tienen fecha de corte del 15 de octubre de 2026. Algunos insumos (puntos forward del 13 de octubre, swap SOFR del 1 de octubre) tienen fechas cercanas pero no idénticas.</li>
+  </ul>
+</section>
+
+<section id="fuentes">
+  <h2>Anexo C. Fuentes y fechas de consulta</h2>
+  <p>Todas las consultas se realizaron el {{ k.fecha_val }}. Las series históricas descargadas se conservan en el repositorio para que los resultados sean reproducibles.</p>
+  {{ tab.sources }}
+  <footer>
+    Informe generado con Python (NumPy, pandas, SciPy y Plotly). Solo se muestran resultados; el código fuente y los datos están en el repositorio del proyecto.<br>
+    {{ k.members | join(" · ") }} · Instrumentos derivados financieros · {{ k.fecha_val }}.
+  </footer>
+</section>
+</div>
+</main>
+</body>
+</html>

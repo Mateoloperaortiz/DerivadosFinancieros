@@ -1,0 +1,215 @@
+# Insumos de mercado documentados manualmente.
+# Cada dato registra fuente, fecha del dato y fecha de consulta (2026-10-15).
+# Los datos descargados automáticamente (TRM histórica y series FRED) están en data/raw.
+
+meta:
+  titulo: "Crédito en dólares para maquinaria amarilla y cobertura con forwards COP/USD"
+  curso: "Instrumentos derivados financieros"
+  integrantes: ["[Integrante 1]", "[Integrante 2]", "[Integrante 3]"]
+  fecha_valoracion: "2026-10-15"
+  fecha_consulta: "2026-10-15"
+
+proyecto:
+  valor_maquinaria_cop: 400000000
+  aporte_propio: 0.10
+  plazo_anios: 10
+  pagos_por_anio: 4
+  base_dias: 252             # año comercial de 252 días hábiles
+  dias_por_mes: 21           # 252 / 12
+  dias_por_trimestre: 63     # 252 / 4
+  cobertura: 0.75            # 75 % de la exposición pendiente al cierre del año 6
+  anio_inicio_cobertura: 6   # los forwards cubren los años 7, 8, 9 y 10
+
+spot:
+  trm: 3197.65
+  fecha: "2026-10-15"
+  descripcion: "TRM vigente el 15-oct-2026, certificada por la Superintendencia Financiera con las operaciones del 14-oct-2026"
+  fuente: "Superintendencia Financiera de Colombia — conjunto 32sa-8pi3 en datos.gov.co"
+  url: "https://www.datos.gov.co/resource/32sa-8pi3.json"
+  setfx:
+    - {sesion: "2026-10-13", apertura: 3205.00, cierre: 3183.44, promedio: 3181.70, maximo: 3209.77, minimo: 3170.11, volumen_musd: 1193.8}
+    - {sesion: "2026-10-14", apertura: 3199.50, cierre: 3183.80, promedio: 3197.56, maximo: 3214.00, minimo: 3179.00, volumen_musd: 1085.9}
+    - {sesion: "2026-10-15", apertura: 3165.00, cierre: 3170.00, promedio: 3170.38, maximo: 3183.00, minimo: 3157.70, volumen_musd: null}
+  fuente_setfx: "Mercado spot SET-ICAP FX, reportado por dolar.wilkinsonpc.com.co (sesiones 13 y 14-oct) y Noticias RCN/Pulzo (sesión 15-oct)"
+
+credito:
+  entidad: "Wells Fargo Bank, N.A. (San Francisco, California)"
+  producto: "Préstamo comercial a plazo para equipo (equipment term loan) indexado a la tasa Prime de Wells Fargo"
+  prime: 0.0700
+  prime_vigencia: "2026-09-17"
+  fuente_prime: "Wells Fargo Newsroom, 16-sep-2026: 'Wells Fargo Bank Increases Prime Rate to 7.00 Percent' (efectiva 17-sep-2026); confirmada por Federal Reserve H.15 (Bank prime loan = 7,00 %)"
+  url_prime: "https://newsroom.wf.com/news-releases/news-details/2026/Wells-Fargo-Bank-Increases-Prime-Rate-to-7-00-Percent/default.aspx"
+  spread: 0.0250
+  forma_cotizacion: "Tasa nominal anual Prime + 2,50 pp, pagadera trimestre vencido (T.V.); tasa periódica = nominal / 4"
+  supuesto_tasa_fija: "Se fija la tasa vigente durante los 10 años (necesario para cuotas constantes del sistema francés); el riesgo de que Prime cambie se analiza en la sensibilidad"
+  referencias:
+    - {nombre: "SBA 504 — debenture a 10 años (equipo), precio del 8-oct-2026", tasa: 0.0659, fuente: "SomerCor, 'October 2026 SBA 504 Interest Rates'", url: "https://somercor.com/october-2026-sba-504-interest-rates/"}
+    - {nombre: "Techo SBA 7(a) variable, préstamos de USD 50.001–250.000 (Prime + 6,0 pp)", tasa: 0.1300, fuente: "U.S. Small Business Administration — 7(a) terms, conditions and eligibility", url: "https://www.sba.gov/partners/lenders/7a-loan-program/terms-conditions-eligibility"}
+    - {nombre: "Rango típico de préstamos bancarios para equipo (APR)", tasa_min: 0.06, tasa_max: 0.13, fuente: "Stacking Capital / Bankrate, guía de financiación de equipo 2026", url: "https://www.stacking.capital/articles/equipment-financing-complete-guide"}
+    - {nombre: "Construcción y equipo pesado (APR), con Prime en 7,00 %", tasa_min: 0.07, tasa_max: 0.16, fuente: "RAN Funding, 'Equipment Financing Rates in 2026' (14-oct-2026)", url: "https://ranfunding.com/equipment-financing-rates/"}
+
+tasas:
+  banrep: {valor: 0.1225, forma: "E.A.", vigencia: "2026-10-01", fuente: "Banco de la República — comunicado de la Junta Directiva del 30-sep-2026 (4 votos por +25 pb, 2 por mantener, 1 por +50 pb)"}
+  ibr_overnight: {valor: 0.11410, forma: "nominal anual base 360", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional — Indicadores económicos (IBR publicado por BanRep)", url: "https://www.bancodebogotainternacional.com/bbi/es/economicindicator"}
+  ibr_1m: {valor: 0.11500, forma: "nominal anual base 360 (30 días)", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional — Indicadores económicos (IBR publicado por BanRep)"}
+  dtf_90: {valor: 0.10190, forma: "E.A.", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional — Indicadores económicos"}
+  tes_nov2027: {valor: 0.1170, forma: "E.A.", fecha: "2026-09-30", fuente: "Acciones & Valores — Perspectiva de renta fija (7-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Mensual-rf-07.10.2026.pdf"}
+  tes_jun2032: {valor: 0.12924, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores — Informe semanal de renta fija (13-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Semanal-rf-13.10.2026.pdf"}
+  tes_oct2034: {valor: 0.12920, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores — Informe semanal de renta fija (13-oct-2026)"}
+  tes_oct2050: {valor: 0.12940, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores — Informe semanal de renta fija (13-oct-2026)"}
+  sofr: {valor: 0.0388, forma: "Act/360 overnight", fecha: "2026-10-14", fuente: "Federal Reserve Bank of New York vía FRED (SOFR)"}
+  sofr_swap_1y: {valor: 0.043067, forma: "Act/360, tasa fija par a 1 año", fecha: "2026-10-01", fuente: "Eris Futures — SOFR par coupon curve EOD", url: "https://files.erisfutures.com/ftp/Eris_20261001_EOD_ParCouponCurve_SOFR.csv"}
+  ust_1y: {valor: 0.0453, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS1)"}
+  ust_10y: {valor: 0.0519, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS10)"}
+  fed_rango: {inferior: 0.0375, superior: 0.0400, vigencia: "2026-09-17", fuente: "FOMC statement, 16-sep-2026 (alza de 25 pb, votación 12-0)"}
+  fed_sep_2026_09:
+    fuente: "Federal Reserve — Summary of Economic Projections, 16-sep-2026 (medianas)"
+    fondos_federales: {"2026": 4.1, "2027": 4.1, "2028": 3.9, "2029": 3.6, "Largo plazo": 3.2}
+    pce: {"2026": 3.7, "2027": 2.3, "2028": 2.1, "2029": 2.0}
+  largo_plazo:
+    descripcion: "Tasas a 1 año esperadas para 2032–2036, usadas para pactar los forwards futuros por paridad cubierta"
+    r_cop: 0.075
+    r_usd: 0.034
+    justificacion_cop: "Meta de inflación de 3 % + tasa real neutral cercana a 2,5 % + prima fiscal y de plazo de ~2 pp, coherente con una normalización parcial frente al 12,25 % actual"
+    justificacion_usd: "Mediana de largo plazo de la Fed (3,2 %) + prima de plazo de 0,2 pp"
+
+forward_mercado:
+  fuente: "Itaú Colombia — 'Cierre de mercado', martes 13-oct-2026 (publicado 14-oct-2026), sección 'Curva forward COP'"
+  url: "https://banco.itau.co/documents/d/inversiones/cierre-de-mercado-14-de-octubre"
+  fecha_cotizacion: "2026-10-13"
+  spot_referencia: 3183.44
+  nota_spot: "Cierre SET-ICAP FX del 13-oct-2026, día de la cotización de los puntos"
+  dias_calendario: {"1M": 30, "3M": 91, "6M": 182, "1Y": 365, "3Y": 1095}
+  puntos: {"1M": 17, "3M": 59, "6M": 121, "1Y": 257, "3Y": 796}
+  historia_1y: {"Hoy": 257, "Hace 1 día": 255, "Hace 5 días": 264, "Hace 1 mes": 250, "Hace 3 meses": 289, "Hace 6 meses": 315, "Inicio de año": 354, "Hace 1 año": 216}
+  tradition:
+    fuente: "Tradition Colombia — Estadísticas del mercado forward USD/COP (sesión del 15-oct-2026)"
+    url: "https://www.tradition.com.co/operaciones-estadisticas?producto=forward"
+    cierres: {"0-1M": [3170.00, 13], "1-2M": [3190.00, 6], "2-3M": [3214.50, 2], "3-6M": [3223.75, 1], "6-9M": [null, 0], "9-12M": [null, 0], ">12M": [null, 0]}
+  setfx_nota: "El 'Informe de Cierre Diario de la mesa NDF' de SET-ICAP FX (puntos forward por plazo y devaluación) es un servicio por suscripción; por ello se usan Itaú y Tradition como fuentes verificables del mercado colombiano."
+  banco_agrario:
+    fuente: "Banco Agrario de Colombia — Informe de Mercado Cambiario 'Nada dura para siempre' (1-oct-2026), con datos de Tradition"
+    url: "https://www.bancoagrario.gov.co/sites/default/files/2026-10/IMC202609.pdf"
+    hallazgos:
+      - "La curva de devaluaciones implícitas bajó en promedio 156 pb en septiembre; el nodo de 7 días cayó a 5,59 %."
+      - "La curva implícita se ubicó en promedio 149 pb por debajo de la teórica (diferencial de tasas), lo que mantiene incentivos al carry trade."
+      - "La Posición Propia de Contado de los IMC cayó a un promedio de USD -212 millones en septiembre, mínimos desde marzo de 2020."
+      - "Los extranjeros redujeron posiciones largas en forwards por USD 1.261 millones en septiembre."
+
+banrep_decisiones:
+  fuente: "Banco de la República — comunicados de la Junta Directiva"
+  inicio: {fecha: "2021-01-01", tasa: 1.75}
+  cambios:
+    - ["2021-09-30", 2.00]
+    - ["2021-10-29", 2.50]
+    - ["2021-12-17", 3.00]
+    - ["2022-01-28", 4.00]
+    - ["2022-03-31", 5.00]
+    - ["2022-04-29", 6.00]
+    - ["2022-06-30", 7.50]
+    - ["2022-07-29", 9.00]
+    - ["2022-09-30", 10.00]
+    - ["2022-10-31", 11.00]
+    - ["2022-12-16", 12.00]
+    - ["2023-01-31", 12.75]
+    - ["2023-03-31", 13.00]
+    - ["2023-04-28", 13.25]
+    - ["2023-12-18", 13.00]
+    - ["2024-01-31", 12.75]
+    - ["2024-03-22", 12.25]
+    - ["2024-04-30", 11.75]
+    - ["2024-06-28", 11.25]
+    - ["2024-07-31", 10.75]
+    - ["2024-09-30", 10.25]
+    - ["2024-10-31", 9.75]
+    - ["2024-12-19", 9.50]
+    - ["2025-04-30", 9.25]
+    - ["2026-01-30", 10.25]
+    - ["2026-03-31", 11.25]
+    - ["2026-06-30", 12.00]
+    - ["2026-09-30", 12.25]
+
+inflacion:
+  colombia_septiembre:
+    fuente: "DANE — Anexo IPC septiembre de 2026, cuadro 1 (variación anual a septiembre de cada año), publicado 7-oct-2026"
+    valores: {"2017": 3.97, "2018": 3.23, "2019": 3.82, "2020": 1.97, "2021": 4.51, "2022": 11.44, "2023": 10.99, "2024": 5.81, "2025": 5.18, "2026": 6.29}
+  colombia_detalle:
+    - "IPC sept-2026: 0,37 % mensual y 6,29 % anual (agosto: 6,24 %). Sin alimentos ni regulados: 6,03 %. Bienes: 2,9 % (efecto de la apreciación). Servicios sin arriendo: 9,21 % (Banco de Bogotá, 7-oct-2026)."
+    - "Salario mínimo 2026: +23 % (Decreto 1469 de 2025; ratificado transitoriamente por el Decreto 159 de 2026)."
+  expectativas:
+    - {entidad: "BanRep (IPM jul-2026)", "2026": 6.9, "2027": 4.3}
+    - {entidad: "Fedesarrollo EOF (sep-2026)", "2026": 6.82, "2027": null}
+    - {entidad: "BBVA Research", "2026": 7.0, "2027": 5.6}
+    - {entidad: "Bancolombia (sep-2026)", "2026": 6.7, "2027": 5.5}
+    - {entidad: "FMI WEO (oct-2026)", "2026": 6.0, "2027": 5.7}
+  eeuu_detalle: "IPC EE. UU. sept-2026: 3,7 % anual (0,6 % mensual) y subyacente 2,6 %, impulsado por gasolina (+9,1 % m/m)."
+
+fundamentales:
+  - {grupo: "Tasas", indicador: "Tasa de política BanRep", valor: "12,25 %", fecha: "1-oct-2026", efecto: -1, fuente: "BanRep"}
+  - {grupo: "Tasas", indicador: "Rango fondos federales", valor: "3,75 %–4,00 %", fecha: "17-sep-2026", efecto: 1, fuente: "FOMC"}
+  - {grupo: "Tasas", indicador: "Diferencial de política (BanRep − techo Fed)", valor: "8,25 pp", fecha: "15-oct-2026", efecto: -1, fuente: "Cálculo propio"}
+  - {grupo: "Tasas", indicador: "Bono del Tesoro EE. UU. a 10 años", valor: "5,19 %", fecha: "14-oct-2026", efecto: 1, fuente: "H.15 / FRED"}
+  - {grupo: "Inflación", indicador: "IPC Colombia (anual)", valor: "6,29 %", fecha: "sep-2026", efecto: 1, fuente: "DANE"}
+  - {grupo: "Inflación", indicador: "IPC EE. UU. (anual)", valor: "3,7 %", fecha: "sep-2026", efecto: 0, fuente: "BLS"}
+  - {grupo: "Petróleo", indicador: "Brent spot (EIA)", valor: "USD 126,55", fecha: "14-oct-2026", efecto: -1, fuente: "EIA / FRED"}
+  - {grupo: "Petróleo", indicador: "Brent futuro ICE (dic-26)", valor: "USD 105,92", fecha: "15-oct-2026", efecto: -1, fuente: "Reuters"}
+  - {grupo: "Petróleo", indicador: "Pronóstico Brent 2027 (promedio)", valor: "USD 84", fecha: "6-oct-2026", efecto: 1, fuente: "EIA STEO"}
+  - {grupo: "Externo", indicador: "Déficit de cuenta corriente 2T26", valor: "3,5 % del PIB (USD 4.702 m)", fecha: "1-sep-2026", efecto: 1, fuente: "BanRep"}
+  - {grupo: "Externo", indicador: "Déficit comercial de bienes 12 meses", valor: "USD 18.462 m (3,6 % del PIB)", fecha: "jul-2026", efecto: 1, fuente: "DANE / Banco Agrario"}
+  - {grupo: "Externo", indicador: "IED hacia Colombia 1S26", valor: "USD 8.138 m (+31,1 % a/a)", fecha: "1-sep-2026", efecto: -1, fuente: "BanRep"}
+  - {grupo: "Externo", indicador: "Inversión de portafolio 2T26", valor: "Salidas por USD 7.352 m", fecha: "1-sep-2026", efecto: 1, fuente: "BanRep"}
+  - {grupo: "Externo", indicador: "Reservas internacionales brutas", valor: "USD 67.831 m (máximo histórico)", fecha: "ago-2026", efecto: -1, fuente: "BanRep"}
+  - {grupo: "Riesgo", indicador: "CDS Colombia 5 años", valor: "159 pb (rango 52 sem.: 134–241)", fecha: "14-oct-2026", efecto: 0, fuente: "ICE / OBM"}
+  - {grupo: "Riesgo", indicador: "TES tasa fija 10 años (jun-2032)", valor: "12,92 %", fecha: "9-oct-2026", efecto: 1, fuente: "Acciones & Valores"}
+  - {grupo: "Riesgo", indicador: "Calificación soberana", valor: "S&P BB- / Fitch BB / Moody's Baa3", fecha: "2025–2026", efecto: 1, fuente: "IRC – MinHacienda"}
+  - {grupo: "Fiscal", indicador: "Déficit fiscal 2026 (CARF)", valor: "7,4 % del PIB", fecha: "jul-2026", efecto: 1, fuente: "CARF"}
+  - {grupo: "Fiscal", indicador: "Deuda neta GNC 2026 (CARF)", valor: "61 % del PIB (máximo histórico)", fecha: "jul-2026", efecto: 1, fuente: "CARF"}
+  - {grupo: "Fiscal", indicador: "Presupuesto 2027", valor: "COP 635 billones (24 % servicio de deuda)", fecha: "27-ago-2026", efecto: 1, fuente: "MinHacienda"}
+  - {grupo: "Choques", indicador: "Daños directos terremoto 10-ago-2026", valor: "COP 42,1 billones (2,3 % del PIB)", fecha: "28-ago-2026", efecto: 1, fuente: "PNUD / UNGRD"}
+
+calificaciones:
+  fuente: "IRC – Ministerio de Hacienda, historial de calificación crediticia"
+  url: "https://www.irc.gov.co/conoce-colombia/calificacion-crediticia"
+  agencias:
+    - {agencia: "S&P", moneda_extranjera: "BB-", perspectiva: "Estable", fecha: "8-abr-2026"}
+    - {agencia: "Fitch", moneda_extranjera: "BB", perspectiva: "Estable", fecha: "16-dic-2025"}
+    - {agencia: "Moody's", moneda_extranjera: "Baa3", perspectiva: "Estable", fecha: "26-jun-2025"}
+    - {agencia: "DBRS", moneda_extranjera: "BB (high)", perspectiva: "Estable", fecha: "28-ago-2026"}
+
+proyecciones_trm:
+  - {entidad: "BanRep — Encuesta de analistas (EME)", horizonte: "Dic-2026", tipo: "Cierre", valor: 3300, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
+  - {entidad: "Fedesarrollo–BVC (EOF)", horizonte: "Dic-2026", tipo: "Cierre", valor: 3240, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
+  - {entidad: "Encuesta Citi", horizonte: "Dic-2026", tipo: "Cierre", valor: 3264, fecha: "oct-2026", fuente: "IBTimes Colombia"}
+  - {entidad: "BBVA Research", horizonte: "Dic-2026", tipo: "Cierre", valor: 3265, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
+  - {entidad: "Bank of America", horizonte: "Dic-2026", tipo: "Cierre", valor: 3150, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
+  - {entidad: "BTG Pactual", horizonte: "Dic-2026", tipo: "Cierre", valor: 3460, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
+  - {entidad: "Banco Agrario", horizonte: "Dic-2026", tipo: "Cierre", valor: 3400, fecha: "1-oct-2026", fuente: "IMC Banco Agrario"}
+  - {entidad: "ANIF", horizonte: "Dic-2026", tipo: "Cierre", valor: 3229, fecha: "sep-2026", fuente: "ANIF, Panorama III"}
+  - {entidad: "ANIF", horizonte: "Dic-2027", tipo: "Cierre", valor: 3324, fecha: "sep-2026", fuente: "ANIF, Panorama III"}
+  - {entidad: "Bancolombia", horizonte: "2027", tipo: "Promedio", valor: 3330, fecha: "23-sep-2026", fuente: "Bancolombia, proyecciones 2027"}
+  - {entidad: "Corficolombiana", horizonte: "2027", tipo: "Promedio", valor: 3405, fecha: "oct-2026", fuente: "Portafolio"}
+  - {entidad: "Citi (Economic Outlook)", horizonte: "Dic-2027", tipo: "Cierre", valor: 3746, fecha: "14-jul-2026", fuente: "La República"}
+  - {entidad: "Banco Agrario (rango 1T27)", horizonte: "1T-2027", tipo: "Rango", valor: 3650, fecha: "1-oct-2026", fuente: "IMC Banco Agrario: 'niveles de COP 3.600–3.700 altamente probables'"}
+  - {entidad: "Banco Agrario — valor justo estructural", horizonte: "Equilibrio", tipo: "Modelo", valor: 3590, fecha: "1-oct-2026", fuente: "IMC Banco Agrario"}
+
+escenarios:
+  descripcion: "TRM esperada a 12 meses (oct-2027) y deriva anual de largo plazo (años 2 a 10)"
+  lista:
+    - key: favorable
+      nombre: "Favorable para el peso"
+      trm_12m: 3050
+      deriva_lp: 0.000
+      probabilidad: 0.25
+      narrativa: "Desescalamiento en Medio Oriente con Brent aún sobre USD 85, aprobación de la Ley Fiscal y recortes creíbles que estabilizan la calificación, continuidad del carry trade y pausa de la Fed. Equivale a una apreciación real de ~1,5 % anual."
+    - key: central
+      nombre: "Central"
+      trm_12m: 3400
+      deriva_lp: 0.030
+      probabilidad: 0.50
+      narrativa: "Corrección gradual hacia el valor justo por el deterioro externo y fiscal, normalización del petróleo (EIA: Brent USD 84 en 2027) y una Fed restrictiva, amortiguada por el diferencial de tasas. A largo plazo, PPP relativa más una prima de riesgo moderada."
+    - key: adverso
+      nombre: "Adverso (depreciación)"
+      trm_12m: 3850
+      deriva_lp: 0.070
+      probabilidad: 0.25
+      narrativa: "Desvío fiscal (déficit > 8 % del PIB), pérdida del último grado de inversión, caída rápida del crudo hacia USD 70, dos alzas adicionales de la Fed y salida de flujos de portafolio. Repite la dinámica de depreciación persistente de 2012–2022."
