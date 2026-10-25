@@ -98,10 +98,10 @@ def key_numbers(R: dict) -> dict:
             "trm_final": num(r["trm_final"]),
             "var_total": pct(r["total_cop"] / summ.loc["base", "total_cop"] - 1, 1, True),
             "fx_total": mcop(r["fx_interes"] + r["fx_capital"]),
-            "share_int": pct(r["interes_s0"] / r["costo_financiero"], 1) if r["costo_financiero"] else "—",
-            "share_fx": pct((r["fx_interes"] + r["fx_capital"]) / r["costo_financiero"], 1) if r["costo_financiero"] else "—",
+            "share_int": pct(r["interes_s0"] / r["costo_financiero"], 1) if r["costo_financiero"] else "s. d.",
+            "share_fx": pct((r["fx_interes"] + r["fx_capital"]) / r["costo_financiero"], 1) if r["costo_financiero"] else "s. d.",
             "share_fxk_of_fx": pct(r["fx_capital"] / (r["fx_interes"] + r["fx_capital"]), 1)
-            if abs(r["fx_interes"] + r["fx_capital"]) > 1 else "—",
+            if abs(r["fx_interes"] + r["fx_capital"]) > 1 else "s. d.",
             "cuota_var": pct(r["cuota_ultima"] / summ.loc["base", "cuota_ultima"] - 1, 1, True),
             "cuota_var_abs": pct(abs(r["cuota_ultima"] / summ.loc["base", "cuota_ultima"] - 1), 1),
         }

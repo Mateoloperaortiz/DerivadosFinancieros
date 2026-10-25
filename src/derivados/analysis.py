@@ -210,7 +210,7 @@ def part_b1(inp: dict, s0: float, d_lr: float) -> dict:
         ("TES nov-2027 vs. Tesoro EE. UU. 1 año", t["tes_nov2027"]["valor"],
          fw.ea_from_bond_equivalent(t["ust_1y"]["valor"]), "TES 11,70 % E.A. / UST 4,53 % semestral"),
         ("Tasas de largo plazo supuestas (años 7–10)", t["largo_plazo"]["r_cop"], t["largo_plazo"]["r_usd"],
-         "7,50 % E.A. / 3,40 % E.A. — insumo para pactar los forwards futuros"),
+         "7,50 % E.A. / 3,40 % E.A.: insumo para pactar los forwards futuros"),
     ]
     cip = []
     for name, rc, ru, note in pairs:

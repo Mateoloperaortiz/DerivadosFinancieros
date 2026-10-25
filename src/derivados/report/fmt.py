@@ -15,7 +15,7 @@ MESES_LARGOS = [
 
 def num(x: float, d: int = 0) -> str:
     if x is None or (isinstance(x, float) and math.isnan(x)):
-        return "—"
+        return "s. d."
     if round(x, d) == 0:
         x = 0.0
     s = f"{x:,.{d}f}"
@@ -24,7 +24,7 @@ def num(x: float, d: int = 0) -> str:
 
 def pct(x: float, d: int = 2, signed: bool = False) -> str:
     if x is None or (isinstance(x, float) and math.isnan(x)):
-        return "—"
+        return "s. d."
     sign = "+" if signed and round(100 * x, d) > 0 else ""
     return f"{sign}{num(100 * x, d)}{NBSP}%"
 

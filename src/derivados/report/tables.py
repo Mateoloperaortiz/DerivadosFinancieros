@@ -108,7 +108,7 @@ def cip(R: dict) -> str:
                      pct(c["dev"]), num(c["forward_13oct"], 2), num(c["dif_cop"], 2), num(c["dif_pb"], 0),
                      num(c["forward_val"], 2)])
     mkt = R["b1"]
-    rows.append(["<b>Mercado (Itaú, 257 puntos)</b>", "", "", pct(mkt["dev_1y"]), num(mkt["forward_1y_mkt"], 2), "—", "—",
+    rows.append(["<b>Mercado (Itaú, 257 puntos)</b>", "", "", pct(mkt["dev_1y"]), num(mkt["forward_1y_mkt"], 2), "n. a.", "n. a.",
                  num(mkt["forward_1y_val"], 2)])
     return html_table(["Par de tasas (E.A.)", "r COP", "r USD", "Devaluación teórica", "F teórico (spot 13-oct)",
                        "Mercado − teórico (COP)", "Mercado − teórico (pb)", "F al spot de valoración (3.197,65)"],
@@ -205,7 +205,7 @@ def b3_summary(R: dict) -> str:
                 rows.append([f"<b>{names[key]}</b>", DISTS[dist], STRATS[strat], mm(m["total_media"]), mm(m["total_sd"]),
                              mm(m["total_p95"]), mm(m["total_cvar95"]),
                              f"{pct(m['tir_media'])} <small>({pct(m['tir_p5'], 1)} – {pct(m['tir_p95'], 1)})</small>",
-                             mm(m["vp_media"]), mm(m["forward_neto"], 2) if strat == "con" else "—"])
+                             mm(m["vp_media"]), mm(m["forward_neto"], 2) if strat == "con" else "n. a."])
     return html_table(["Escenario", "Innovación", "Estrategia", "Total pagado medio (COP M)", "σ total (COP M)",
                        "P95 total (COP M)", "CVaR 95 % (COP M)", "TIR en COP media (P5 – P95)",
                        "VP a TES 10A (COP M)", "Resultado forwards (COP M)"], rows, "lllrrrrrrr", highlight=hl,
@@ -288,7 +288,7 @@ def sources(R: dict) -> str:
         ("Decisiones de política monetaria", inp["banrep_decisiones"]["fuente"], None),
         ("Inflación Colombia", inp["inflacion"]["colombia_septiembre"]["fuente"], None),
         ("Calificaciones soberanas", inp["calificaciones"]["fuente"], inp["calificaciones"]["url"]),
-        ("Series de EE. UU. (Prime, SOFR, Fed, Tesoros, Brent, IPC)", "FRED — Federal Reserve Bank of St. Louis (descarga del 15-oct-2026)",
+        ("Series de EE. UU. (Prime, SOFR, Fed, Tesoros, Brent, IPC)", "FRED: Federal Reserve Bank of St. Louis (descarga del 15-oct-2026)",
          "https://fred.stlouisfed.org"),
     ]
     rows = []

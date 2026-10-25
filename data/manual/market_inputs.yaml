@@ -24,7 +24,7 @@ spot:
   trm: 3197.65
   fecha: "2026-10-15"
   descripcion: "TRM vigente el 15-oct-2026, certificada por la Superintendencia Financiera con las operaciones del 14-oct-2026"
-  fuente: "Superintendencia Financiera de Colombia — conjunto 32sa-8pi3 en datos.gov.co"
+  fuente: "Superintendencia Financiera de Colombia: conjunto 32sa-8pi3 en datos.gov.co"
   url: "https://www.datos.gov.co/resource/32sa-8pi3.json"
   setfx:
     - {sesion: "2026-10-13", apertura: 3205.00, cierre: 3183.44, promedio: 3181.70, maximo: 3209.77, minimo: 3170.11, volumen_musd: 1193.8}
@@ -43,27 +43,27 @@ credito:
   forma_cotizacion: "Tasa nominal anual Prime + 2,50 pp, pagadera trimestre vencido (T.V.); tasa periódica = nominal / 4"
   supuesto_tasa_fija: "Se fija la tasa vigente durante los 10 años (necesario para cuotas constantes del sistema francés); el riesgo de que Prime cambie se analiza en la sensibilidad"
   referencias:
-    - {nombre: "SBA 504 — debenture a 10 años (equipo), precio del 8-oct-2026", tasa: 0.0659, fuente: "SomerCor, 'October 2026 SBA 504 Interest Rates'", url: "https://somercor.com/october-2026-sba-504-interest-rates/"}
-    - {nombre: "Techo SBA 7(a) variable, préstamos de USD 50.001–250.000 (Prime + 6,0 pp)", tasa: 0.1300, fuente: "U.S. Small Business Administration — 7(a) terms, conditions and eligibility", url: "https://www.sba.gov/partners/lenders/7a-loan-program/terms-conditions-eligibility"}
+    - {nombre: "SBA 504: debenture a 10 años (equipo), precio del 8-oct-2026", tasa: 0.0659, fuente: "SomerCor, 'October 2026 SBA 504 Interest Rates'", url: "https://somercor.com/october-2026-sba-504-interest-rates/"}
+    - {nombre: "Techo SBA 7(a) variable, préstamos de USD 50.001–250.000 (Prime + 6,0 pp)", tasa: 0.1300, fuente: "U.S. Small Business Administration: 7(a) terms, conditions and eligibility", url: "https://www.sba.gov/partners/lenders/7a-loan-program/terms-conditions-eligibility"}
     - {nombre: "Rango típico de préstamos bancarios para equipo (APR)", tasa_min: 0.06, tasa_max: 0.13, fuente: "Stacking Capital / Bankrate, guía de financiación de equipo 2026", url: "https://www.stacking.capital/articles/equipment-financing-complete-guide"}
     - {nombre: "Construcción y equipo pesado (APR), con Prime en 7,00 %", tasa_min: 0.07, tasa_max: 0.16, fuente: "RAN Funding, 'Equipment Financing Rates in 2026' (14-oct-2026)", url: "https://ranfunding.com/equipment-financing-rates/"}
 
 tasas:
-  banrep: {valor: 0.1225, forma: "E.A.", vigencia: "2026-10-01", fuente: "Banco de la República — comunicado de la Junta Directiva del 30-sep-2026 (4 votos por +25 pb, 2 por mantener, 1 por +50 pb)"}
-  ibr_overnight: {valor: 0.11410, forma: "nominal anual base 360", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional — Indicadores económicos (IBR publicado por BanRep)", url: "https://www.bancodebogotainternacional.com/bbi/es/economicindicator"}
-  ibr_1m: {valor: 0.11500, forma: "nominal anual base 360 (30 días)", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional — Indicadores económicos (IBR publicado por BanRep)"}
-  dtf_90: {valor: 0.10190, forma: "E.A.", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional — Indicadores económicos"}
-  tes_nov2027: {valor: 0.1170, forma: "E.A.", fecha: "2026-09-30", fuente: "Acciones & Valores — Perspectiva de renta fija (7-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Mensual-rf-07.10.2026.pdf"}
-  tes_jun2032: {valor: 0.12924, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores — Informe semanal de renta fija (13-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Semanal-rf-13.10.2026.pdf"}
-  tes_oct2034: {valor: 0.12920, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores — Informe semanal de renta fija (13-oct-2026)"}
-  tes_oct2050: {valor: 0.12940, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores — Informe semanal de renta fija (13-oct-2026)"}
+  banrep: {valor: 0.1225, forma: "E.A.", vigencia: "2026-10-01", fuente: "Banco de la República: comunicado de la Junta Directiva del 30-sep-2026 (4 votos por +25 pb, 2 por mantener, 1 por +50 pb)"}
+  ibr_overnight: {valor: 0.11410, forma: "nominal anual base 360", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional: Indicadores económicos (IBR publicado por BanRep)", url: "https://www.bancodebogotainternacional.com/bbi/es/economicindicator"}
+  ibr_1m: {valor: 0.11500, forma: "nominal anual base 360 (30 días)", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional: Indicadores económicos (IBR publicado por BanRep)"}
+  dtf_90: {valor: 0.10190, forma: "E.A.", fecha: "2026-10-14", fuente: "Banco de Bogotá Internacional: Indicadores económicos"}
+  tes_nov2027: {valor: 0.1170, forma: "E.A.", fecha: "2026-09-30", fuente: "Acciones & Valores: Perspectiva de renta fija (7-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Mensual-rf-07.10.2026.pdf"}
+  tes_jun2032: {valor: 0.12924, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores: Informe semanal de renta fija (13-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Semanal-rf-13.10.2026.pdf"}
+  tes_oct2034: {valor: 0.12920, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores: Informe semanal de renta fija (13-oct-2026)"}
+  tes_oct2050: {valor: 0.12940, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores: Informe semanal de renta fija (13-oct-2026)"}
   sofr: {valor: 0.0388, forma: "Act/360 overnight", fecha: "2026-10-14", fuente: "Federal Reserve Bank of New York vía FRED (SOFR)"}
-  sofr_swap_1y: {valor: 0.043067, forma: "Act/360, tasa fija par a 1 año", fecha: "2026-10-01", fuente: "Eris Futures — SOFR par coupon curve EOD", url: "https://files.erisfutures.com/ftp/Eris_20261001_EOD_ParCouponCurve_SOFR.csv"}
+  sofr_swap_1y: {valor: 0.043067, forma: "Act/360, tasa fija par a 1 año", fecha: "2026-10-01", fuente: "Eris Futures: SOFR par coupon curve EOD", url: "https://files.erisfutures.com/ftp/Eris_20261001_EOD_ParCouponCurve_SOFR.csv"}
   ust_1y: {valor: 0.0453, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS1)"}
   ust_10y: {valor: 0.0519, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS10)"}
   fed_rango: {inferior: 0.0375, superior: 0.0400, vigencia: "2026-09-17", fuente: "FOMC statement, 16-sep-2026 (alza de 25 pb, votación 12-0)"}
   fed_sep_2026_09:
-    fuente: "Federal Reserve — Summary of Economic Projections, 16-sep-2026 (medianas)"
+    fuente: "Federal Reserve: Summary of Economic Projections, 16-sep-2026 (medianas)"
     fondos_federales: {"2026": 4.1, "2027": 4.1, "2028": 3.9, "2029": 3.6, "Largo plazo": 3.2}
     pce: {"2026": 3.7, "2027": 2.3, "2028": 2.1, "2029": 2.0}
   largo_plazo:
@@ -74,7 +74,7 @@ tasas:
     justificacion_usd: "Mediana de largo plazo de la Fed (3,2 %) + prima de plazo de 0,2 pp"
 
 forward_mercado:
-  fuente: "Itaú Colombia — 'Cierre de mercado', martes 13-oct-2026 (publicado 14-oct-2026), sección 'Curva forward COP'"
+  fuente: "Itaú Colombia: 'Cierre de mercado', martes 13-oct-2026 (publicado 14-oct-2026), sección 'Curva forward COP'"
   url: "https://banco.itau.co/documents/d/inversiones/cierre-de-mercado-14-de-octubre"
   fecha_cotizacion: "2026-10-13"
   spot_referencia: 3183.44
@@ -83,12 +83,12 @@ forward_mercado:
   puntos: {"1M": 17, "3M": 59, "6M": 121, "1Y": 257, "3Y": 796}
   historia_1y: {"Hoy": 257, "Hace 1 día": 255, "Hace 5 días": 264, "Hace 1 mes": 250, "Hace 3 meses": 289, "Hace 6 meses": 315, "Inicio de año": 354, "Hace 1 año": 216}
   tradition:
-    fuente: "Tradition Colombia — Estadísticas del mercado forward USD/COP (sesión del 15-oct-2026)"
+    fuente: "Tradition Colombia: Estadísticas del mercado forward USD/COP (sesión del 15-oct-2026)"
     url: "https://www.tradition.com.co/operaciones-estadisticas?producto=forward"
     cierres: {"0-1M": [3170.00, 13], "1-2M": [3190.00, 6], "2-3M": [3214.50, 2], "3-6M": [3223.75, 1], "6-9M": [null, 0], "9-12M": [null, 0], ">12M": [null, 0]}
   setfx_nota: "El 'Informe de Cierre Diario de la mesa NDF' de SET-ICAP FX (puntos forward por plazo y devaluación) es un servicio por suscripción; por ello se usan Itaú y Tradition como fuentes verificables del mercado colombiano."
   banco_agrario:
-    fuente: "Banco Agrario de Colombia — Informe de Mercado Cambiario 'Nada dura para siempre' (1-oct-2026), con datos de Tradition"
+    fuente: "Banco Agrario de Colombia: Informe de Mercado Cambiario 'Nada dura para siempre' (1-oct-2026), con datos de Tradition"
     url: "https://www.bancoagrario.gov.co/sites/default/files/2026-10/IMC202609.pdf"
     hallazgos:
       - "La curva de devaluaciones implícitas bajó en promedio 156 pb en septiembre; el nodo de 7 días cayó a 5,59 %."
@@ -97,7 +97,7 @@ forward_mercado:
       - "Los extranjeros redujeron posiciones largas en forwards por USD 1.261 millones en septiembre."
 
 banrep_decisiones:
-  fuente: "Banco de la República — comunicados de la Junta Directiva"
+  fuente: "Banco de la República: comunicados de la Junta Directiva"
   inicio: {fecha: "2021-01-01", tasa: 1.75}
   cambios:
     - ["2021-09-30", 2.00]
@@ -131,7 +131,7 @@ banrep_decisiones:
 
 inflacion:
   colombia_septiembre:
-    fuente: "DANE — Anexo IPC septiembre de 2026, cuadro 1 (variación anual a septiembre de cada año), publicado 7-oct-2026"
+    fuente: "DANE: Anexo IPC septiembre de 2026, cuadro 1 (variación anual a septiembre de cada año), publicado 7-oct-2026"
     valores: {"2017": 3.97, "2018": 3.23, "2019": 3.82, "2020": 1.97, "2021": 4.51, "2022": 11.44, "2023": 10.99, "2024": 5.81, "2025": 5.18, "2026": 6.29}
   colombia_detalle:
     - "IPC sept-2026: 0,37 % mensual y 6,29 % anual (agosto: 6,24 %). Sin alimentos ni regulados: 6,03 %. Bienes: 2,9 % (efecto de la apreciación). Servicios sin arriendo: 9,21 % (Banco de Bogotá, 7-oct-2026)."
@@ -177,7 +177,7 @@ calificaciones:
     - {agencia: "DBRS", moneda_extranjera: "BB (high)", perspectiva: "Estable", fecha: "28-ago-2026"}
 
 proyecciones_trm:
-  - {entidad: "BanRep — Encuesta de analistas (EME)", horizonte: "Dic-2026", tipo: "Cierre", valor: 3300, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
+  - {entidad: "BanRep: Encuesta de analistas (EME)", horizonte: "Dic-2026", tipo: "Cierre", valor: 3300, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
   - {entidad: "Fedesarrollo–BVC (EOF)", horizonte: "Dic-2026", tipo: "Cierre", valor: 3240, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
   - {entidad: "Encuesta Citi", horizonte: "Dic-2026", tipo: "Cierre", valor: 3264, fecha: "oct-2026", fuente: "IBTimes Colombia"}
   - {entidad: "BBVA Research", horizonte: "Dic-2026", tipo: "Cierre", valor: 3265, fecha: "oct-2026", fuente: "EnPrimera, 11-oct-2026"}
@@ -190,7 +190,7 @@ proyecciones_trm:
   - {entidad: "Corficolombiana", horizonte: "2027", tipo: "Promedio", valor: 3405, fecha: "oct-2026", fuente: "Portafolio"}
   - {entidad: "Citi (Economic Outlook)", horizonte: "Dic-2027", tipo: "Cierre", valor: 3746, fecha: "14-jul-2026", fuente: "La República"}
   - {entidad: "Banco Agrario (rango 1T27)", horizonte: "1T-2027", tipo: "Rango", valor: 3650, fecha: "1-oct-2026", fuente: "IMC Banco Agrario: 'niveles de COP 3.600–3.700 altamente probables'"}
-  - {entidad: "Banco Agrario — valor justo estructural", horizonte: "Equilibrio", tipo: "Modelo", valor: 3590, fecha: "1-oct-2026", fuente: "IMC Banco Agrario"}
+  - {entidad: "Banco Agrario: valor justo estructural", horizonte: "Equilibrio", tipo: "Modelo", valor: 3590, fecha: "1-oct-2026", fuente: "IMC Banco Agrario"}
 
 escenarios:
   descripcion: "TRM esperada a 12 meses (oct-2027) y deriva anual de largo plazo (años 2 a 10)"

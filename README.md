@@ -1,4 +1,4 @@
-# Instrumentos derivados financieros — Forward de divisas COP/USD
+# Instrumentos derivados financieros: Forward de divisas COP/USD
 
 Desarrollo de la **Parte 1** del ejercicio semestral: financiar maquinaria amarilla por COP 400.000.000 con un crédito en dólares (Wells Fargo, Prime + 2,50 pp, 10 años, cuotas trimestrales por sistema francés), medir el riesgo cambiario y evaluar una cobertura con cuatro forwards de divisas (NDF) sobre el 75 % de la exposición de los años 7 a 10.
 
