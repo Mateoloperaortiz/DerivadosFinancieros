@@ -5,7 +5,7 @@
 meta:
   titulo: "Crédito en dólares para maquinaria amarilla y cobertura con forwards COP/USD"
   curso: "Instrumentos derivados financieros"
-  integrantes: ["[Integrante 1]", "[Integrante 2]", "[Integrante 3]"]
+  integrantes: ["Julieth Cárdenas", "Sebastián Pérez", "Mateo Lopera"]
   fecha_valoracion: "2026-10-15"
   fecha_consulta: "2026-10-15"
 
@@ -200,16 +200,16 @@ escenarios:
       trm_12m: 3050
       deriva_lp: 0.000
       probabilidad: 0.25
-      narrativa: "Desescalamiento en Medio Oriente con Brent aún sobre USD 85, aprobación de la Ley Fiscal y recortes creíbles que estabilizan la calificación, continuidad del carry trade y pausa de la Fed. Equivale a una apreciación real de ~1,5 % anual."
+      narrativa: "Se calma Medio Oriente pero el Brent se sostiene sobre USD 85, pasa la Ley Fiscal con recortes creíbles que nos salvan la calificación, el carry trade sigue vivito y la Fed entra en pausa. En plata blanca: el peso se aprecia en términos reales ~1,5 % al año."
     - key: central
       nombre: "Central"
       trm_12m: 3400
       deriva_lp: 0.030
       probabilidad: 0.50
-      narrativa: "Corrección gradual hacia el valor justo por el deterioro externo y fiscal, normalización del petróleo (EIA: Brent USD 84 en 2027) y una Fed restrictiva, amortiguada por el diferencial de tasas. A largo plazo, PPP relativa más una prima de riesgo moderada."
+      narrativa: "Nuestro mundo más probable: el peso corrige de a poquitos hacia su valor justo porque lo externo y lo fiscal pesan, el petróleo se normaliza (EIA: Brent en USD 84 para 2027) y la Fed se mantiene dura, con el diferencial de tasas aguantando el golpe. A largo plazo manda la PPP relativa más una primita de riesgo moderada."
     - key: adverso
       nombre: "Adverso (depreciación)"
       trm_12m: 3850
       deriva_lp: 0.070
       probabilidad: 0.25
-      narrativa: "Desvío fiscal (déficit > 8 % del PIB), pérdida del último grado de inversión, caída rápida del crudo hacia USD 70, dos alzas adicionales de la Fed y salida de flujos de portafolio. Repite la dinámica de depreciación persistente de 2012–2022."
+      narrativa: "El mundo feo: el hueco fiscal se va a más de 8 % del PIB, perdemos el último grado de inversión, el crudo se cae rapidito hacia USD 70, la Fed sube dos veces más y la plata de portafolio sale corriendo. Sería revivir la depreciación terca de 2012–2022."
