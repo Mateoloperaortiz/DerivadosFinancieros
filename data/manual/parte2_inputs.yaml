@@ -1,0 +1,97 @@
+# Insumos documentados de la Parte 2 (cobertura con futuros sobre el S&P 500).
+# Los precios diarios están en data/raw/parte2/yahoo_parte2.json (API de Yahoo Finance, consulta 27-oct-2026)
+# y la curva del Tesoro en data/raw/parte2/treasury_par_yield_2026.csv (U.S. Treasury, consulta 27-oct-2026).
+
+meta:
+  titulo: "Portafolio MSFT–WMT–XOM y cobertura con futuros E-mini S&P 500"
+  fecha_consulta: "2026-10-27"
+
+portafolio:
+  capital_usd: 20000000
+  tickers: ["MSFT", "WMT", "XOM"]
+  nombres: {MSFT: "Microsoft Corporation", WMT: "Walmart Inc.", XOM: "Exxon Mobil Corporation"}
+  sectores: {MSFT: "Tecnología de la información", WMT: "Consumo básico", XOM: "Energía"}
+  mercado: "^GSPC"
+  inicio_muestra: "2016-08-01"
+  fin_muestra: "2026-07-29"        # estimación en t-1
+  fecha_inversion: "2026-07-30"    # ejecución al cierre del 30-jul-2026
+  fin_horizonte: "2030-07-30"
+  dias_anio: 252
+  dias_mes: 21
+
+tasas:
+  rf_sharpe:
+    valor: 0.0383
+    descripcion: "Treasury a 3 meses (par yield, CMT) del 29-jul-2026"
+    fuente: "U.S. Department of the Treasury: Daily Treasury Par Yield Curve Rates 2026"
+    url: "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026"
+  rf_horizonte:
+    ticker: "^FVX"
+    descripcion: "CBOE 5-Year Treasury Yield Index (^FVX), cierre del 29-jul-2026; rendimiento equivalente de bono (semestral)"
+    fuente: "Yahoo Finance (^FVX); contraste con la curva par del Tesoro (5 años = 4,37 %, 3 años = 4,29 %)"
+  rf_tnx:
+    ticker: "^TNX"
+    descripcion: "CBOE 10-Year Treasury Yield Index (^TNX), cierre del 29-jul-2026"
+
+supuestos:
+  prima_riesgo_mercado: 0.05     # supuesto de prima de riesgo de mercado de largo plazo (sensibilidad 3 %–7 %)
+  prima_sensibilidad: [0.03, 0.05, 0.07]
+  ruido_base: 0.0025              # desviación del error de base ln(F/S) frente a la paridad (estimada con ESZ26/ESH27)
+  n_trayectorias: 10000
+  semilla: 20260730
+
+futuro:
+  nombre: "E-mini S&P 500 (ES)"
+  bolsa: "CME Group (CME Globex)"
+  subyacente: "Índice S&P 500 (^GSPC)"
+  multiplicador: 50
+  tick: "0,25 puntos del índice = USD 12,50 por contrato"
+  vencimientos: "Trimestrales: marzo, junio, septiembre y diciembre (21 trimestres consecutivos listados)"
+  ultimo_dia: "El tercer viernes del mes del contrato, a las 9:30 a. m. ET"
+  liquidacion: "Financiera (en efectivo) contra la Special Opening Quotation (SOQ) del S&P 500 del tercer viernes"
+  mark_to_market: "Diario: la cámara liquida ganancias y pérdidas al precio de liquidación de cada sesión"
+  fuente_specs: "CME Group: E-mini S&P 500 Futures, Contract Specs (consulta 27-oct-2026)"
+  url_specs: "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.contractSpecs.html"
+  margen_mant_corto: 23252
+  margen_mant_largo: 26098
+  factor_margen_inicial: 1.10
+  fuente_margen: "CME Group: E-mini S&P 500 Futures Margins, contrato 12/2026 (Last Updated 27-oct-2026); margen inicial de cliente = 110 % del de mantenimiento"
+  url_margen: "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.margins.html"
+  nota_margen: "CME no publica el histórico de márgenes; se usa el vigente en la fecha de consulta como aproximación del de julio de 2026 y se mantiene fijo en USD por contrato."
+
+fundamentales:
+  MSFT:
+    - "Ingresos 4T del año fiscal 2026 (cerrado el 30-jun-2026): USD 90.000 millones (+18 %); utilidad operativa USD 40.600 millones (+18 %)."
+    - "Utilidad neta USD 35.800 millones (+31 %) y UPA diluida USD 4,81; incluye una ganancia de USD 3.200 millones por su inversión en Anthropic."
+    - "Microsoft Cloud USD 59.300 millones (+27 %); Azure y otros servicios de nube +43 %; Azure superó USD 100.000 millones anuales."
+    - "Más de 30 millones de puestos pagados de Microsoft 365 Copilot."
+    - "Guía 1T FY2027: Azure cerca de +45 % en moneda constante e ingresos de USD 89.850–90.950 millones (punto medio USD 90.400 millones)."
+  WMT:
+    - "Año fiscal 2026: ingresos de USD 713.200 millones (+4,7 %; +5,1 % a tipo de cambio constante)."
+    - "Comercio electrónico global +24 % y publicidad global +46 % (cerca de USD 6.400 millones)."
+    - "Utilidad operativa ajustada +5,4 % a tipo de cambio constante; ROA de 8,2 % y ROI de 15,1 %."
+    - "Recompra autorizada por USD 30.000 millones y dividendo anual elevado a USD 0,99 por acción."
+    - "Guía FY2027: ventas +3,5 % a +4,5 %, utilidad operativa ajustada +6 % a +8 % y UPA ajustada de USD 2,75–2,85."
+    - "1T del año fiscal 2027 (publicado el 21-may-2026): ingresos de USD 177.800 millones (+7,3 %; +5,9 % a tipo de cambio constante), comercio electrónico global +26 %, publicidad global +37 %, UPA ajustada USD 0,66; guía anual ratificada."
+  XOM:
+    - "Resultados 2025 (publicados el 30-ene-2026): utilidades de USD 28.844 millones, inferiores a las de 2024."
+    - "Flujo de caja operativo de USD 52.000 millones y distribuciones de USD 37.200 millones (USD 17.200 millones en dividendos y USD 20.000 millones en recompras)."
+    - "Mayor producción anual de Upstream en más de 40 años, impulsada por Guyana y la cuenca Pérmica."
+    - "Ahorros estructurales acumulados de USD 15.100 millones desde 2019."
+    - "1T 2026 (publicado el 1-may-2026): utilidades de USD 4.200 millones (USD 4.900 millones sin partidas identificadas, USD 1,16 por acción), flujo operativo de USD 8.700 millones (USD 13.800 millones sin depósitos de margen), distribuciones de USD 9.200 millones y producción de 4,6 millones de barriles equivalentes diarios, con récord trimestral en Guyana."
+
+fuentes:
+  - {dato: "Precios diarios, dividendos, ^GSPC, ^SP500TR, ES=F, ESZ26, ESH27, ^IRX, ^FVX, ^TNX", fuente: "Yahoo Finance, API chart v8 (consulta 27-oct-2026)", url: "https://finance.yahoo.com/"}
+  - {dato: "Curva par del Tesoro de EE. UU.", fuente: "U.S. Department of the Treasury, Daily Treasury Par Yield Curve Rates (consulta 27-oct-2026)", url: "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026"}
+  - {dato: "Especificaciones del E-mini S&P 500", fuente: "CME Group, Contract Specs (consulta 27-oct-2026)", url: "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.contractSpecs.html"}
+  - {dato: "Márgenes del E-mini S&P 500", fuente: "CME Group, Margins (Last Updated 27-oct-2026)", url: "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.margins.html"}
+  - {dato: "Universo S&P 500", fuente: "Slickcharts, S&P 500 Companies by Weight", url: "https://www.slickcharts.com/sp500"}
+  - {dato: "Resultados 4T FY2026 de Microsoft", fuente: "Microsoft Corporation (29-jul-2026), 'Microsoft Cloud and AI strength fuels fourth quarter results'; Redmond Magazine (30-jul-2026); MarketBeat (29-jul-2026)", url: "https://www.microsoft.com/en-us/Investor/earnings/FY-2026-Q4/press-release-webcast"}
+  - {dato: "Resultados 4T FY2026 de Walmart", fuente: "Walmart Inc. (19-feb-2026), 'Walmart releases Q4 FY26 earnings'", url: "https://corporate.walmart.com/news/2026/02/19/walmart-releases-q4-fy26-earnings"}
+  - {dato: "Resultados 2025 de ExxonMobil", fuente: "ExxonMobil (30-ene-2026), 'ExxonMobil announces 2025 results'", url: "https://investor.exxonmobil.com/company-information/press-releases/detail/1200/exxonmobil-announces-2025-results"}
+  - {dato: "Resultados 1T FY2027 de Walmart", fuente: "Walmart Inc. (21-may-2026), earnings release Q1 FY27 (Form 8-K)", url: "https://www.boardroomalpha.com/sec/wmt-8-k-2026-05-21-0000104169-26-000095/earningsreleasefy27q1.htm"}
+  - {dato: "Resultados 1T 2026 de ExxonMobil", fuente: "ExxonMobil (1-may-2026), 'ExxonMobil announces first-quarter 2026 results'", url: "https://investor.exxonmobil.com/company-information/press-releases/detail/1204/exxonmobil-announces-first-quarter-2026-results"}
+  - {dato: "Informe anual 2025 de ExxonMobil (Form 10-K)", fuente: "U.S. SEC, EDGAR", url: "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm"}
+  - {dato: "Informe anual FY2026 de Walmart (Form 10-K)", fuente: "Walmart Inc., 2026 Annual Report", url: "https://stock.walmart.com/_assets/_ef4b3350ef1127ae63b1dd51abb6cf31/walmart/db/950/9988/annual_report/Walmart+2026+Annual+Report.pdf"}
+  - {dato: "Segmentos de Microsoft", fuente: "EDGAR Tools, Microsoft revenue by segment (10-K)", url: "https://app.edgar.tools/companies/MSFT/disclosures/segments"}
+  - {dato: "Reacción y consenso de Azure (40,92 %)", fuente: "Reuters (29-jul-2026), 'Microsoft says cash will keep flowing from AI, shares rise'", url: "https://www.reuters.com/business/microsoft-tops-quarterly-cloud-growth-estimates-easing-spending-concerns-2026-07-29/"}

@@ -5,109 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pedir en dólares sin sufrir con la TRM · Forwards COP/USD para maquinaria amarilla</title>
 <meta name="description" content="Instrumentos derivados financieros: crédito en dólares, riesgo cambiario COP/USD y cobertura con forwards (informe interactivo).">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
-<script src="{{ plotly_js }}" charset="utf-8"></script>
-<script>
-Plotly.register({moduleType: 'locale', name: 'es', dictionary: {
-  'Autoscale': 'Autoescalar', 'Box Select': 'Selección rectangular', 'Download plot as a png': 'Descargar gráfico como PNG',
-  'Pan': 'Desplazar', 'Reset axes': 'Restablecer ejes', 'Zoom': 'Zoom', 'Zoom in': 'Acercar', 'Zoom out': 'Alejar',
-  'Toggle Spike Lines': 'Líneas guía', 'Show closest data on hover': 'Dato más cercano', 'Compare data on hover': 'Comparar datos',
-  'Reset view': 'Restablecer vista'},
-  format: {days: ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
-    shortDays: ['dom','lun','mar','mié','jue','vie','sáb'],
-    months: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
-    shortMonths: ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],
-    date: '%d/%m/%Y', decimal: ',', thousands: '.'}});
-</script>
-<style>
-:root{--navy:#0f3d5e;--navy2:#13507a;--amber:#e3a21a;--green:#2a9d8f;--red:#c8553d;--ink:#1f2937;--muted:#5b6b7f;
---line:#e2e8f0;--bg:#f6f8fb;--card:#ffffff;--soft:#eef4fa}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:18px}
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.62;font-size:16px}
-a{color:var(--navy2)}
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:272px;background:#0b2c44;color:#dbe7f3;padding:26px 20px;overflow-y:auto;z-index:10}
-.sidebar .brand{font-family:"Source Serif 4",Georgia,serif;font-size:19px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:4px}
-.sidebar .brand-sub{font-size:12px;color:#9fb6cc;margin-bottom:22px}
-.sidebar a{display:block;color:#cfe0f0;text-decoration:none;padding:6px 10px;border-radius:7px;font-size:14px}
-.sidebar a:hover{background:rgba(255,255,255,.08);color:#fff}
-.sidebar .grp{margin:16px 0 4px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#7f9bb5;padding-left:10px}
-.sidebar .sub{padding-left:22px;font-size:13.5px}
-.sidebar .stamp{margin-top:24px;font-size:11.5px;color:#8fa9c2;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
-main{margin-left:272px;padding:0 0 80px}
-.wrap{max-width:1120px;margin:0 auto;padding:0 40px}
-.hero{background:linear-gradient(135deg,#0b2c44 0%,#0f3d5e 55%,#1d5a85 100%);color:#fff;padding:54px 0 40px;position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(227,162,26,.35),rgba(227,162,26,0) 70%)}
-.eyebrow{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:#f5c862;font-weight:600}
-.hero h1{font-family:"Source Serif 4",Georgia,serif;font-size:38px;line-height:1.15;margin:12px 0 14px;max-width:880px}
-.hero .lead{font-size:17.5px;color:#d6e4f1;max-width:860px;margin:0 0 22px}
-.meta{display:flex;flex-wrap:wrap;gap:12px 34px;font-size:14px;color:#e6eef7;margin-bottom:28px}
-.meta span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#9fb6cc}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative;z-index:1}
-.kpi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:14px 16px}
-.kpi .l{font-size:12px;color:#b9cde0;text-transform:uppercase;letter-spacing:.06em}
-.kpi .v{font-size:24px;font-weight:700;margin:2px 0}
-.kpi .s{font-size:12.5px;color:#cfdeed}
-section{padding:44px 0 6px}
-section.part{padding-top:56px}
-.part-label{display:inline-block;background:var(--amber);color:#1b1b1b;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
-h2{font-family:"Source Serif 4",Georgia,serif;font-size:30px;line-height:1.2;margin:14px 0 8px;color:#0b2c44}
-h2 .num{color:var(--amber);margin-right:8px}
-h3{font-size:19px;margin:30px 0 8px;color:#0f3d5e}
-h4{font-size:16px;margin:20px 0 6px;color:#0f3d5e}
-p{margin:10px 0}
-.intro{font-size:17px;color:#334155}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0;box-shadow:0 1px 2px rgba(15,61,94,.04)}
-.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px 8px;margin:20px 0}
-.fig .cap{font-size:13.5px;color:var(--muted);padding:2px 6px 6px}
-.fig .cap b{color:#0b2c44}
-.callout{border-left:4px solid var(--amber);background:#fffaf0;padding:14px 18px;border-radius:0 12px 12px 0;margin:18px 0}
-.callout.blue{border-color:var(--navy2);background:#f0f6fc}
-.callout.green{border-color:var(--green);background:#effaf8}
-.callout.red{border-color:var(--red);background:#fdf3f1}
-.callout .t{font-weight:700;color:#0b2c44;display:block;margin-bottom:4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.mini{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.mini .l{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.mini .v{font-size:22px;font-weight:700;color:#0b2c44}
-.mini .s{font-size:13px;color:var(--muted)}
-.table-wrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:12px;background:#fff}
-table.data{border-collapse:collapse;width:100%;font-size:13.5px}
-table.data caption{caption-side:bottom;text-align:left;font-size:12.5px;color:var(--muted);padding:8px 12px}
-table.data th{background:#0f3d5e;color:#fff;font-weight:600;padding:9px 10px;font-size:12.5px;vertical-align:bottom}
-table.data td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:top}
-table.data tbody tr:nth-child(even){background:#f9fbfd}
-table.data tr.hl td{background:#fff6dd}
-table.compact td,table.compact th{padding:6px 8px;font-size:12.8px}
-table.kv td:first-child{font-weight:600;color:#0b2c44;width:30%}
-table.narrow{max-width:640px}
-.up{color:var(--red);font-weight:600;white-space:nowrap}
-.down{color:var(--green);font-weight:600;white-space:nowrap}
-.flat{color:#a16207;font-weight:600;white-space:nowrap}
-.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:var(--soft);color:var(--navy)}
-ul.tight li{margin:4px 0}
-.formula{background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:6px 14px;margin:14px 0;overflow-x:auto}
-.timeline{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:16px 0 6px}
-.timeline div{text-align:center;font-size:12px;padding:8px 2px;border-radius:6px;background:#e2e8f0;color:#334155}
-.timeline div.h{background:#2a9d8f;color:#fff;font-weight:600}
-.timeline-legend{font-size:12.5px;color:var(--muted)}
-.toc-mobile{display:none}
-footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
-@media (max-width:1100px){.sidebar{display:none}main{margin-left:0}.kpis{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr 1fr}}
-@media (max-width:720px){.wrap{padding:0 18px}.hero h1{font-size:28px}.kpis,.grid2,.grid3{grid-template-columns:1fr}}
+{% include "_head.html.j2" %}
 </style>
 </head>
 <body>
 <nav class="sidebar">
   <div class="brand">Forward de divisas COP/USD</div>
   <div class="brand-sub">Crédito en USD para maquinaria amarilla</div>
+  <div class="parts"><a class="on" href="index.html">Parte 1 · Forwards</a><a href="parte2.html">Parte 2 · Futuros</a></div>
   <a href="#inicio">Inicio</a>
   <a href="#resumen">El resumen, en plata blanca</a>
   <div class="grp">Parte A · Crédito y riesgo (35 %)</div>
@@ -129,6 +34,7 @@ footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);font-size
 <main>
 <header class="hero" id="inicio">
   <div class="wrap">
+    <div class="part-switch"><a href="parte2.html">Ir a la Parte 2: cobertura con futuros sobre el S&amp;P 500 →</a></div>
     <div class="eyebrow">Instrumentos derivados financieros · Trabajo semestral · Parte 1</div>
     <h1>Pedir prestado en dólares para maquinaria amarilla… y no sufrir con la TRM: cobertura con forwards COP/USD</h1>
     <p class="lead">En este trabajo financiamos una máquina de {{ k.machine }} con un crédito en Estados Unidos, vemos cuánto nos puede pegar la devaluación del peso en el bolsillo y probamos si cuatro forwards anuales (sobre el 75 % de lo que quedaría debiendo al cierre del año 6) alcanzan para dormir más tranquilos.</p>
@@ -183,7 +89,7 @@ footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);font-size
   <p class="intro">Seamos honestos: nadie tiene la bola de cristal para decir la TRM exacta en un año. Lo que sí podemos hacer (y es lo que hacemos aquí) es poner sobre la mesa todas las fuerzas que jalan al peso para un lado y para el otro, armar un escenario central con su historia bien contada y preparar dos alternativas por si acaso. Esos tres escenarios son luego el combustible de las simulaciones de la A.3 y de toda la Parte B.</p>
 
   <h3>Arranquemos por hoy: peso fuerte, pero con los pies de barro</h3>
-  <p>El 15 de octubre de 2026 la TRM está en <b>{{ k.s0 }}</b> pesos por dólar. Empezó el año en {{ k.inicio_2026 }} y hace doce meses andaba en {{ k.hace_1_anio }}: en cristiano, el peso se apreció {{ k.var_anio_abs }} en el año y {{ k.var_12m_abs }} en doce meses. Pero que no nos engañe el promedio, porque el viaje fue tipo montaña rusa: pegó un brinco a {{ k.max_2026 }} el {{ k.fecha_max_2026 }}, cuando estalló la guerra en el golfo Pérsico, y después bajó hasta {{ k.min_2026 }} el {{ k.fecha_min_2026 }}. Desde que se posesionó el nuevo presidente el 7 de agosto (ese día la TRM era {{ k.posesion }}) se ha movido {{ k.var_posesion }}. A septiembre, el peso era el que más se había apreciado entre las monedas emergentes en 2026 (12,5 %, según Banco Agrario)… pero justo ese mes rebotó a niveles de julio y la volatilidad trimestral anualizada subió a 15,3 %. O sea: fuerte, sí, pero nervioso.</p>
+  <p>El 15 de octubre de 2026 la TRM está en <b>{{ k.s0 }}</b> pesos por dólar. Empezó el año en {{ k.inicio_2026 }} y hace doce meses andaba en {{ k.hace_1_anio }}: en cristiano, la TRM cayó {{ k.var_anio_abs }} en el año y {{ k.var_12m_abs }} en doce meses (vista desde el peso, una apreciación de {{ k.peso_anio }} y {{ k.peso_12m }}). Pero que no nos engañe el promedio, porque el viaje fue tipo montaña rusa: pegó un brinco a {{ k.max_2026 }} el {{ k.fecha_max_2026 }}, cuando estalló la guerra en el golfo Pérsico, y después bajó hasta {{ k.min_2026 }} el {{ k.fecha_min_2026 }}. Desde que se posesionó el nuevo presidente el 7 de agosto (ese día la TRM era {{ k.posesion }}) se ha movido {{ k.var_posesion }}. A septiembre, el peso era el que más se había apreciado entre las monedas emergentes en 2026 (12,5 %, según Banco Agrario)… pero justo ese mes rebotó a niveles de julio y la volatilidad trimestral anualizada subió a 15,3 %. O sea: fuerte, sí, pero nervioso.</p>
   <div class="fig">{{ fig.trm_history }}<div class="cap"><b>Gráfico A.1.1.</b> TRM diaria y Brent (promedio mensual), 2015–2026. Con los botones pueden cambiar el horizonte y curiosear por años. Fuente: SFC (datos.gov.co) y EIA/FRED. Eventos: elaboración propia.</div></div>
 
   <h3>1. Tasas de interés: el carry trade está viviendo de prestado</h3>
@@ -258,7 +164,7 @@ footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);font-size
   <h3>¿Quién tiene la culpa del sobrecosto: los intereses o el dólar?</h3>
   <p>Para no hablar por hablar, desarmamos cada cuota en pesos en cuatro pedacitos exactos:</p>
   <div class="formula">$$\underbrace{A\,S_t}_{\text{cuota COP}} = \underbrace{K_t S_0}_{\text{capital a TRM base}} + \underbrace{I_t S_0}_{\text{interés a TRM base}} + \underbrace{K_t (S_t - S_0)}_{\text{efecto cambiario s/ capital}} + \underbrace{I_t (S_t - S_0)}_{\text{efecto cambiario s/ interés}}$$</div>
-  <p>El resultado es lapidario. En el escenario central, de un costo financiero total de {{ k.a3_central.costo }}, {{ k.a3_central.int }} son intereses calculados a la TRM de hoy ({{ k.a3_central.share_int }}) y {{ k.a3_central.fx_total }} son puro efecto cambiario ({{ k.a3_central.share_fx }}). Y dentro de ese efecto cambiario, {{ k.a3_central.fxk }} vienen de devolver el capital más caro ({{ k.a3_central.share_fxk_of_fx }}) y {{ k.a3_central.fxi }} de pagar intereses también más caros. En resumen: los intereses fijan el piso ({{ k.a3_base.costo }}}, igualito en todos los escenarios), pero <b>toda la diferencia entre escenarios es culpa de la tasa de cambio</b>. Pedimos prestado a {{ k.s0 }} y devolvemos a un dólar más caro. Y entre más avance el crédito, peor: al final las cuotas son casi puro capital y la TRM ya acumuló años de depreciación.</p>
+  <p>El resultado es lapidario. En el escenario central, de un costo financiero total de {{ k.a3_central.costo }}, {{ k.a3_central.int }} son intereses calculados a la TRM de hoy ({{ k.a3_central.share_int }}) y {{ k.a3_central.fx_total }} son puro efecto cambiario ({{ k.a3_central.share_fx }}). Y dentro de ese efecto cambiario, {{ k.a3_central.fxk }} vienen de devolver el capital más caro ({{ k.a3_central.share_fxk_of_fx }}) y {{ k.a3_central.fxi }} de pagar intereses también más caros. En resumen: los intereses fijan el piso ({{ k.a3_base.costo }}, igualito en todos los escenarios), pero <b>toda la diferencia entre escenarios es culpa de la tasa de cambio</b>. Pedimos prestado a {{ k.s0 }} y devolvemos a un dólar más caro. Y entre más avance el crédito, peor: al final las cuotas son casi puro capital y la TRM ya acumuló años de depreciación.</p>
   <div class="grid2">
     <div class="fig">{{ fig.decomposition }}<div class="cap"><b>Gráfico A.3.2.</b> Descomposición trimestral de la cuota en pesos (arriba pueden cambiar de escenario).</div></div>
     <div class="fig">{{ fig.waterfall }}<div class="cap"><b>Gráfico A.3.3.</b> Del capital desembolsado al total pagado en pesos (COP millones).</div></div>
@@ -400,7 +306,7 @@ footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);font-size
   <ul class="tight">
     <li><b>Amarrar todo de una al cierre del año 6 (strip a 1–4 años):</b> baja la volatilidad condicional a {{ k.strip_cond }} ({{ k.strip_cond_chg }} menos), pero nos cuesta en promedio {{ k.strip_cost }} porque pagamos la prima forward compuesta de una vez y borramos el riesgo de nivel de los años 7–10. Ojo al comparar: su desviación presupuestal ({{ k.strip_dev }}) se mide contra un presupuesto fijado en el año 6 <i>para los cuatro años</i>, una vara mucho más alta que presupuestar año a año.</li>
     <li><b>Rolling, pero con cuatro vencimientos trimestrales:</b> se acaba el desfase de calendario y la desviación presupuestal baja a {{ k.qm_dev }}, con un costo esperado de {{ k.qm_cost }}. Simple y efectivo.</li>
-    <li><b>¿El 75 % está bien medido?</b> Con un solo vencimiento al año, la exposición “de verdad” a la TRM de cierre equivale a \(\beta = \tfrac{3+6+9+12}{12}\div 4 = 0{,}625\), o sea {{ k.minvar }} de los pagos del año. Cubrir 75 % nos deja la desviación en {{ k.roll_dev }} (el mínimo posible sería {{ k.dev_hr625 }}), y si nos fuéramos al 100 % la embarraríamos hasta {{ k.dev_hr100 }}. Aclaración importante: el 75 % no supera la deuda ni es especulativo, pero sí se pasa un tris frente a la TRM de fin de año. Y ese “exceso” tiene un efecto colateral bacano: como la TRM con la que cerramos un año es la base del forward siguiente, pasarnos un poquito nos ayuda a compensar el riesgo de nivel del año que viene. Por eso el diseño anual baja más la volatilidad condicional ({{ k.roll_cond }}) que la versión trimestral ({{ k.qm_cond }}), aunque cuide un poco menos el presupuesto de cada año puntual. Última advertencia de la vida real: si algún día prepagaramos el crédito, los forwards vivos quedarían huérfanos y tocaría cerrarlos de inmediato para no quedarnos con una apuesta cambiaria sin querer.</li>
+    <li><b>¿El 75 % está bien medido?</b> Con un solo vencimiento al año, la exposición “de verdad” a la TRM de cierre equivale a \(\beta = \tfrac{3+6+9+12}{12}\div 4 = 0{,}625\), o sea {{ k.minvar }} de los pagos del año. Cubrir 75 % nos deja la desviación en {{ k.roll_dev }} (el mínimo posible sería {{ k.dev_hr625 }}), y si nos fuéramos al 100 % la embarraríamos hasta {{ k.dev_hr100 }}. Aclaración importante: el 75 % no supera la deuda ni es especulativo, pero sí se pasa un tris frente a la TRM de fin de año. Y ese “exceso” tiene un efecto colateral bacano: como la TRM con la que cerramos un año es la base del forward siguiente, pasarnos un poquito nos ayuda a compensar el riesgo de nivel del año que viene. Por eso el diseño anual baja más la volatilidad condicional ({{ k.roll_cond }}) que la versión trimestral ({{ k.qm_cond }}), aunque cuide un poco menos el presupuesto de cada año puntual. Última advertencia de la vida real: si algún día prepagáramos el crédito, los forwards vivos quedarían huérfanos y tocaría cerrarlos de inmediato para no quedarnos con una apuesta cambiaria sin querer.</li>
   </ul>
 
   <h3>¿Qué pasa si las tasas no se comportan como esperamos?</h3>

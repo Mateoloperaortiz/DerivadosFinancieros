@@ -1,4 +1,4 @@
-"""Genera docs/index.html: informe interactivo con resultados (sin código) para GitHub Pages.
+"""Genera docs/index.html (Parte 1) y docs/parte2.html (Parte 2): informes interactivos para GitHub Pages.
 
 Uso: uv run python -m derivados.report.build
 """
@@ -62,6 +62,8 @@ def key_numbers(R: dict) -> dict:
     k["var_12m"] = pct(st["var_12m"], 1, True)
     k["var_anio_abs"] = pct(abs(st["var_anio"]), 1)
     k["var_12m_abs"] = pct(abs(st["var_12m"]), 1)
+    k["peso_anio"] = pct(1 / (1 + st["var_anio"]) - 1, 1)
+    k["peso_12m"] = pct(1 / (1 + st["var_12m"]) - 1, 1)
     for name in ("inicio_2026", "hace_1_anio", "max_2026", "min_2026", "posesion", "segunda_vuelta",
                  "post_segunda_vuelta", "max_hist"):
         k[name] = num(st[name], 2)
@@ -270,6 +272,9 @@ def main() -> None:
     OUTPUT.write_text(render(R), encoding="utf-8")
     (OUTPUT.parent / ".nojekyll").write_text("")
     print(f"Informe generado en {OUTPUT.relative_to(ROOT)} ({OUTPUT.stat().st_size / 1024:,.0f} KB)")
+    from . import build_parte2
+
+    build_parte2.main()
 
 
 if __name__ == "__main__":

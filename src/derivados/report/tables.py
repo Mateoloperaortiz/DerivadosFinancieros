@@ -272,6 +272,23 @@ def sens_d(R: dict) -> str:
                       cls="compact")
 
 
+RATE_LABELS = {
+    "banrep": "Tasa de política del Banco de la República",
+    "ibr_overnight": "IBR overnight",
+    "ibr_1m": "IBR a 1 mes",
+    "dtf_90": "DTF a 90 días",
+    "tes_nov2027": "TES tasa fija nov-2027",
+    "tes_jun2032": "TES tasa fija jun-2032 (10 años)",
+    "tes_oct2034": "TES tasa fija oct-2034",
+    "tes_oct2050": "TES tasa fija oct-2050",
+    "sofr": "SOFR overnight",
+    "sofr_swap_1y": "Swap SOFR a 1 año",
+    "ust_1y": "Tesoro de EE. UU. a 1 año",
+    "ust_10y": "Tesoro de EE. UU. a 10 años",
+    "fed_rango": "Rango de los fondos federales (Fed)",
+}
+
+
 def sources(R: dict) -> str:
     inp = R["inp"]
     items = [
@@ -282,11 +299,12 @@ def sources(R: dict) -> str:
         ("Puntos forward COP", inp["forward_mercado"]["fuente"], inp["forward_mercado"]["url"]),
         ("Operaciones forward por tramo", inp["forward_mercado"]["tradition"]["fuente"], inp["forward_mercado"]["tradition"]["url"]),
         ("Curva de devaluaciones implícitas", inp["forward_mercado"]["banco_agrario"]["fuente"], inp["forward_mercado"]["banco_agrario"]["url"]),
-        *[(k.replace("_", " ").upper() if len(k) < 6 else k.replace("_", " ").capitalize(), v["fuente"], v.get("url"))
+        *[(RATE_LABELS.get(k, k), v["fuente"], v.get("url"))
           for k, v in inp["tasas"].items() if isinstance(v, dict) and "fuente" in v and k not in ("fed_sep_2026_09",)],
-        ("Proyecciones de la Fed", inp["tasas"]["fed_sep_2026_09"]["fuente"], None),
+        ("Proyecciones de la Fed", inp["tasas"]["fed_sep_2026_09"]["fuente"], "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"),
         ("Decisiones de política monetaria", inp["banrep_decisiones"]["fuente"], None),
-        ("Inflación Colombia", inp["inflacion"]["colombia_septiembre"]["fuente"], None),
+        ("Inflación Colombia", inp["inflacion"]["colombia_septiembre"]["fuente"],
+         "https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc"),
         ("Calificaciones soberanas", inp["calificaciones"]["fuente"], inp["calificaciones"]["url"]),
         ("Series de EE. UU. (Prime, SOFR, Fed, Tesoros, Brent, IPC)", "FRED: Federal Reserve Bank of St. Louis (descarga del 15-oct-2026)",
          "https://fred.stlouisfed.org"),

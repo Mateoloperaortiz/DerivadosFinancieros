@@ -57,11 +57,11 @@ tasas:
   tes_jun2032: {valor: 0.12924, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores: Informe semanal de renta fija (13-oct-2026)", url: "https://www.accivalores.com/wp-content/uploads/Informe-Semanal-rf-13.10.2026.pdf"}
   tes_oct2034: {valor: 0.12920, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores: Informe semanal de renta fija (13-oct-2026)"}
   tes_oct2050: {valor: 0.12940, forma: "E.A.", fecha: "2026-10-09", fuente: "Acciones & Valores: Informe semanal de renta fija (13-oct-2026)"}
-  sofr: {valor: 0.0388, forma: "Act/360 overnight", fecha: "2026-10-14", fuente: "Federal Reserve Bank of New York vía FRED (SOFR)"}
+  sofr: {valor: 0.0388, forma: "Act/360 overnight", fecha: "2026-10-14", fuente: "Federal Reserve Bank of New York vía FRED (SOFR)", url: "https://fred.stlouisfed.org/series/SOFR"}
   sofr_swap_1y: {valor: 0.043067, forma: "Act/360, tasa fija par a 1 año", fecha: "2026-10-01", fuente: "Eris Futures: SOFR par coupon curve EOD", url: "https://files.erisfutures.com/ftp/Eris_20261001_EOD_ParCouponCurve_SOFR.csv"}
-  ust_1y: {valor: 0.0453, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS1)"}
-  ust_10y: {valor: 0.0519, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS10)"}
-  fed_rango: {inferior: 0.0375, superior: 0.0400, vigencia: "2026-09-17", fuente: "FOMC statement, 16-sep-2026 (alza de 25 pb, votación 12-0)"}
+  ust_1y: {valor: 0.0453, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS1)", url: "https://fred.stlouisfed.org/series/DGS1"}
+  ust_10y: {valor: 0.0519, forma: "bond-equivalent (semestral)", fecha: "2026-10-14", fuente: "Federal Reserve H.15 vía FRED (DGS10)", url: "https://fred.stlouisfed.org/series/DGS10"}
+  fed_rango: {inferior: 0.0375, superior: 0.0400, vigencia: "2026-09-17", fuente: "FOMC statement, 16-sep-2026 (alza de 25 pb, votación 12-0)", url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"}
   fed_sep_2026_09:
     fuente: "Federal Reserve: Summary of Economic Projections, 16-sep-2026 (medianas)"
     fondos_federales: {"2026": 4.1, "2027": 4.1, "2028": 3.9, "2029": 3.6, "Largo plazo": 3.2}
