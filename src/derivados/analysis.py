@@ -17,7 +17,7 @@ SEED = 20261015
 EXTREME = 0.20  # umbral de pérdida extrema: TRM al vencimiento ±20 % frente a la tasa pactada
 BUDGET_TOL = 0.10  # desviación presupuestal tolerada
 DISTS = {"normal": "Normal", "t": "t de Student"}
-STRATS = {"sin": "Sin cobertura", "con": "Con forwards 75 % (años 7–10)"}
+STRATS = {"sin": "Sin cobertura", "con": "Con forwards 75 % (años 7–10)"}  # espacio duro: el % no se parte
 HEDGE_YEARS = (7, 8, 9, 10)
 QUARTERS = np.arange(1, 41)
 
@@ -229,8 +229,10 @@ def part_b1(inp: dict, s0: float, d_lr: float) -> dict:
             }
         )
     cip = pd.DataFrame(cip)
-    rc_grid = np.round(np.arange(0.10, 0.1301, 0.005), 4)
-    ru_grid = np.round(np.arange(0.035, 0.0501, 0.0025), 4)
+    # Malla fina (pasos de 0,1 pp y 0,05 pp) para que la superficie del Gráfico B.1.2 sea continua y cada par de
+    # tasas de mercado quede sobre su propio color.
+    rc_grid = np.round(np.linspace(0.10, 0.13, 31), 4)
+    ru_grid = np.round(np.linspace(0.035, 0.05, 31), 4)
     heat = np.array([[fw.cip_forward(s0, rc, ru, 252) for rc in rc_grid] for ru in ru_grid])
 
     theo_curve = []

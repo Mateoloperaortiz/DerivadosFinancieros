@@ -230,6 +230,7 @@ class Market:
     beta: float         # beta del portafolio
     resid_vol: float    # volatilidad idiosincrática anual del portafolio
     basis_sd: float     # error de base
+    basis_cal: float = 0.0  # parte del error de base que el contrato nuevo no comparte con el viejo el día del roll
 
     @property
     def mu(self) -> float:
@@ -238,6 +239,11 @@ class Market:
 
 def fut_price(S, tau, rf: float, q: float, noise=0.0):
     return S * np.exp((np.log1p(rf) - np.log1p(q)) * tau) * (1 + noise)
+
+
+def on_tick(price, tick: float):
+    """Precio en la grilla del contrato: el E-mini cotiza en pasos de ``tick`` puntos (0,25), como los observados."""
+    return np.round(np.asarray(price) / tick) * tick
 
 
 def build_timeline(cfg: dict) -> pd.DataFrame:
@@ -282,6 +288,7 @@ def simulate(cfg: dict, tl: pd.DataFrame, mk: Market, n: int, seed: int, s_obs: 
         Fo[:, i], Fn[:, i] = s_obs["F"][i]
     m = np.log1p(mk.mu)
     rf_dt = per_period(mk.rf, dt)
+    tick = cfg["futuro"]["tick_puntos"]
     for i in range(last_i + 1, T):
         eps_m = rng.standard_normal(n)
         eps_e = rng.standard_normal(n)
@@ -291,9 +298,19 @@ def simulate(cfg: dict, tl: pd.DataFrame, mk: Market, n: int, seed: int, s_obs: 
         Rp = rf_dt + mk.beta * (Rm - rf_dt) + mk.resid_vol * np.sqrt(dt) * eps_e
         V[:, i] = V[:, i - 1] * (1 + Rp)
         r = tl.iloc[i]
-        Fo[:, i] = fut_price(S[:, i], r["tau_old"], mk.rf, mk.q, mk.basis_sd * rng.standard_normal(n))
-        Fn[:, i] = (fut_price(S[:, i], r["tau_new"], mk.rf, mk.q, mk.basis_sd * rng.standard_normal(n))
-                    if r["roll"] else Fo[:, i])
+        # El día del roll los dos contratos comparten casi todo el error de base (en los datos, el de ESZ26 y el de
+        # ESH27 se mueven juntos y su diferencia tiene un desvío de unos 2 puntos): así el spread entre trimestres queda
+        # cerca del acarreo, como el real, en vez de saltar decenas de puntos. Se toma la segunda normal solo en los
+        # rolls, como antes, para no mover el resto de la secuencia aleatoria (índice, portafolio y riqueza sin cubrir).
+        # Los precios del futuro van al tick después de sacar las normales: la secuencia aleatoria no cambia y la G/P de
+        # cada mes queda en múltiplos de USD 12,50 por contrato, como en la cámara.
+        z = rng.standard_normal(n)
+        Fo[:, i] = on_tick(fut_price(S[:, i], r["tau_old"], mk.rf, mk.q, mk.basis_sd * z), tick)
+        if r["roll"]:
+            zc = rng.standard_normal(n)
+            Fn[:, i] = on_tick(fut_price(S[:, i], r["tau_new"], mk.rf, mk.q, mk.basis_sd * (z + mk.basis_cal * zc)), tick)
+        else:
+            Fn[:, i] = Fo[:, i]
     return {"S": S, "V": V, "Fo": Fo, "Fn": Fn}
 
 
@@ -302,7 +319,7 @@ def run_hedge(tl: pd.DataFrame, sim: dict, beta: float, n0: int, side: int, mult
     """Cuenta de margen con liquidación mensual. side = -1 corto, +1 largo, 0 sin cobertura."""
     V, Fo, Fn = sim["V"], sim["Fo"], sim["Fn"]
     npaths, T = V.shape
-    im = mm * im_factor
+    im = round(mm * im_factor)  # margen inicial por contrato en dólares enteros, como lo publica CME
     N = np.full(npaths, n0, dtype=float)
     Ns = np.zeros((npaths, T))
     Ns[:, 0] = N
@@ -434,7 +451,8 @@ def build(n_paths: int | None = None) -> dict:
              "V": {i: v_obs(tl.loc[i, "fecha"]) for i in range(last_i + 1)},
              "F": {i: (f0, f0) if i == 0 else fobs[i] for i in range(last_i + 1)}}
     mkt = Market(rf=rf_h, erp=erp, q=q_idx, sigma=bt["mkt_vol"], beta=beta_p,
-                 resid_vol=bt["table"]["Portafolio"]["resid_vol"], basis_sd=sup["ruido_base"])
+                 resid_vol=bt["table"]["Portafolio"]["resid_vol"], basis_sd=sup["ruido_base"],
+                 basis_cal=sup["ruido_calendario"])
     sim = simulate(cfg, tl, mkt, n_paths, sup["semilla"], s_obs, last_i)
 
     strategies = {
@@ -481,7 +499,7 @@ def build(n_paths: int | None = None) -> dict:
     sens_erp = []
     for e in sup["prima_sensibilidad"]:
         mk_e = Market(rf=rf_h, erp=e, q=q_idx, sigma=mkt.sigma, beta=beta_p, resid_vol=mkt.resid_vol,
-                      basis_sd=mkt.basis_sd)
+                      basis_sd=mkt.basis_sd, basis_cal=mkt.basis_cal)
         sim_e = simulate(cfg, tl, mk_e, n_paths, sup["semilla"], s_obs, last_i)
         hu = run_hedge(tl, sim_e, beta_p, n_cont, 0, mult, mm_s, imf)
         hs = run_hedge(tl, sim_e, beta_p, n_cont, -1, mult, mm_s, imf)
@@ -521,7 +539,7 @@ def build(n_paths: int | None = None) -> dict:
         sd_h = np.sqrt(res**2 * mkt.sigma**2 + mkt.resid_vol**2)
         sens_beta.append({"beta": b, "n_star": ns, "n": nr, "exp_sist": b * v0, "dv_1pct": b * v0 * 0.01,
                           "dv_m10": -b * v0 * 0.10, "beta_res": res, "sd_u": sd_u, "sd_h": sd_h,
-                          "red_var": 1 - sd_h**2 / sd_u**2, "mm_total": nr * mm_s, "im_total": nr * mm_s * imf,
+                          "red_var": 1 - sd_h**2 / sd_u**2, "mm_total": nr * mm_s, "im_total": nr * round(mm_s * imf),
                           "Eu": rf_h + b * erp, "Eh": rf_h + res * erp})
     sens_beta = pd.DataFrame(sens_beta)
     change_beta = [{"objetivo": b_t, "n": (b_t - beta_p) * v0 / (f0 * mult),
@@ -562,14 +580,15 @@ def build(n_paths: int | None = None) -> dict:
     def margin_stats(h: dict, mm: float) -> dict:
         calls = h["call"][:, 1:]
         dep = h["dep"][:, 1:].sum(axis=1)
-        cushion = (imf - 1) * mm
+        im = round(mm * imf)
+        cushion = im - mm
         sweep = (h["pnl"][:, 1:] < -cushion * h["N"][:, :-1]).mean()
         return {"p_any": float(calls.any(axis=1).mean()), "n_calls": float(calls.sum(axis=1).mean()),
                 "n_rdep": float(h["rdep"][:, 1:].sum(axis=1).mean()),
                 "n_calls_p95": float(np.percentile(calls.sum(axis=1), 95)), "dep_mean": float(dep.mean()),
                 "dep_p50": float(np.percentile(dep, 50)), "dep_p95": float(np.percentile(dep, 95)),
                 "p_month_call": float(calls.mean()), "sweep_share": float(sweep),
-                "im0": n_cont * mm * imf, "mm0": n_cont * mm}
+                "im0": n_cont * im, "mm0": n_cont * mm}
 
     mstats = {"corto": margin_stats(strategies["corto"], mm_s), "largo": margin_stats(strategies["largo"], mm_l)}
     yrs_sim = (tl["fecha"].iloc[-1] - tl["fecha"].iloc[last_i]).days / 365.25

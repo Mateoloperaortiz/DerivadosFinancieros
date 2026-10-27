@@ -14,12 +14,13 @@ MESES_LARGOS = [
 
 
 def num(x: float, d: int = 0) -> str:
+    """Cifra con miles en punto, decimales en coma y signo menos tipográfico (−), igual que en los ejes de Plotly."""
     if x is None or (isinstance(x, float) and math.isnan(x)):
         return "s. d."
     if round(x, d) == 0:
         x = 0.0
     s = f"{x:,.{d}f}"
-    return s.replace(",", "§").replace(".", ",").replace("§", ".")
+    return s.replace(",", "§").replace(".", ",").replace("§", ".").replace("-", MINUS)
 
 
 def pct(x: float, d: int = 2, signed: bool = False) -> str:
@@ -30,6 +31,7 @@ def pct(x: float, d: int = 2, signed: bool = False) -> str:
 
 
 NBSP = "\u00a0"  # espacio que no se parte: evita que "%" o "COP" queden solos al final de una línea
+MINUS = "\N{MINUS SIGN}"  # signo menos tipográfico, el mismo de los ejes; texnum lo devuelve a "-" para KaTeX
 
 
 def cop(x: float, d: int = 0) -> str:
@@ -49,7 +51,7 @@ def usd(x: float, d: int = 2) -> str:
 
 
 def pb(x: float, d: int = 0) -> str:
-    return f"{num(x, d)} pb"
+    return f"{num(x, d)}{NBSP}pb"
 
 
 def fecha(ts, largo: bool = False) -> str:
@@ -65,8 +67,9 @@ def mes(ts) -> str:
 
 
 def texnum(s: str) -> str:
-    """Protege la coma decimal en LaTeX (KaTeX añade espacio tras una coma en modo matemático)."""
-    return s.replace(",", "{,}")
+    """Protege la coma decimal en LaTeX (KaTeX añade espacio tras una coma en modo matemático) y entrega el signo
+    menos como "-", que KaTeX ya dibuja como −."""
+    return s.replace(",", "{,}").replace(MINUS, "-")
 
 
 FILTERS = {"num": num, "pct": pct, "cop": cop, "mcop": mcop, "mm": mm, "usd": usd, "pb": pb, "fecha": fecha,

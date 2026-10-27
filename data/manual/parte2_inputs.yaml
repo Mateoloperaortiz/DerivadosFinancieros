@@ -37,6 +37,7 @@ supuestos:
   prima_riesgo_mercado: 0.05     # supuesto de prima de riesgo de mercado de largo plazo (sensibilidad 3 %–7 %)
   prima_sensibilidad: [0.03, 0.05, 0.07]
   ruido_base: 0.0025              # desviación del error de base ln(F/S) frente a la paridad (estimada con ESZ26/ESH27)
+  ruido_calendario: 0.1           # parte del error de base que no comparten el contrato viejo y el nuevo el día del roll: el spread ESH27 − ESZ26 tuvo un desvío de unos 2 puntos desde ago-2026 (≈ 0,1 × 0,25 % × 8.300)
   n_trayectorias: 10000
   semilla: 20260730
 
@@ -46,6 +47,7 @@ futuro:
   subyacente: "Índice S&P 500 (^GSPC)"
   multiplicador: 50
   tick: "0,25 puntos del índice = USD 12,50 por contrato"
+  tick_puntos: 0.25               # paso mínimo de precio (CME Contract Specs): los precios simulados del futuro se redondean a él
   vencimientos: "Trimestrales: marzo, junio, septiembre y diciembre (21 trimestres consecutivos listados)"
   ultimo_dia: "El tercer viernes del mes del contrato, a las 9:30 a. m. ET"
   liquidacion: "Financiera (en efectivo) contra la Special Opening Quotation (SOQ) del S&P 500 del tercer viernes"
@@ -86,12 +88,12 @@ fuentes:
   - {dato: "Especificaciones del E-mini S&P 500", fuente: "CME Group, Contract Specs (consulta 27-oct-2026)", url: "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.contractSpecs.html"}
   - {dato: "Márgenes del E-mini S&P 500", fuente: "CME Group, Margins (Last Updated 27-oct-2026)", url: "https://www.cmegroup.com/markets/equities/sp/e-mini-sandp500.margins.html"}
   - {dato: "Universo S&P 500", fuente: "Slickcharts, S&P 500 Companies by Weight", url: "https://www.slickcharts.com/sp500"}
-  - {dato: "Resultados 4T FY2026 de Microsoft", fuente: "Microsoft Corporation (29-jul-2026), 'Microsoft Cloud and AI strength fuels fourth quarter results'; Redmond Magazine (30-jul-2026); MarketBeat (29-jul-2026)", url: "https://www.microsoft.com/en-us/Investor/earnings/FY-2026-Q4/press-release-webcast"}
-  - {dato: "Resultados 4T FY2026 de Walmart", fuente: "Walmart Inc. (19-feb-2026), 'Walmart releases Q4 FY26 earnings'", url: "https://corporate.walmart.com/news/2026/02/19/walmart-releases-q4-fy26-earnings"}
-  - {dato: "Resultados 2025 de ExxonMobil", fuente: "ExxonMobil (30-ene-2026), 'ExxonMobil announces 2025 results'", url: "https://investor.exxonmobil.com/company-information/press-releases/detail/1200/exxonmobil-announces-2025-results"}
+  - {dato: "Resultados 4T FY2026 de Microsoft", fuente: "Microsoft Corporation (29-jul-2026), “Microsoft Cloud and AI strength fuels fourth quarter results”; Redmond Magazine (30-jul-2026); MarketBeat (29-jul-2026)", url: "https://www.microsoft.com/en-us/Investor/earnings/FY-2026-Q4/press-release-webcast"}
+  - {dato: "Resultados 4T FY2026 de Walmart", fuente: "Walmart Inc. (19-feb-2026), “Walmart releases Q4 FY26 earnings”", url: "https://corporate.walmart.com/news/2026/02/19/walmart-releases-q4-fy26-earnings"}
+  - {dato: "Resultados 2025 de ExxonMobil", fuente: "ExxonMobil (30-ene-2026), “ExxonMobil announces 2025 results”", url: "https://investor.exxonmobil.com/company-information/press-releases/detail/1200/exxonmobil-announces-2025-results"}
   - {dato: "Resultados 1T FY2027 de Walmart", fuente: "Walmart Inc. (21-may-2026), earnings release Q1 FY27 (Form 8-K)", url: "https://www.boardroomalpha.com/sec/wmt-8-k-2026-05-21-0000104169-26-000095/earningsreleasefy27q1.htm"}
-  - {dato: "Resultados 1T 2026 de ExxonMobil", fuente: "ExxonMobil (1-may-2026), 'ExxonMobil announces first-quarter 2026 results'", url: "https://investor.exxonmobil.com/company-information/press-releases/detail/1204/exxonmobil-announces-first-quarter-2026-results"}
+  - {dato: "Resultados 1T 2026 de ExxonMobil", fuente: "ExxonMobil (1-may-2026), “ExxonMobil announces first-quarter 2026 results”", url: "https://investor.exxonmobil.com/company-information/press-releases/detail/1204/exxonmobil-announces-first-quarter-2026-results"}
   - {dato: "Informe anual 2025 de ExxonMobil (Form 10-K)", fuente: "U.S. SEC, EDGAR", url: "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm"}
   - {dato: "Informe anual FY2026 de Walmart (Form 10-K)", fuente: "Walmart Inc., 2026 Annual Report", url: "https://stock.walmart.com/_assets/_ef4b3350ef1127ae63b1dd51abb6cf31/walmart/db/950/9988/annual_report/Walmart+2026+Annual+Report.pdf"}
   - {dato: "Segmentos de Microsoft", fuente: "EDGAR Tools, Microsoft revenue by segment (10-K)", url: "https://app.edgar.tools/companies/MSFT/disclosures/segments"}
-  - {dato: "Reacción y consenso de Azure (40,92 %)", fuente: "Reuters (29-jul-2026), 'Microsoft says cash will keep flowing from AI, shares rise'", url: "https://www.reuters.com/business/microsoft-tops-quarterly-cloud-growth-estimates-easing-spending-concerns-2026-07-29/"}
+  - {dato: "Reacción y consenso de Azure (40,92 %)", fuente: "Reuters (29-jul-2026), “Microsoft says cash will keep flowing from AI, shares rise”", url: "https://www.reuters.com/business/microsoft-tops-quarterly-cloud-growth-estimates-easing-spending-concerns-2026-07-29/"}

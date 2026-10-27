@@ -1,0 +1,525 @@
+<script>
+window.DV_DARK = {{ dv_map }};
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var DARK = window.DV_DARK || {}, LIGHT = {};
+  Object.keys(DARK).forEach(function (k) { LIGHT[DARK[k]] = k; });
+  var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var has = Object.prototype.hasOwnProperty;
+
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    return t ? t === 'dark' : !!(mq && mq.matches);
+  }
+
+  // Cambia en el lugar cada color de la paleta clara por su pareja oscura (o al revés).
+  function remap(o, m) {
+    if (typeof o === 'string') return has.call(m, o) ? m[o] : o;
+    if (Array.isArray(o)) { for (var i = 0; i < o.length; i++) o[i] = remap(o[i], m); return o; }
+    if (o && typeof o === 'object' && !ArrayBuffer.isView(o)) {
+      for (var k in o) if (has.call(o, k) && k.charAt(0) !== '_') o[k] = remap(o[k], m);
+    }
+    return o;
+  }
+
+  /* ------------------------------------------------------------ gráficas */
+  var plots = [];
+
+  // Ajustes para lienzo angosto (theme.narrow): «on» se aplica por debajo de «below» px y «off» repone la figura.
+  // Se guardan en claro y se pasan a oscuro al aplicarlos, como los argumentos de los menús.
+  function setPath(o, path, v) {
+    var ks = path.split('.');
+    for (var i = 0; i < ks.length - 1; i++) {
+      if (!o[ks[i]] || typeof o[ks[i]] !== 'object') o[ks[i]] = {};
+      o = o[ks[i]];
+    }
+    if (v === null) delete o[ks[ks.length - 1]]; else o[ks[ks.length - 1]] = v;
+  }
+  function isNarrow(it) {
+    var w = it.div.clientWidth;
+    return !!it.narrow && w > 0 && w < it.narrow.below;
+  }
+  function narrowSet(it, on) {
+    var set = JSON.parse(JSON.stringify(on ? it.narrow.on : it.narrow.off));
+    if (it.dark) remap(set, DARK);
+    if (set.layout.height) it.div.style.height = set.layout.height + 'px';
+    return set;
+  }
+  function fitNarrow() {
+    plots.forEach(function (it) {
+      if (!it.done || !it.narrow) return;
+      var n = isNarrow(it);
+      if (n === it.isNarrow) return;
+      it.isNarrow = n;
+      var set = narrowSet(it, n);
+      Object.keys(set.traces).forEach(function (i) {
+        var u = {};
+        Object.keys(set.traces[i]).forEach(function (k) { u[k] = [set.traces[i][k]]; });
+        Plotly.restyle(it.div, u, [+i]);
+      });
+      // Al cambiar el alto, relayout fija también el ancho de ese momento y apaga autosize: se devuelven para que la
+      // gráfica siga al contenedor en el próximo cambio de ancho.
+      Plotly.relayout(it.div, set.layout).then(function () {
+        delete it.div.layout.width;
+        it.div.layout.autosize = true;
+        return Plotly.Plots.resize(it.div);
+      });
+    });
+  }
+
+  function render(it) {
+    if (it.done || !window.Plotly) return;
+    it.done = true;
+    var spec = JSON.parse(it.script.textContent);
+    it.menus = spec.menus || [];
+    it.narrow = spec.narrow || null;
+    it.isNarrow = isNarrow(it);
+    if (it.isNarrow) {
+      // aún en claro: el paso a oscuro de abajo lo cambia junto con el resto de la especificación
+      var on = it.narrow.on;
+      Object.keys(on.layout).forEach(function (k) { setPath(spec.layout, k, JSON.parse(JSON.stringify(on.layout[k]))); });
+      Object.keys(on.traces).forEach(function (i) {
+        Object.keys(on.traces[i]).forEach(function (k) { setPath(spec.data[+i], k, JSON.parse(JSON.stringify(on.traces[i][k]))); });
+      });
+      if (on.layout.height) it.div.style.height = on.layout.height + 'px';
+    }
+    it.dark = isDark();
+    if (it.dark) { remap(spec.data, DARK); remap(spec.layout, DARK); }
+    Plotly.newPlot(it.div, spec.data, spec.layout, spec.config).then(function () {
+      var layer = it.div.querySelector('.hoverlayer');
+      if (layer) new MutationObserver(function () { minusSign(layer); }).observe(layer, {childList: true, subtree: true});
+    });
+  }
+
+  // d3-format escribe los negativos de los tooltips con guion, mientras los ejes de Plotly usan el signo menos (−).
+  // Se cambia al dibujar cada tooltip: la caja unificada se ensancha lo que haga falta; la de un solo punto vuelve al
+  // guion si el texto ya no cabe. Un cero con signo («+0 %», «−0,00», del formato «+» de d3) queda sin él: el título
+  // del tooltip de 12.1 solo conoce la x, así que el «+» del formato no se puede quitar desde la plantilla.
+  var NEG = /(^|[\s(\[:=+\/>])-(?=\d)/g;
+  var ZERO = /(^|[\s(\[:=\/>])[+−](0(?:,0+)?)(?![\d,])/g;
+  function minusSign(layer) {
+    layer.querySelectorAll('g.hovertext, g.legend').forEach(function (g) {
+      var walk = document.createTreeWalker(g, NodeFilter.SHOW_TEXT), n, changed = [];
+      while ((n = walk.nextNode())) {
+        var v = n.nodeValue.replace(NEG, '$1−').replace(ZERO, '$1$2');
+        if (v !== n.nodeValue) { changed.push([n, n.nodeValue]); n.nodeValue = v; }
+      }
+      if (!changed.length) return;
+      var box = g.querySelector('rect.bg') || g.querySelector('path');
+      if (!box) return;
+      var right = box.getBoundingClientRect().right, over = 0;
+      g.querySelectorAll('text').forEach(function (t) { over = Math.max(over, t.getBoundingClientRect().right + 4 - right); });
+      if (over <= 0) return;
+      if (box.tagName === 'rect') {
+        var clip = g.querySelector('[clip-path]'), id = clip && /#([^)"']+)/.exec(clip.getAttribute('clip-path'));
+        var cr = id && document.getElementById(id[1]);
+        [box, cr && cr.querySelector('rect')].forEach(function (r) {
+          if (r) r.setAttribute('width', +r.getAttribute('width') + Math.ceil(over));
+        });
+      } else {
+        changed.forEach(function (c) { c[0].nodeValue = c[1]; });
+      }
+    });
+  }
+
+  function apply(it, mi) {
+    render(it);
+    var label = it.sel[mi].join(' · ');
+    var b = (it.menus[mi] || []).filter(function (x) { return x.label === label; })[0];
+    if (!b) return false;
+    var args = JSON.parse(JSON.stringify(b.args || []));
+    if (it.dark) remap(args, DARK);
+    if (b.method === 'update') Plotly.update(it.div, args[0] || {}, args[1] || {});
+    else if (b.method === 'restyle') Plotly.restyle(it.div, args[0], args[1]);
+    else if (b.method === 'relayout') Plotly.relayout(it.div, args[0]);
+    return true;
+  }
+
+  function wireControls(it) {
+    var box = document.querySelector('.plot-controls[data-for="' + it.div.id + '"]');
+    it.sel = {};
+    if (!box) return;
+    box.querySelectorAll('[data-menu]').forEach(function (g) {
+      var mi = +g.getAttribute('data-menu');
+      it.sel[mi] = it.sel[mi] || [];
+      if (g.tagName === 'SELECT') {
+        it.sel[mi][+g.getAttribute('data-dim')] = g.value;
+        g.addEventListener('change', function () {
+          it.sel[mi][+g.getAttribute('data-dim')] = g.value;
+          apply(it, mi);
+        });
+        return;
+      }
+      g.querySelectorAll('button').forEach(function (btn) {
+        var d = +btn.getAttribute('data-dim');
+        if (btn.getAttribute('aria-pressed') === 'true') it.sel[mi][d] = btn.textContent;
+        btn.addEventListener('click', function () {
+          var prev = it.sel[mi][d];
+          it.sel[mi][d] = btn.textContent;
+          if (!apply(it, mi)) { it.sel[mi][d] = prev; return; }
+          g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); });
+        });
+      });
+    });
+  }
+
+  function retheme() {
+    var d = isDark();
+    plots.forEach(function (it) {
+      if (!it.done || it.dark === d) return;
+      var m = d ? DARK : LIGHT;
+      remap(it.div.data, m); remap(it.div.layout, m);
+      it.dark = d;
+      Plotly.react(it.div, it.div.data, it.div.layout);
+    });
+    drawAll(false);
+  }
+
+  function initPlots() {
+    if (window.Plotly && Plotly.register) {
+      Plotly.register({moduleType: 'locale', name: 'es', dictionary: {
+        'Autoscale': 'Autoescalar', 'Box Select': 'Selección rectangular', 'Download plot as a png': 'Descargar como PNG',
+        'Pan': 'Desplazar', 'Reset axes': 'Restablecer ejes', 'Zoom': 'Zoom', 'Zoom in': 'Acercar', 'Zoom out': 'Alejar',
+        'Reset view': 'Restablecer vista', 'Double-click to zoom back out': 'Doble clic para volver'},
+        format: {days: ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
+          shortDays: ['dom','lun','mar','mié','jue','vie','sáb'],
+          months: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+          shortMonths: ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],
+          date: '%d/%m/%Y', decimal: ',', thousands: '.'}});
+    }
+    document.querySelectorAll('script.plot-spec').forEach(function (s) {
+      var div = document.getElementById(s.getAttribute('data-for'));
+      if (!div) return;
+      var it = {div: div, script: s, done: false};
+      wireControls(it);
+      plots.push(it);
+    });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          plots.forEach(function (it) { if (it.div === e.target) render(it); });
+        });
+      }, {rootMargin: '900px 0px'});
+      plots.forEach(function (it) { io.observe(it.div); });
+    } else {
+      plots.forEach(render);
+    }
+    window.addEventListener('beforeprint', function () { plots.forEach(render); });
+    var nz;
+    window.addEventListener('resize', function () { clearTimeout(nz); nz = setTimeout(fitNarrow, 160); });
+  }
+
+  /* ------------------------------------------------------------ guilloché (trama de papel de valores) */
+  var canvases = [];
+
+  function css(name) { return getComputedStyle(root).getPropertyValue(name).trim(); }
+
+  function rosette(ctx, cx, cy, R, amp, n, lines, color, lw, upto) {
+    ctx.strokeStyle = color; ctx.lineWidth = lw;
+    var steps = Math.max(360, n * 40);
+    for (var j = 0; j < Math.min(lines, upto); j++) {
+      var ph = j * (2 * Math.PI) / (lines * n);
+      ctx.beginPath();
+      for (var s = 0; s <= steps; s++) {
+        var t = s / steps * 2 * Math.PI;
+        var r = R + amp * Math.sin(n * t + j * 0.21) + amp * 0.55 * Math.cos((n - 3) * t - ph * n);
+        var x = cx + r * Math.cos(t), y = cy + r * Math.sin(t);
+        if (s) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function ribbon(ctx, w, y0, amp, lines, color, lw, upto, k) {
+    ctx.strokeStyle = color; ctx.lineWidth = lw;
+    for (var j = 0; j < Math.min(lines, upto); j++) {
+      var ph = j / lines * Math.PI * 2;
+      ctx.beginPath();
+      for (var x = -10; x <= w + 10; x += 3) {
+        var u = x / w * Math.PI * 2;
+        var y = y0 + amp * Math.sin(u * (3 + k) + ph) * Math.cos(u * 1.5 - ph * 0.5) + amp * 0.35 * Math.sin(u * (11 + k) - ph);
+        if (x > -10) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  // Cajas, en coordenadas del lienzo, que ocupa el texto real de la portada (enlace, rótulo, título, entradilla y
+  // metadatos). Se miden en cada dibujo, así siguen al texto aunque cambie el ancho o termine de cargar la fuente.
+  function textBoxes(c) {
+    var o = c.getBoundingClientRect(), boxes = [], ticket = c.parentElement.querySelector('.ticket');
+    var tTop = ticket ? ticket.getBoundingClientRect().top : -Infinity;
+    c.parentElement.querySelectorAll('.part-switch a, .eyebrow, h1, .lead, .meta > div').forEach(function (el) {
+      var rs;
+      if (el.tagName === 'A') rs = [el.getBoundingClientRect()];
+      else { var rg = document.createRange(); rg.selectNodeContents(el); rs = rg.getClientRects(); }
+      var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (var i = 0; i < rs.length; i++) {
+        var r = rs[i];
+        if (r.width < 1 || r.height < 1) continue;
+        x0 = Math.min(x0, r.left); y0 = Math.min(y0, r.top); x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom);
+      }
+      // Los metadatos se prolongan hasta la ficha, para que no asome una franja de trama entre los dos.
+      if (el.parentElement.classList.contains('meta')) y1 = Math.max(y1, tTop);
+      if (x1 > x0) boxes.push([x0 - o.left, y0 - o.top, x1 - x0, y1 - y0]);
+    });
+    return boxes;
+  }
+
+  // Borra la trama bajo cada caja con un halo difuminado: un rectángulo nítido justo sobre el texto y, alrededor, la
+  // sombra de un rectángulo dibujado fuera del lienzo (shadowBlur), que funde el borde sin depender de ctx.filter.
+  function clearText(ctx, c, w, dpr) {
+    var boxes = textBoxes(c), pad = 26, soft = 34, far = w + 4 * soft;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = '#000';
+    boxes.forEach(function (b) { ctx.fillRect(b[0] - 6, b[1] - 4, b[2] + 12, b[3] + 8); });
+    ctx.shadowColor = '#000'; ctx.shadowBlur = soft * dpr; ctx.shadowOffsetX = far * dpr;
+    boxes.forEach(function (b) { ctx.fillRect(b[0] - pad - far, b[1] - pad, b[2] + 2 * pad, b[3] + 2 * pad); });
+    ctx.restore();
+  }
+
+  function draw(c, progress) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = c.clientWidth, h = c.clientHeight;
+    if (!w || !h) return;
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    var ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    var g1 = css('--guil-1'), g2 = css('--guil-2');
+    var seed = +(c.getAttribute('data-seed') || 1);
+    if (c.classList.contains('mark')) {
+      rosette(ctx, w / 2, h / 2, w * 0.31, w * 0.075, 7 + seed, 14, css('--brand-2'), 0.7, 99);
+      rosette(ctx, w / 2, h / 2, w * 0.17, w * 0.05, 5 + seed, 8, css('--gold-2'), 0.6, 99);
+      return;
+    }
+    var p = progress, big = Math.min(Math.max(h * 0.62, 220), 440);
+    var cx = w - big * 0.3, cy = h * 0.36;
+    if (w <= 760) {
+      // En el celular el texto ocupa todo el ancho y no queda sitio para la roseta: la portada se enmarca con dos
+      // cenefas, dorada arriba (en el margen superior, sobre el enlace) y verde abajo.
+      ribbon(ctx, w, 17, 7, 16, g2, 0.6, Math.ceil(16 * p), seed + 1);
+      ribbon(ctx, w, h - 26, 13, 22, g1, 0.6, Math.ceil(22 * p), seed);
+      return;
+    }
+    rosette(ctx, cx, cy, big * 0.78, big * 0.09, 16 + seed * 2, 34, g1, 0.7, Math.ceil(34 * p));
+    rosette(ctx, cx, cy, big * 0.5, big * 0.07, 11 + seed, 24, g2, 0.7, Math.ceil(24 * p));
+    rosette(ctx, cx, cy, big * 0.25, big * 0.045, 7 + seed, 16, g1, 0.6, Math.ceil(16 * p));
+    // La trama nunca pasa por detrás del texto: el título, la entradilla y los metadatos quedan sobre papel limpio.
+    clearText(ctx, c, w, dpr);
+    ribbon(ctx, w, h - 26, 13, 22, g1, 0.6, Math.ceil(22 * p), seed);
+  }
+
+  function drawAll(animate) {
+    canvases.forEach(function (c) {
+      if (!animate || reduce || c.classList.contains('mark')) { draw(c, 1); return; }
+      var t0 = null;
+      (function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 1100);
+        draw(c, 1 - Math.pow(1 - p, 3));
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  }
+
+  /* ------------------------------------------------------------ ficha de la portada */
+  // Los rótulos de una misma fila de la ficha toman el alto del más alto: si uno se parte en dos renglones, los valores
+  // de esa fila siguen arrancando parejos y cada nota sigue pegada a su valor.
+  function alignKpis() {
+    document.querySelectorAll('.kpis').forEach(function (g) {
+      var ls = Array.prototype.slice.call(g.querySelectorAll('.kpi > .l')), rows = {};
+      ls.forEach(function (l) { l.style.minHeight = ''; });
+      ls.forEach(function (l) {
+        var k = Math.round(l.parentElement.getBoundingClientRect().top);
+        (rows[k] = rows[k] || []).push([l, l.getBoundingClientRect().height]);
+      });
+      Object.keys(rows).forEach(function (k) {
+        var hs = rows[k].map(function (x) { return x[1]; }), h = Math.max.apply(null, hs);
+        if (Math.min.apply(null, hs) < h - 0.5) rows[k].forEach(function (x) { x[0].style.minHeight = h + 'px'; });
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------ tablas que se desplazan */
+  // Marca en cada .tscroll lo que queda fuera de vista: .ml (columnas a la izquierda), .mr (a la derecha) y .mb (filas
+  // abajo). El CSS funde ese borde. Se recalcula al desplazarse y cada vez que cambia el tamaño del recuadro o de la
+  // tabla: al cargar, al girar el celular, al llegar la fuente y al mostrar una pestaña que estaba oculta.
+  function initScrollHints() {
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.tscroll'));
+    function update(s) {
+      var x = Math.abs(s.scrollLeft), dx = s.scrollWidth - s.clientWidth, dy = s.scrollHeight - s.clientHeight;
+      s.classList.toggle('ml', dx > 1 && x > 1);
+      s.classList.toggle('mr', dx > 1 && dx - x > 1);
+      s.classList.toggle('mb', dy > 1 && dy - s.scrollTop > 1);
+    }
+    // Tablas de alto fijo (.vs): si el borde inferior cae justo entre dos filas, la tabla parece terminar ahí. Se
+    // ajusta el alto para que, encima de la fila Σ fija, asome media fila de las que siguen.
+    function trim(s) {
+      var t = s.firstElementChild, body = t && t.tBodies && t.tBodies[0];
+      if (!s.classList.contains('vs') || !body || !s.clientWidth) return;
+      var base = parseFloat(getComputedStyle(s).getPropertyValue('--vs-h')) || 0;
+      var foot = t.tFoot ? t.tFoot.offsetHeight : 0, limit = base - foot, want = '';
+      if (base && t.offsetHeight > base + 1) {
+        for (var i = 0; i < body.rows.length; i++) {
+          var r = body.rows[i], top = r.offsetTop, h = r.offsetHeight;
+          if (top + h < limit) continue;
+          var seen = (limit - top) / h;
+          if (seen < 0.35 || seen > 0.75) want = Math.round(top + h / 2 + foot) + 'px';
+          break;
+        }
+      }
+      if (s.style.maxHeight !== want) s.style.maxHeight = want;
+    }
+    boxes.forEach(function (s) {
+      var tick = false;
+      s.addEventListener('scroll', function () {
+        if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; update(s); }); }
+      }, {passive: true});
+      trim(s); update(s);
+    });
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(function (entries) {
+        // El alto se ajusta en el cuadro siguiente: cambiarlo dentro del aviso dispararía otro en el mismo cuadro.
+        entries.forEach(function (e) {
+          var s = e.target.closest('.tscroll');
+          if (!s) return;
+          update(s);
+          if (e.target !== s) requestAnimationFrame(function () { trim(s); });
+        });
+      });
+      boxes.forEach(function (s) { ro.observe(s); if (s.firstElementChild) ro.observe(s.firstElementChild); });
+    } else {
+      var all = function () { boxes.forEach(function (s) { trim(s); update(s); }); };
+      window.addEventListener('resize', all);
+      window.addEventListener('load', all);
+      document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.tabs')) setTimeout(all, 0); });
+    }
+  }
+
+  /* ------------------------------------------------------------ fórmulas en línea */
+  // El CSS deja cada fórmula en línea entera (.katex nowrap). Si una no cabe ni en un renglón completo de su párrafo,
+  // solo esa recibe .kwrap y vuelve a partirse por donde KaTeX lo permite (después de un = o de un +). Se mide al
+  // dibujar las fórmulas (lo llama auto-render desde la cabecera), al llegar sus fuentes y cada vez que cambia el ancho.
+  function fitMath() {
+    var ks = Array.prototype.filter.call(document.querySelectorAll('.katex'), function (k) { return !k.closest('.katex-display'); });
+    ks.forEach(function (k) { k.classList.remove('kwrap'); });
+    ks.filter(function (k) {
+      var box = k.parentElement;
+      while (box && getComputedStyle(box).display.indexOf('inline') === 0) box = box.parentElement;
+      if (!box) return false;
+      var cs = getComputedStyle(box);
+      var room = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      return room > 0 && k.getBoundingClientRect().width > room + 0.5;
+    }).forEach(function (k) { k.classList.add('kwrap'); });
+  }
+  window.dvFitMath = function () {
+    fitMath();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMath);
+    var fz;
+    window.addEventListener('resize', function () { clearTimeout(fz); fz = setTimeout(fitMath, 150); });
+  };
+
+  /* ------------------------------------------------------------ navegación, progreso y tema */
+  function initNav() {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+    var targets = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+    var bar = document.querySelector('.progress span');
+    var ticking = false;
+    function onScroll() {
+      ticking = false;
+      var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+      var cur = -1;
+      targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top < 140) cur = i; });
+      links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, {passive: true});
+    onScroll();
+
+    var body = document.body;
+    var openBtn = document.querySelector('.topbar button');
+    function setNav(open) {
+      body.classList.toggle('nav-open', open);
+      if (openBtn) openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    if (openBtn) openBtn.addEventListener('click', function () { setNav(!body.classList.contains('nav-open')); });
+    var scrim = document.querySelector('.scrim');
+    if (scrim) scrim.addEventListener('click', function () { setNav(false); });
+    links.forEach(function (a) { a.addEventListener('click', function () { setNav(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
+
+    var btns = document.querySelectorAll('.theme-switch button');
+    function mark() {
+      var t = root.getAttribute('data-theme') || 'system';
+      btns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-set') === t ? 'true' : 'false'); });
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var t = b.getAttribute('data-set');
+        if (t === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+        try { if (t === 'system') localStorage.removeItem('dv-theme'); else localStorage.setItem('dv-theme', t); } catch (e) {}
+        mark(); retheme();
+      });
+    });
+    mark();
+    if (mq) {
+      var cb = function () { if (!root.getAttribute('data-theme')) retheme(); };
+      if (mq.addEventListener) mq.addEventListener('change', cb); else if (mq.addListener) mq.addListener(cb);
+    }
+
+    // Pestañas: si cada botón abre un .tabpane, el grupo es un tablist de verdad (tab + aria-controls + tabpanel);
+    // si solo cambia marcadores <i> (Tabla B.3.1, que combina con :has), los botones son interruptores (aria-pressed).
+    document.querySelectorAll('.tabs').forEach(function (g) {
+      var sec = g.parentElement, btns = Array.prototype.slice.call(g.querySelectorAll('button'));
+      var pane = function (x) { return sec.querySelector('#' + x.getAttribute('data-target')); };
+      var tabs = btns.every(function (x) { var p = pane(x); return p && p.classList.contains('tabpane'); });
+      var set = function (x, on) {
+        x.classList.toggle('on', on);
+        x.setAttribute(tabs ? 'aria-selected' : 'aria-pressed', on ? 'true' : 'false');
+        var p = pane(x);
+        if (p) p.classList.toggle('on', on);
+      };
+      if (tabs) g.setAttribute('role', 'tablist');
+      btns.forEach(function (b) {
+        b.type = 'button';
+        if (tabs) {
+          b.setAttribute('role', 'tab');
+          b.setAttribute('aria-controls', b.getAttribute('data-target'));
+          pane(b).setAttribute('role', 'tabpanel');
+        }
+        set(b, b.classList.contains('on'));
+        b.addEventListener('click', function () { btns.forEach(function (x) { set(x, x === b); }); });
+      });
+    });
+  }
+
+  alignKpis();
+  canvases = Array.prototype.slice.call(document.querySelectorAll('canvas.guilloche, canvas.mark'));
+  drawAll(true);
+  // Al llegar la fuente definitiva el título y los rótulos cambian de cortes: se vuelve a medir y a dibujar.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { alignKpis(); drawAll(false); });
+  var rz;
+  window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { alignKpis(); drawAll(false); }, 150); });
+  if ('ResizeObserver' in window) {
+    var seen = new WeakMap();
+    var ro = new ResizeObserver(function (entries) {
+      entries.forEach(function (e) {
+        var w = Math.round(e.contentRect.width) + 'x' + Math.round(e.contentRect.height);
+        if (seen.get(e.target) !== undefined && seen.get(e.target) !== w) draw(e.target, 1);
+        seen.set(e.target, w);
+      });
+    });
+    canvases.forEach(function (c) { ro.observe(c); });
+  }
+  initNav();
+  initScrollHints();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPlots);
+  else initPlots();
+})();
+</script>

@@ -5,59 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>USD 20 millones en 3 acciones sin sufrir con el mercado: futuros E-mini S&amp;P 500</title>
 <meta name="description" content="Instrumentos derivados financieros, Parte 2: portafolio media-varianza de tres acciones del S&P 500, VaR, beta CAPM y cobertura con futuros E-mini S&P 500 con márgenes y roll-over trimestral.">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_CO">
+<meta property="og:title" content="Cobertura con futuros E-mini S&amp;P 500 · Parte 2">
+<meta property="og:description" content="Instrumentos derivados financieros, Parte 2: portafolio media-varianza de tres acciones del S&P 500, VaR, beta CAPM y cobertura con futuros E-mini S&P 500 con márgenes y roll-over trimestral.">
 {% include "_head.html.j2" %}
-</style>
 </head>
 <body>
-<nav class="sidebar">
-  <div class="brand">Cobertura con futuros sobre el S&amp;P 500</div>
-  <div class="brand-sub">Portafolio MSFT · WMT · XOM</div>
-  <div class="parts"><a href="index.html">Parte 1 · Forwards</a><a class="on" href="parte2.html">Parte 2 · Futuros</a></div>
-  <a href="#inicio">Inicio</a>
-  <a href="#resumen">El resumen, en plata blanca</a>
-  <a href="#convenciones">Las reglas del juego (fechas)</a>
-  <div class="grp">Portafolio</div>
-  <a class="sub" href="#p1">1. Las 3 acciones elegidas</a>
-  <a class="sub" href="#p2">2. ¿Qué tanto rinden y qué tan bravas son?</a>
-  <a class="sub" href="#p3">3. La mezcla ganadora</a>
-  <a class="sub" href="#p4">4. ¿Cuánto podemos perder en un mes?</a>
-  <div class="grp">Cobertura con futuros</div>
-  <a class="sub" href="#p5">5. Beta: ¿qué tanto nos mueve el mercado?</a>
-  <a class="sub" href="#p6">6. ¿Cuántos contratos vendemos?</a>
-  <a class="sub" href="#p7">7. ¿Cortos o largos? (spoiler: cortos)</a>
-  <a class="sub" href="#p8">8. El margen y sus llamados</a>
-  <a class="sub" href="#p9">9. A renovar cada trimestre</a>
-  <a class="sub" href="#p10">10. ¿Cuánto vale cubrirse?</a>
-  <a class="sub" href="#p11">11. El mes a mes y los dividendos</a>
-  <a class="sub" href="#p12">12. ¿Y si la beta fuera 0,5 o 2?</a>
-  <a class="sub" href="#expost">¿Funcionó con datos reales?</a>
-  <a class="sub" href="#conclusion">Conclusiones, sin rodeos</a>
-  <div class="grp">Anexos</div>
-  <a class="sub" href="#metodologia">Metodología</a>
-  <a class="sub" href="#supuestos">Supuestos y limitaciones</a>
-  <a class="sub" href="#fuentes">Fuentes</a>
+<div class="progress" aria-hidden="true"><span></span></div>
+<header class="topbar"><span class="t">Parte 2 · Futuros S&amp;P 500</span><button type="button" aria-expanded="false" aria-controls="nav">Índice</button></header>
+<div class="scrim" aria-hidden="true"></div>
+<nav class="sidebar" id="nav" aria-label="Contenido del informe">
+  <a class="brand" href="#inicio"><canvas class="mark" data-seed="2" aria-hidden="true"></canvas><span><span class="brand-t">Cobertura con futuros sobre el S&amp;P&nbsp;500</span><span class="brand-sub">Portafolio MSFT · WMT · XOM</span></span></a>
+  <div class="parts"><a href="index.html"><small>Parte 1</small>Forwards</a><a class="on" aria-current="page" href="parte2.html"><small>Parte 2</small>Futuros</a></div>
+  <div class="toc">
+    <a href="#inicio"><span class="code"></span><span>Inicio</span></a>
+    <a href="#resumen"><span class="code"></span><span>El resumen, en plata blanca</span></a>
+    <a href="#convenciones"><span class="code"></span><span>Las reglas del juego (fechas)</span></a>
+    <div class="grp">Portafolio</div>
+    <a href="#p1"><span class="code">1</span><span>Las 3 acciones elegidas</span></a>
+    <a href="#p2"><span class="code">2</span><span>¿Qué tanto rinden y qué tan bravas son?</span></a>
+    <a href="#p3"><span class="code">3</span><span>La mezcla ganadora</span></a>
+    <a href="#p4"><span class="code">4</span><span>¿Cuánto podemos perder en un mes?</span></a>
+    <div class="grp">Cobertura con futuros</div>
+    <a href="#p5"><span class="code">5</span><span>Beta: ¿qué tanto nos mueve el mercado?</span></a>
+    <a href="#p6"><span class="code">6</span><span>¿Cuántos contratos vendemos?</span></a>
+    <a href="#p7"><span class="code">7</span><span>¿Cortos o largos? (spoiler: cortos)</span></a>
+    <a href="#p8"><span class="code">8</span><span>El margen y sus llamados</span></a>
+    <a href="#p9"><span class="code">9</span><span>A renovar cada trimestre</span></a>
+    <a href="#p10"><span class="code">10</span><span>¿Cuánto vale cubrirse?</span></a>
+    <a href="#p11"><span class="code">11</span><span>El mes a mes y los dividendos</span></a>
+    <a href="#p12"><span class="code">12</span><span>¿Y si la beta fuera 0,5 o 2?</span></a>
+    <a href="#expost"><span class="code"></span><span>¿Funcionó con datos reales?</span></a>
+    <a href="#conclusion"><span class="code"></span><span>Conclusiones, sin rodeos</span></a>
+    <div class="grp">Anexos</div>
+    <a href="#metodologia"><span class="code">A</span><span>Metodología</span></a>
+    <a href="#supuestos"><span class="code">B</span><span>Supuestos y limitaciones</span></a>
+    <a href="#fuentes"><span class="code">C</span><span>Fuentes</span></a>
+  </div>
   <div class="stamp">Inversión: 30-jul-2026<br>Horizonte: 4 años (30-jul-2030)<br>Liquidaciones reales hasta {{ k.last_obs }}<br>Precios reales hasta {{ k.last_px }}<br>{{ k.n_paths }} trayectorias simuladas</div>
+  <div class="theme-switch" role="group" aria-label="Tema de color"><button type="button" data-set="system">Sistema</button><button type="button" data-set="light">Claro</button><button type="button" data-set="dark">Oscuro</button></div>
 </nav>
 
 <main>
 <header class="hero" id="inicio">
+  <canvas class="guilloche" data-seed="2" aria-hidden="true"></canvas>
   <div class="wrap">
-    <div class="part-switch"><a href="index.html">← Volver a la Parte 1: forwards de divisas</a></div>
-    <div class="eyebrow">Instrumentos derivados financieros · Trabajo semestral · Parte 2</div>
+    <div class="part-switch"><a href="index.html">←&nbsp;Volver a la Parte 1: forwards de divisas</a></div>
+    <div class="eyebrow sl"><span>Instrumentos derivados financieros</span><span>Trabajo semestral&nbsp;·&nbsp;Parte&nbsp;2</span></div>
     <h1>USD 20 millones en Microsoft, Walmart y Exxon… sin sufrir cada vez que el S&amp;P 500 estornuda</h1>
     <p class="lead">Armamos un portafolio con tres acciones del S&amp;P 500 (media y varianza, como toca), le medimos el pulso con VaR y beta CAPM y le montamos el paraguas con futuros E-mini: cuántos contratos vender, cómo se comporta la cuenta de margen mes a mes, cómo renovar la cobertura cada trimestre durante cuatro años y qué pasa si la beta fuera otra.</p>
     <div class="meta">
-      <div><span>Integrantes</span>{{ k.members | join(" · ") }}</div>
+      <div><span>Integrantes</span><div class="sl">{% for m in k.members %}<span class="nw">{{ m }}</span>{% endfor %}</div></div>
       <div><span>Fecha de inversión</span>30 de julio de 2026 (datos hasta el 29 de julio)</div>
       <div><span>Convención</span>Año de 252 días hábiles; mes de 21 días</div>
     </div>
-    <div class="kpis">
-      <div class="kpi"><div class="l">Portafolio óptimo (máximo Sharpe)</div><div class="v">{{ k.w.MSFT }} · {{ k.w.WMT }} · {{ k.w.XOM }}</div><div class="s">MSFT · WMT · XOM · Sharpe {{ k.sharpe }}</div></div>
-      <div class="kpi"><div class="l">VaR mensual 95 % / 99 %</div><div class="v">{{ k.var95.pct }} / {{ k.var99.pct }}</div><div class="s">{{ k.var95.usd }} / {{ k.var99.usd }}</div></div>
-      <div class="kpi"><div class="l">Beta del portafolio</div><div class="v">{{ k.beta_p2 }}</div><div class="s">MSFT {{ k.MSFT.beta }} · WMT {{ k.WMT.beta }} · XOM {{ k.XOM.beta }}</div></div>
-      <div class="kpi"><div class="l">Cobertura</div><div class="v">{{ k.n }} futuros cortos</div><div class="s">{{ k.contract0 }} a {{ k.f0 }} · nocional {{ k.hedged_notional }}</div></div>
-      <div class="kpi"><div class="l">Riesgo a 4 años (σ de la riqueza)</div><div class="v">{{ k.T_sin.sd }} → {{ k.T_corto.sd }}</div><div class="s">Varianza eliminada: {{ k.var_red }}</div></div>
-      <div class="kpi"><div class="l">Costo esperado de cubrirse</div><div class="v">{{ k.T_sin.ra }} → {{ k.T_corto.ra }}</div><div class="s">Rentabilidad anual esperada sin y con cobertura</div></div>
+    <div class="ticket">
+      <div class="ticket-head"><span class="sl"><span>Ficha de la cobertura</span><span><b class="nw">E-mini S&amp;P 500</b></span></span><span class="nw">Inversión&nbsp;·&nbsp;30 de julio de 2026</span></div>
+      <div class="kpis">
+        <div class="kpi wide"><div class="l">Portafolio óptimo (máximo Sharpe)</div><div class="v wts"><span><small class="t-msft">MSFT</small>{{ k.w.MSFT }}</span><span><small class="t-wmt">WMT</small>{{ k.w.WMT }}</span><span><small class="t-xom">XOM</small>{{ k.w.XOM }}</span></div><div class="s">Razón de Sharpe {{ k.sharpe }}</div></div>
+        <div class="kpi"><div class="l sl slash"><span><span class="nc">VaR</span> mensual 95 %</span><span>99 %</span></div><div class="v sl slash"><span>{{ k.var95.pct }}</span><span>{{ k.var99.pct }}</span></div><div class="s sl slash"><span>{{ k.var95.usd }}</span><span>{{ k.var99.usd }}</span></div></div>
+        <div class="kpi"><div class="l">Beta del portafolio</div><div class="v">{{ k.beta_p3 }}</div><div class="s sl"><span>MSFT&nbsp;{{ k.MSFT.beta }}</span><span>WMT&nbsp;{{ k.WMT.beta }}</span><span>XOM&nbsp;{{ k.XOM.beta }}</span></div></div>
+        <div class="kpi wide"><div class="l">Cobertura</div><div class="v">{{ k.n }} futuros cortos</div><div class="s sl"><span>{{ k.contract0 }} a&nbsp;{{ k.f0 }}</span><span>nocional {{ k.hedged_notional }}</span></div></div>
+        <div class="kpi"><div class="l">Riesgo a 4 años (<span class="nc">σ</span> de la riqueza)</div><div class="v">{{ k.T_sin.sd }} → {{ k.T_corto.sd }}</div><div class="s">Varianza eliminada: {{ k.var_red }}</div></div>
+        <div class="kpi"><div class="l">Costo esperado de cubrirse</div><div class="v">{{ k.T_sin.ra }} → {{ k.T_corto.ra }}</div><div class="s">Rentabilidad anual esperada sin y con cobertura</div></div>
+      </div>
     </div>
   </div>
 </header>
@@ -70,7 +82,7 @@
     <ul class="tight">
       <li><b>La mezcla que armamos.</b> Con los precios diarios (ya ajustados por dividendos) entre el 1 de agosto de 2016 y el 29 de julio de 2026, la combinación de máximo Sharpe nos quedó así: {{ k.w.MSFT }} en Microsoft, {{ k.w.WMT }} en Walmart y {{ k.w.XOM }} en ExxonMobil. Históricamente rindió {{ k.ret }} al año con una volatilidad de {{ k.vol }}, más bajita que la de cualquiera de las tres acciones por separado. Diversificar sí paga.</li>
       <li><b>¿Y el riesgo?</b> En un mes normalito de 21 días hábiles podríamos perder más de {{ k.var95.usd }} con 5 % de probabilidad, y más de {{ k.var99.usd }} con apenas 1 %. La buena noticia: el {{ k.r2_p }} de los brincos diarios del portafolio viene del propio S&amp;P 500, y justo eso es lo que un futuro sobre el índice sí puede neutralizar.</li>
-      <li><b>El paraguas.</b> Con una beta de {{ k.beta_p }}, la fórmula nos da N* = {{ k.n_star }} contratos. Redondeamos a <b>{{ k.n }} contratos cortos</b> del {{ k.contract0 }} porque es el entero que menos exposición nos deja. Los renovamos cada trimestre (16 rolls en total) y en cada roll recalculamos la cantidad, juiciosos.</li>
+      <li><b>El paraguas.</b> Con una beta de {{ k.beta_p }}, la fórmula nos da <span class="nw">N* = {{ k.n_star }}</span> contratos. Redondeamos a <b>{{ k.n }} contratos cortos</b> del {{ k.contract0 }} porque es el entero que menos exposición nos deja. Los renovamos cada trimestre (16 rolls en total) y en cada roll recalculamos la cantidad, juiciosos.</li>
       <li><b>¿Qué ganamos cubriéndonos?</b> En la simulación a cuatro años, la incertidumbre sobre la plata final baja de {{ k.T_sin.sd }} a {{ k.T_corto.sd }}. El precio de esa tranquilidad: la rentabilidad esperada cae de {{ k.T_sin.ra }} a {{ k.T_corto.ra }} al año. En cristiano, le entregamos al mercado su prima de riesgo y nos quedamos con algo parecido a la tasa libre de riesgo ({{ k.rf_h }}) más lo que nuestras tres acciones logren por mérito propio.</li>
       <li><b>Ojo con la caja.</b> El margen inicial es {{ k.im_tot }}, pero cuando el mercado sube, los cortos pierden y toca reponer de una: en agosto de 2026 ya vivimos un llamado real de {{ k.p1_call }}. En promedio la estrategia pide reponer {{ k.m.dep_mean }} en cuatro años (y {{ k.m.dep_p95 }} en el 5 % de los escenarios más alcistas). Esa plata tiene que salir de una reserva o de ir vendiendo acciones de a poquitos.</li>
       <li><b>Y con datos reales, ¿qué tal?</b> Entre el 30 de julio y el {{ k.ep.fecha }}, nuestro portafolio ganó {{ k.ep.r }} contra solo {{ k.ep.spx }} del S&amp;P 500. Los futuros perdieron {{ k.ep.fut_abs }} y el portafolio cubierto cerró en {{ k.ep.rh }}: el paraguas nos quitó el ruido del mercado y nos dejó intacto el buen momento de las tres acciones. Justo para eso lo compramos.</li>
@@ -98,13 +110,13 @@
 
   <div class="grid3">
     <div class="mini"><div class="l">Microsoft · Tecnología</div><div class="v">Crecimiento</div><div class="s">Nube, software y IA; ingresos recurrentes por suscripción.</div></div>
-    <div class="mini"><div class="l">Walmart · Consumo básico</div><div class="v">Defensa</div><div class="s">Demanda estable, escala logística, e-commerce y publicidad.</div></div>
+    <div class="mini"><div class="l">Walmart · Consumo básico</div><div class="v">Defensa</div><div class="s">Demanda estable, escala logística, <span class="nw">e-commerce</span> y publicidad.</div></div>
     <div class="mini"><div class="l">ExxonMobil · Energía</div><div class="v">Diversificación</div><div class="s">Petróleo y gas integrados; flujo de caja y dividendos.</div></div>
   </div>
 
   <h3>¿Cómo venían de ánimos? (hasta el 29 de julio de 2026)</h3>
   {{ tab.prices }}
-  <div class="fig">{{ fig.p2_price12m }}<div class="cap"><b>Gráfico 1.1.</b> Así les fue a las tres acciones y al S&amp;P 500 en los doce meses antes de decidir. La zona sombreada es posterior al 30 de julio: no la usamos para decidir, quedó solo como chismorreo de verificación.</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 1.1</b></div>{{ fig.p2_price12m }}<figcaption class="cap">Así les fue a las tres acciones (con dividendos) y al S&amp;P 500 (solo precio) en los doce meses antes de decidir. La zona sombreada es posterior al 30 de julio: no la usamos para decidir, quedó solo como chismorreo de verificación.</figcaption></figure>
   <p>Cada una llegó a la cita en un momento totalmente distinto, y eso nos pareció bacano. <b>Microsoft</b> traía {{ k.MSFT.r12 }} en doce meses y andaba {{ k.MSFT.dist_abs }} por debajo de su máximo de 52 semanas, castigada por la pregunta del millón: ¿todo ese gasto en IA y centros de datos sí va a rentar? <b>ExxonMobil</b>, en cambio, era la dura del parche ({{ k.XOM.r12 }} en doce meses y {{ k.XOM.ytd }} en 2026), con el petróleo por las nubes tras el conflicto en el golfo Pérsico (ese mismo que analizamos en la Parte 1). Y <b>Walmart</b> subía {{ k.WMT.r12 }} en doce meses, aunque venía de corregir {{ k.WMT.r3_abs }} en el trimestre más reciente.</p>
 
   <div class="card company">
@@ -147,7 +159,7 @@
   <span class="part-label">Punto 2</span>
   <h2><span class="num">2</span>¿Qué tanto rinden, qué tan bravas son y qué tanto se parecen?</h2>
   <p><b>Los datos.</b> Usamos los cierres diarios ya ajustados por dividendos y splits (Yahoo Finance) desde el 1 de agosto de 2016 hasta el 29 de julio de 2026. Son {{ k.n_px }} precios y {{ k.n_obs }} retornos diarios por acción, casi diez años completicos (el enunciado pedía entre 6 y 10). Como el precio ya viene ajustado, el dividendo ya va metido en el retorno total. Nada de sumarlo otra vez, que eso sería contar la misma plata dos veces.</p>
-  <div class="formula">$$R_{i,t} = \frac{P_{i,t}}{P_{i,t-1}} - 1,\qquad E(R_i)^{anual} = 252\cdot \bar R_i,\qquad \sigma_i^{anual} = \sqrt{252}\,\sigma_i,\qquad \Sigma^{anual} = 252\cdot\Sigma^{diaria}$$</div>
+  <div class="formula">$$R_{i,t} = \frac{P_{i,t}}{P_{i,t-1}} - 1,$$ $$E(R_i)^{\text{anual}} = 252\cdot \bar R_i,$$ $$\sigma_i^{\text{anual}} = \sqrt{252}\,\sigma_i,$$ $$\Sigma^{\text{anual}} = 252\cdot\Sigma^{\text{diaria}}$$</div>
   <p><b>¿Cómo pasamos de diario a anual?</b> Fácil: la media diaria por 252 y la desviación por raíz de 252 (si los días fueran independientes, la varianza crece derechito con el tiempo). Las correlaciones quedan igual, esas no se anualizan. Y de ñapa mostramos el retorno geométrico, que es el que de verdad sintió alguien que se quedó invertido todo el tiempo. Siempre sale menor que el aritmético por culpa de la volatilidad (más o menos μ menos σ²/2), y donde más se nota la brecha es en XOM ({{ k.XOM.ra }} contra {{ k.XOM.rg }}).</p>
   {{ tab.stats }}
   <div class="grid2">
@@ -155,10 +167,10 @@
     <div><h4>Matriz de correlaciones</h4>{{ tab.corr }}</div>
   </div>
   <div class="grid2">
-    <div class="fig">{{ fig.p2_growth }}<div class="cap"><b>Gráfico 2.1.</b> USD 100 invertidos el 1-ago-2016 (escala logarítmica, datos semanales).</div></div>
-    <div class="fig">{{ fig.p2_corr }}<div class="cap"><b>Gráfico 2.2.</b> Correlaciones de los retornos diarios.</div></div>
+    <figure class="fig"><div class="fig-label"><b>Gráfico 2.1</b></div>{{ fig.p2_growth }}<figcaption class="cap">USD 100 invertidos el 1-ago-2016, con dividendos reinvertidos (datos semanales). Arranca en escala logarítmica; con los botones la pasan a lineal.</figcaption></figure>
+    <figure class="fig"><div class="fig-label"><b>Gráfico 2.2</b></div>{{ fig.p2_corr }}<figcaption class="cap">Correlaciones de los retornos diarios. La diagonal (cada acción contra sí misma, siempre 1) va en gris.</figcaption></figure>
   </div>
-  <div class="fig">{{ fig.p2_byyear }}<div class="cap"><b>Gráfico 2.3.</b> Retorno total por año calendario. Los años en que una acción cae y otra sube (2020, 2022) muestran la diversificación en acción.</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 2.3</b></div>{{ fig.p2_byyear }}<figcaption class="cap">Retorno total por año calendario. Los años sombreados (2020 y 2022) son los casos más marcados de una acción que se hunde mientras otra sube: ahí se ve la diversificación en acción.</figcaption></figure>
   <p><b>En plata blanca:</b> MSFT es la que más rinde ({{ k.MSFT.ra }}), WMT la más tranquila (volatilidad de {{ k.WMT.vol }}) y XOM la más alebrestada ({{ k.XOM.vol }}). Las tres se mueven en la misma dirección, sí, pero sueltas: las correlaciones son bajitas ({{ k.c_mw }} entre MSFT y WMT, {{ k.c_mx }} entre MSFT y XOM y apenas {{ k.c_wx }} entre WMT y XOM). Con correlaciones así de lejos del 1, mezclarlas sí que baja el riesgo. Eso sí, las tres tienen colas pesadas (exceso de curtosis positivo), un recorderis de que el VaR normal del punto 4 hay que mirarlo con pinzas. Y que quede claro: estos números son una brújula, no una profecía. La década 2016 a 2026 fue de fiesta para la bolsa gringa.</p>
 </section>
 
@@ -167,29 +179,29 @@
   <span class="part-label">Punto 3</span>
   <h2><span class="num">3</span>La mezcla ganadora: el portafolio de máximo Sharpe</h2>
   <p>Ahora viene el pulso bueno: buscar los pesos que más retorno nos dan por cada unidad de riesgo, o sea, los que maximizan el Sharpe. Sin ventas en corto y sin pedir prestado (cada peso entre 0 y 1, y todos suman 1), usando los retornos y las covarianzas del punto anterior. Como tasa libre de riesgo para ese Sharpe usamos el Treasury a 3 meses del 29 de julio de 2026 ({{ k.rf_s }}, curva par del Tesoro), porque la gracia es comparar un año invertido aquí contra dejar la plata quieta en el corto plazo. Si usáramos la tasa a 5 años del punto 10 ({{ k.rf_h }}), el Sharpe de esta misma mezcla sería {{ k.sharpe_rfh }}.</p>
-  <div class="formula">$$\max_{w}\ \frac{w^\top\mu - r_f}{\sqrt{w^\top\Sigma w}}\quad \text{s. a. } \sum_i w_i = 1,\ 0\le w_i\le 1$$</div>
+  <div class="formula">$$\max_{w}\ \frac{w^\top\mu - r_f}{\sqrt{w^\top\Sigma w}}$$ $$\text{s. a. }\ \sum_i w_i = 1,\quad 0\le w_i\le 1$$</div>
   {{ tab.weights }}
   <div class="grid3">
     <div class="mini"><div class="l">Retorno esperado (histórico)</div><div class="v">{{ k.ret }}</div><div class="s">≈ {{ k.exp_usd }} al año sobre USD 20 M</div></div>
     <div class="mini"><div class="l">Volatilidad anual</div><div class="v">{{ k.vol }}</div><div class="s">Menor que la de cualquier acción individual</div></div>
     <div class="mini"><div class="l">Sharpe Ratio</div><div class="v">{{ k.sharpe }}</div><div class="s">({{ k.ret }} − {{ k.rf_s }}) / {{ k.vol }}</div></div>
   </div>
-  <div class="fig">{{ fig.p2_frontier }}<div class="cap"><b>Gráfico 3.1.</b> Combinaciones factibles (color = Sharpe), frontera eficiente y línea del mercado de capitales tangente en el portafolio de máximo Sharpe.</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 3.1</b></div>{{ fig.p2_frontier }}<figcaption class="cap">Combinaciones factibles (color = Sharpe), frontera eficiente y línea del mercado de capitales tangente en el portafolio de máximo Sharpe. Arranca con zoom a la frontera; con los botones la ven completa, desde la tasa libre de donde sale esa línea. Si pasan el cursor por la nube, les sale la mezcla de pesos de cada punto.</figcaption></figure>
   <p><b>¿Por qué esa repartija?</b> WMT se queda con el pedazo más grande porque junta tres cosas que al optimizador le encantan: un retorno decente, la menor volatilidad y correlaciones bajitas con las otras. MSFT entra por pura potencia. Y XOM, con el retorno más flojo y la volatilidad más alta, igual se coló porque se mueve a su aire y eso mejora el Sharpe. Si la comparamos con la mezcla de <b>mínima varianza</b> ({{ k.w_mv.MSFT }} en MSFT, {{ k.w_mv.WMT }} en WMT y {{ k.w_mv.XOM }} en XOM; retorno {{ k.ret_mv }}, volatilidad {{ k.vol_mv }} y Sharpe {{ k.sharpe_mv }}), la de máximo Sharpe nos da {{ k.d_ret }} puntos más de retorno a cambio de {{ k.d_vol }} puntos más de volatilidad. Como la consigna es el mejor retorno por peso de riesgo, nos quedamos con la de máximo Sharpe, de una.</p>
-  <div class="callout"><span class="t">Pilas con el optimizador ⚠️</span>Todo optimizador tiene su maña: trata los retornos del pasado como si fueran los que vienen, y justo esos son el insumo más resbaloso de todos. Si le metiéramos los retornos del CAPM del punto 5, los pesos saldrían distintos. Por eso, cuando evaluemos la cobertura, mejor con los pies en la tierra: expectativas CAPM, bien conservadoras.</div>
+  <div class="callout"><span class="t">Pilas con el optimizador</span>Todo optimizador tiene su maña: trata los retornos del pasado como si fueran los que vienen, y justo esos son el insumo más resbaloso de todos. Si le metiéramos los retornos del CAPM del punto 5, los pesos saldrían distintos. Por eso, cuando evaluemos la cobertura, mejor con los pies en la tierra: expectativas CAPM, bien conservadoras.</div>
 </section>
 
 <!-- ============================================================ PUNTO 4 -->
 <section id="p4" class="part">
   <span class="part-label">Punto 4</span>
   <h2><span class="num">4</span>¿Cuánto podemos perder en un mal mes? (VaR)</h2>
-  <p>Al VaR lo calculamos por el camino paramétrico (varianza y covarianza) sobre la serie diaria del portafolio ya con los pesos ganadores, y lo llevamos a 21 días hábiles: μ₂₁ = 21·μ<sub>d</sub> = {{ k.mu21 }} y σ₂₁ = √21·σ<sub>d</sub> = {{ k.sd21 }}. Y, para no creernos el cuento a ojo cerrado, lo contrastamos con el VaR histórico, sacado de componer los retornos de todas las ventanas móviles de 21 días que hubo.</p>
-  <div class="formula">$$\text{VaR}_{c} = z_c\,\sigma_{21} - \mu_{21},\qquad \text{VaR}_{USD} = \text{VaR}_c \times \text{USD } 20.000.000$$</div>
+  <p>Al VaR lo calculamos por el camino paramétrico (varianza y covarianza) sobre la serie diaria del portafolio ya con los pesos ganadores, y lo llevamos a 21 días hábiles: <span class="nw">\(\mu_{21} = 21\,\mu_d\) = {{ k.mu21 }}</span> y <span class="nw">\(\sigma_{21} = \sqrt{21}\,\sigma_d\) = {{ k.sd21 }}</span>. Y, para no creernos el cuento a ojo cerrado, lo contrastamos con el VaR histórico, sacado de componer los retornos de todas las ventanas móviles de 21 días que hubo.</p>
+  <div class="formula">$$\text{VaR}_{c} = z_c\,\sigma_{21} - \mu_{21},$$ $$\text{VaR}_{\text{USD}} = \text{VaR}_c \times \text{USD } {{ k.v0_num | texnum }}$$</div>
   {{ tab.var }}
-  <div class="fig">{{ fig.p2_var }}<div class="cap"><b>Gráfico 4.1.</b> Distribución de los retornos del portafolio en 21 días y umbrales de VaR paramétrico e histórico.</div></div>
-  <p><b>¿Cómo se lee eso sin enredarse?</b> Con 95 % de confianza, la pérdida de un mes no debería pasar de {{ k.var95.usd }} ({{ k.var95.pct }}). Dicho al revés: en uno de cada veinte meses sí la pasamos, mala suerte. Con 99 % la vara sube a {{ k.var99.usd }} ({{ k.var99.pct }}), algo así como un mes entre cien. Ahora, el VaR tiene un vacío importante: no cuenta cuánto perdemos cuando ya cruzamos ese umbral. Para eso trajimos también el CVaR en los anexos.</p>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 4.1</b></div>{{ fig.p2_var }}<figcaption class="cap">Distribución de los retornos del portafolio en 21 días y umbrales de VaR paramétrico (azul) e histórico (ocre): la línea discontinua marca el 95 % y la continua, el 99 %.</figcaption></figure>
+  <p><b>¿Cómo se lee eso sin enredarse?</b> Con 95 % de confianza, la pérdida de un mes no debería pasar de {{ k.var95.usd }} ({{ k.var95.pct }}). Dicho al revés: en uno de cada veinte meses sí la pasamos, mala suerte. Con 99 % la vara sube a {{ k.var99.usd }} ({{ k.var99.pct }}), algo así como un mes entre cien. Ahora, el VaR tiene un vacío importante: no cuenta cuánto perdemos cuando ya cruzamos ese umbral. Para eso está el CVaR (el promedio de los peores casos), que usamos en el punto 9 para comparar las estrategias y explicamos en el anexo A.</p>
   <p><b>¿Qué tan frágil es el número?</b> Si no descontamos el retorno esperado (lo más prudente, porque esa media es bien movediza), el VaR se sube a {{ k.var95.z_usd }} y {{ k.var99.z_usd }}. Y el VaR histórico nos deja una lección bacana: sale menor al 95 % ({{ k.var95.h_usd }}) pero casi igualito al 99 % ({{ k.var99.h_usd }}). ¿Por qué? Porque en la vida real los retornos se amontonan más en el centro y tienen colas más gordas que la normal (exceso de curtosis diario entre 6 y 13). La normal, entonces, exagera las pérdidas medianitas, pero allá en el extremo del 99 % los dos métodos se dan la mano.</p>
-  <div class="callout blue"><span class="t">Ojo: lo que cubrimos no es el VaR</span>Este es otro de esos enredos clásicos. El VaR nos dice cuánto podemos perder, pero con los futuros no cubrimos el VaR. Cubrimos la <b>exposición sistemática</b>, β·V = {{ k.exp_sist }}, que es el pedazo de la pérdida que baila al ritmo del índice. En el punto 5 van a ver que el mercado explica el {{ k.r2_p }} de la varianza del portafolio: hasta ahí, como máximo, llega cualquier cobertura con futuros. El resto, el riesgo propio de cada empresa, nos toca aguantarlo. Y sí, ayuda: con cobertura puesta, el VaR mensual al 95 % baja de {{ k.mvar95_u }} a {{ k.mvar95_h }} (punto 11).</div>
+  <div class="callout blue"><span class="t">Ojo: lo que cubrimos no es el <span class="nc">VaR</span></span>Este es otro de esos enredos clásicos. El VaR nos dice cuánto podemos perder, pero con los futuros no cubrimos el VaR. Cubrimos la <b>exposición sistemática</b>, <span class="nw">β·V = {{ k.exp_sist }}</span>, que es el pedazo de la pérdida que baila al ritmo del índice. En el punto 5 van a ver que el mercado explica el {{ k.r2_p }} de la varianza del portafolio: hasta ahí, como máximo, llega cualquier cobertura con futuros. El resto, el riesgo propio de cada empresa, nos toca aguantarlo. Y sí, ayuda: en el punto 11, ya con la media del CAPM en vez de la histórica (por eso el punto de partida no es el de la tabla de arriba), el VaR mensual al 95 % baja de {{ k.mvar95_u }} sin cobertura a {{ k.mvar95_h }} con ella.</div>
 </section>
 
 <!-- ============================================================ PUNTO 5 -->
@@ -197,15 +209,15 @@
   <span class="part-label">Punto 5</span>
   <h2><span class="num">5</span>Beta: ¿qué tanto nos arrastra el mercado?</h2>
   <p>La beta de cada acción sale de la regresión clásica del CAPM sobre los excesos de retorno diarios. Como "el mercado" usamos al propio S&amp;P 500 (^GSPC), que además es el subyacente del futuro que vamos a vender, y como tasa libre de riesgo diaria, el T-bill a 13 semanas (^IRX). La muestra es la misma de siempre, la de los puntos 2 a 4.</p>
-  <div class="formula">$$R_{i,t}-r_{f,t} = \alpha_i + \beta_i\,(R_{m,t}-r_{f,t}) + \varepsilon_{i,t},\qquad \beta_i = \frac{\text{Cov}(R_i,R_m)}{\text{Var}(R_m)},\qquad \beta_p = \sum_i w_i\,\beta_i$$</div>
+  <div class="formula">$$R_{i,t}-r_{f,t} = \alpha_i + \beta_i\,(R_{m,t}-r_{f,t}) + \varepsilon_{i,t},$$ $$\beta_i = \frac{\text{Cov}(R_i,R_m)}{\text{Var}(R_m)},$$ $$\beta_p = \sum_i w_i\,\beta_i$$</div>
   {{ tab.beta }}
   <div class="grid2">
-    <div class="fig">{{ fig.p2_beta_scatter }}<div class="cap"><b>Gráfico 5.1.</b> La recta del CAPM en acción. Con el menú pueden curiosear acción por acción, o quedarse con el portafolio completo.</div></div>
-    <div class="fig">{{ fig.p2_beta_rolling }}<div class="cap"><b>Gráfico 5.2.</b> Beta móvil con ventanas de dos años.</div></div>
+    <figure class="fig"><div class="fig-label"><b>Gráfico 5.1</b></div>{{ fig.p2_beta_scatter }}<figcaption class="cap">La recta del CAPM en acción. Con los botones pueden curiosear acción por acción, o quedarse con el portafolio completo. La punteada es β = 1: si la recta queda más parada, la acción se mueve más que el mercado.</figcaption></figure>
+    <figure class="fig"><div class="fig-label"><b>Gráfico 5.2</b></div>{{ fig.p2_beta_rolling }}<figcaption class="cap">Beta móvil con ventanas de dos años: cada punto usa los 504 días que terminan en esa fecha. La punteada marca β = 1, el mercado.</figcaption></figure>
   </div>
-  <p><b>¿Y quién es quién?</b> MSFT sale más acelerada que el mercado (beta de {{ k.MSFT.beta }}), XOM queda ligeramente a la defensiva ({{ k.XOM.beta }}) y WMT es la propia tortuga, en el buen sentido ({{ k.WMT.beta }}). Con nuestros pesos ganadores, la beta del portafolio completo es <b>{{ k.beta_p }}</b>. Y sí, da exactico lo mismo que regresar directo la serie del portafolio ({{ k.beta_reg }}), porque la beta es juiciosamente lineal en los pesos. Todas salen sólidas de verdad (t mayor que 20) y con intervalos de confianza apretaditos (de más o menos {{ k.se_beta2 }} para el portafolio).</p>
+  <p><b>¿Y quién es quién?</b> MSFT sale más acelerada que el mercado (beta de {{ k.MSFT.beta }}), XOM queda ligeramente a la defensiva ({{ k.XOM.beta }}) y WMT es la propia tortuga, en el buen sentido ({{ k.WMT.beta }}). Con nuestros pesos ganadores, la beta del portafolio completo es <b>{{ k.beta_p3 }}</b>. Y sí, da exactico lo mismo que regresar directo la serie del portafolio ({{ k.beta_reg }}), porque la beta es juiciosamente lineal en los pesos. Todas salen sólidas de verdad (t mayor que 20) y con intervalos de confianza apretaditos (de más o menos {{ k.se_beta2 }} para el portafolio).</p>
   <p><b>¿Qué nos cuentan el R² y la alfa?</b> Que el mercado explica el {{ k.r2_p }} de los brincos del portafolio. En WMT y en XOM manda más bien lo propio de cada empresa (R² de {{ k.WMT.r2 }} y {{ k.XOM.r2 }}). Las alfas de la muestra salieron altísimas ({{ k.alpha_p }} anual para el portafolio), y esa alfa explica la mayor tajada de la brecha entre el retorno histórico ({{ k.ret }}) y lo que el CAPM nos pide hacia adelante (rf + beta por prima = {{ k.capm_p }}, con la rf de {{ k.rf_h }} del punto 10 y una prima de mercado supuesta de {{ k.erp }}). El resto es simple: en la muestra el S&amp;P 500 rindió {{ k.mkt_ret }} al año, una prima realizada gigante frente al {{ k.erp }} que suponemos, y con tasas más bajitas. Apostar a que esa fiesta se repite sería de lo más arriesgado.</p>
-  <p><b>¿La beta se queda quieta? Para nada.</b> La beta móvil lo deja clarito: la de XOM se trepó a casi 1 en 2020 y 2021 y luego se descolgó hasta {{ k.beta_roll.XOM }}; la de MSFT bajó de 1,4 a {{ k.beta_roll.MSFT }}; la de WMT, fiel a su estilo, ni se inmutó. Si miráramos solo los dos últimos años, la beta del portafolio sería {{ k.beta_roll.Portafolio }}, menor que la de toda la década ({{ k.beta_p2 }}), y con unos {{ k.n_roll_beta }} contratos nos bastaría. Nosotros preferimos la de diez años porque es más estable y juega con la misma muestra de antes, pero ojo: esa diferencia nos puede dejar sobrecubiertos. Toca revisarla en cada roll (punto 9).</p>
+  <p><b>¿La beta se queda quieta? Para nada.</b> La beta móvil lo deja clarito: la de XOM se trepó por encima de 1 {{ k.xom_hi }} (llegó a {{ k.broll.XOM.max }}) y luego se descolgó hasta {{ k.beta_roll.XOM }}; la de MSFT bajó de {{ k.broll.MSFT.max }} a {{ k.beta_roll.MSFT }}; y hasta la de WMT, la más tranquila, se movió harto: de {{ k.broll.WMT.max }} bajó a {{ k.broll.WMT.min }} y cerró en {{ k.beta_roll.WMT }}, aunque siempre lejos de 1. Si miráramos solo los dos últimos años, la beta del portafolio sería {{ k.beta_roll.Portafolio }}, menor que la de toda la década ({{ k.beta_p3 }}), y con unos {{ k.n_roll_beta }} contratos nos bastaría. Nosotros preferimos la de diez años porque es más estable y juega con la misma muestra de antes, pero ojo: esa diferencia nos puede dejar sobrecubiertos. Toca revisarla en cada roll (punto 9).</p>
 </section>
 
 <!-- ============================================================ PUNTO 6 -->
@@ -214,18 +226,18 @@
   <h2><span class="num">6</span>El contrato y la cuenta que importa: ¿cuántos vendemos?</h2>
   <h3>Conozcan al protagonista: el E-mini S&amp;P 500 (CME)</h3>
   {{ tab.specs }}
-  <p><b>¿A cómo abrimos?</b> El 30 de julio de 2026 el S&amp;P 500 cerró en {{ k.s0 }} y nuestro {{ k.contract0 }} en {{ k.f0 }}. La diferencia (la bendita base) fue de {{ k.basis0 }} puntos. Por costo de acarreo, F = S·e<sup>(r−q)τ</sup>: con {{ k.tau0_d }} días por delante, un dividendo del índice de {{ k.q_idx }} y la rf en {{ k.rf_h }}, el precio de libro sería {{ k.f0_theo }} (o {{ k.f0_theo_3m }} si usamos la tasa a 3 meses). Esos puntitos de diferencia no son misterio: el futuro sigue negociando después de que cierra el índice y los intermediarios se financian a su propia tasa.</p>
+  <p><b>¿A cómo abrimos?</b> El 30 de julio de 2026 el S&amp;P 500 cerró en {{ k.s0 }} y nuestro {{ k.contract0 }} en {{ k.f0 }}. La diferencia (la bendita base) fue de {{ k.basis0 }} puntos. Por costo de acarreo, <span class="nw">F = S·e<sup>(r−q)τ</sup></span>: con {{ k.tau0_d }} días por delante, un dividendo del índice de {{ k.q_idx }} y la rf en {{ k.rf_h }}, el precio de libro sería {{ k.f0_theo }} (o {{ k.f0_theo_3m }} si usamos la tasa a 3 meses). Esos puntitos de diferencia no son misterio: el futuro sigue negociando después de que cierra el índice y los intermediarios se financian a su propia tasa.</p>
 
   <h3>Ahora sí: ¿cuántos contratos?</h3>
-  <div class="formula">$$N^{*} = \beta_p\,\frac{V_p}{F_0\times 50} = {{ k.beta_p | texnum }}\times\frac{20.000.000}{ {{ k.f0 | texnum }}\times 50} = {{ k.n_star | texnum }}$$</div>
+  <div class="formula">$$\begin{aligned} N^{*} &= \beta_p\,\frac{V_p}{F_0\times 50} \\[2pt] &= {{ k.beta_p | texnum }}\times\frac{ {{ k.v0_num | texnum }} }{ {{ k.f0 | texnum }}\times {{ k.mult_num }} } = {{ k.n_star | texnum }} \end{aligned}$$</div>
   {{ tab.contracts }}
-  <p><b>¿Redondeamos para arriba o para abajo?</b> La fórmula nos da N* = {{ k.n_star }}, pero los contratos no vienen en pedacitos. Con <b>{{ k.n }} contratos</b> nos queda una beta residual de {{ k.res_sel }} (un tris sobrecubiertos, como si quedáramos cortos netos en {{ k.exp_sel }}). Con {{ k.n_other }} nos quedaría {{ k.res_oth }} (o sea, {{ k.exp_oth }} descubiertos). Nos vamos con <b>{{ k.n }}</b> porque es el entero que menos riesgo sistemático nos deja. Y tranquilos: ese exceso es más chiquito que el propio error con el que estimamos la beta (de más o menos {{ k.se_beta2 }}), así que de apuesta bajista no tiene nada. Si alguna política interna prohibiera pasarse ni un pelo, la alternativa sería {{ k.n_other }} contratos, pero tocaría aguantarse el doble de exposición larga residual.</p>
+  <p><b>¿Redondeamos para arriba o para abajo?</b> La fórmula nos da <span class="nw">N* = {{ k.n_star }}</span>, pero los contratos no vienen en pedacitos. Con <b>{{ k.n }} contratos</b> nos queda una beta residual de {{ k.res_sel }} (un tris sobrecubiertos, como si quedáramos cortos netos en {{ k.exp_sel }}). Con {{ k.n_other }} nos quedaría {{ k.res_oth }} (o sea, {{ k.exp_oth }} descubiertos). Nos vamos con <b>{{ k.n }}</b> porque es el entero que menos riesgo sistemático nos deja. Y tranquilos: ese exceso es más chiquito que el propio error con el que estimamos la beta (de más o menos {{ k.se_beta2 }}), así que de apuesta bajista no tiene nada. Si alguna política interna prohibiera pasarse ni un pelo, la alternativa sería {{ k.n_other }} contratos, pero tocaría aguantarse el doble de exposición larga residual.</p>
   <div class="grid3">
     <div class="mini"><div class="l">Nocional cubierto</div><div class="v">{{ k.hedged_notional }}</div><div class="s">{{ k.n }} × {{ k.f0 }} × 50</div></div>
     <div class="mini"><div class="l">Margen inicial / mantenimiento</div><div class="v">{{ k.im_tot }}</div><div class="s">Mantenimiento: {{ k.mm_tot }}</div></div>
     <div class="mini"><div class="l">Apalancamiento del futuro</div><div class="v">{{ k.lev }} veces</div><div class="s">El margen inicial es {{ k.im_pct }} del nocional</div></div>
   </div>
-  <p><b>¿Y qué tanto puede lograr el paraguas?</b> La razón de cobertura que minimiza la varianza (h* = ρ·σ<sub>p</sub>/σ<sub>m</sub>) resulta ser, ni más ni menos, la propia beta. Con ella borramos el pedazo ρ² = R² = {{ k.r2_p }} de la varianza. El resto, ni con todos los contratos del mundo: el riesgo propio de las tres empresas ({{ k.resid_p }} al año) no hay futuro sobre el índice que lo tape.</p>
+  <p><b>¿Y qué tanto puede lograr el paraguas?</b> La razón de cobertura que minimiza la varianza <span class="nw">(h* = ρ·σ<sub>p</sub>/σ<sub>m</sub>)</span> resulta ser, ni más ni menos, la propia beta. Con ella borramos el pedazo <span class="nw">ρ² = R² = {{ k.r2_p }}</span> de la varianza. El resto, ni con todos los contratos del mundo: el riesgo propio de las tres empresas ({{ k.resid_p }} al año) no hay futuro sobre el índice que lo tape.</p>
 </section>
 
 <!-- ============================================================ PUNTO 7 -->
@@ -235,7 +247,7 @@
   <p>Aquí no hay mucho que pensar. Nosotros <b>ya tenemos las acciones</b> (ya vamos "largos" en el mercado, con una beta de {{ k.beta_p2 }}) y lo que nos quita el sueño es una caída general. La jugada correcta es <b>vender {{ k.n }} futuros, o sea, ponernos cortos</b>: si el índice se cae, el futuro también se cae, el corto gana y esa ganancia tapa la pérdida de las acciones.</p>
   <div class="grid2">
     <div class="card">
-      <h4>Cobertura corta: la nuestra ✅</h4>
+      <h4>Cobertura corta: la nuestra&nbsp;✅</h4>
       <ul class="tight">
         <li><b>¿Para cuándo es?</b> Para cuando ya tenemos (o vamos a tener) el portafolio y nos da susto que el mercado se venga abajo. Típico: queremos amarrar el valor de la cartera antes de venderla o mientras pasa una época brava.</li>
         <li><b>¿De qué nos cuida?</b> Del riesgo de mercado, el sistemático. Del riesgo propio de cada empresa y del riesgo de base, ni pío.</li>
@@ -248,11 +260,11 @@
       <ul class="tight">
         <li><b>¿Para cuándo es?</b> Para cuando todavía no tenemos las acciones, pero sabemos que toca comprarlas (por decir, nos cae una plata en tres meses) y nos asusta que el mercado se encarezca mientras tanto. También sirve para <b>subirle</b> la beta a un portafolio sin comprar ni una acción más.</li>
         <li><b>¿De qué cuida?</b> De terminar comprando carísimo. Es cubrir una "deuda" implícita con el mercado.</li>
-        <li><b>¿Y para nosotros?</b> Sería todo menos cobertura: duplicaríamos la exposición (una beta efectiva de como {{ k.beta_p2 }} + {{ k.beta_p2 }}) y eso ya tiene otro nombre, especulación con palanca.</li>
+        <li><b>¿Y para nosotros?</b> Sería todo menos cobertura: duplicaríamos la exposición (una beta efectiva de como <span class="nw">{{ k.beta_p2 }} + {{ k.beta_p2 }}</span>) y eso ya tiene otro nombre, especulación con palanca.</li>
       </ul>
     </div>
   </div>
-  <div class="fig">{{ fig.p2_payoff }}<div class="cap"><b>Gráfico 7.1.</b> Esto ganamos o perdemos con el portafolio, con los cortos y juntando todo, según cuánto se mueva el índice. Activen en la leyenda el caso con futuros largos y van a ver el despelote.</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 7.1</b></div>{{ fig.p2_payoff }}<figcaption class="cap">Esto ganamos o perdemos con el portafolio, con los cortos y juntando todo, según cuánto se mueva el índice. Activen en la leyenda el caso con futuros largos y van a ver el despelote.</figcaption></figure>
   <p>Miren la línea verde, casi planita. Ese es el cuento completo de la cobertura: el resultado deja de colgar del índice. Queda lo propio de nuestras acciones (que nos puede salir a favor o en contra) y el riesgo de base, que destripamos en el punto 9.</p>
 </section>
 
@@ -262,28 +274,28 @@
   <h2><span class="num">8</span>La cuenta de margen mes a mes (y sus famosos llamados)</h2>
   <p><b>¿Cómo lo modelamos?</b> En la vida real, CME nos pasa la cuenta todos los días. Para que esto se pueda leer sin volverse loco, liquidamos <b>al cierre de cada mes</b> con las reglas de la tabla del punto 6:</p>
   <ul class="tight">
-    <li>Abrimos la cuenta consignando el margen inicial: {{ k.n }} × {{ k.im_c }} = {{ k.im_tot }}.</li>
-    <li>Cada mes, lo del corto sale de una restica simple: ganancia o pérdida = −N × 50 × (F<sub>final</sub> − F<sub>inicial</sub>). El largo, obvio, gana justo al revés.</li>
-    <li>Si el saldo se cae por debajo del margen de mantenimiento (N × {{ k.mm_c }}), suena el temido <b>llamado al margen</b> y toca reponer hasta volver al inicial. En cada roll, además, nos exigen el margen inicial de la nueva cantidad de contratos. Si el saldo quedó en la mitad de los dos niveles, ese depósito no es un llamado como tal: lo registramos como "depósito por roll".</li>
+    <li>Abrimos la cuenta consignando el margen inicial: <span class="nw">{{ k.n }} × {{ k.im_c }} = {{ k.im_tot }}</span>.</li>
+    <li>Cada mes, la ganancia o pérdida del corto sale de una restica simple: <span class="nw">−N × 50 × (F<sub>final</sub> − F<sub>inicial</sub>)</span>. El largo, obvio, gana justo al revés.</li>
+    <li>Si el saldo se cae por debajo del margen de mantenimiento <span class="nw">(N × {{ k.mm_c }})</span>, suena el temido <b>llamado al margen</b> y toca reponer hasta volver al inicial. En cada roll, además, nos exigen el margen inicial de la nueva cantidad de contratos. Si el saldo quedó en la mitad de los dos niveles, ese depósito no es un llamado como tal: lo registramos como "depósito por roll".</li>
     <li>Y nada de ir sacando las ganancias: las dejamos quieticas en la cuenta, de colchón.</li>
   </ul>
   <p>Agosto y septiembre de 2026 van con <b>precios reales</b>. De octubre en adelante le creemos a la simulación: el S&amp;P 500 se mueve con un movimiento browniano geométrico (volatilidad histórica de {{ k.mkt_vol }} y retorno esperado de rf más la prima de riesgo) y el futuro se valora por costo de acarreo, con su pizquita de error de base.</p>
-  <div class="callout red"><span class="t">El primer mes ya nos dio una probadita (y fue real) 😬</span>Entre el 30 de julio y el 31 de agosto el S&amp;P 500 subió, el {{ k.contract0 }} brincó de {{ k.f0 }} a {{ k.roll1_old }} y nuestro corto perdió {{ k.p1_loss }}. El saldo se fue por debajo del mantenimiento y, de una, <b>llamado al margen real por {{ k.p1_call }}</b> (con el margen inicial de los {{ k.ep.n_roll }} contratos del trimestre nuevo incluido). Sí, las acciones ganaron más que eso, pero la llamada no acepta acciones: la plata hay que ponerla en efectivo y ya.</div>
-  <div class="fig">{{ fig.p2_margin }}<div class="cap"><b>Gráfico 8.1.</b> Así se mueve la cuenta de margen: el saldo, los pisos inicial y de mantenimiento y cada reposición. Jueguen con el menú y vean el mundo bajista, el central y el alcista (según dónde termine el S&amp;P 500 en 2030).</div></div>
+  <div class="callout red"><span class="t">El primer mes ya nos dio una probadita (y fue real)</span>Entre el 30 de julio y el 31 de agosto el S&amp;P 500 subió, el {{ k.contract0 }} brincó de {{ k.f0 }} a {{ k.roll1_old }} y nuestro corto perdió {{ k.p1_loss }}. El saldo se fue por debajo del mantenimiento y, de una, <b>llamado al margen real por {{ k.p1_call }}</b> (con el margen inicial de los {{ k.ep.n_roll }} contratos del trimestre nuevo incluido). Sí, las acciones ganaron más que eso, pero la llamada no acepta acciones: la plata hay que ponerla en efectivo y ya.</div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 8.1</b></div>{{ fig.p2_margin }}<figcaption class="cap">Así se mueve la cuenta de margen: el saldo, los pisos inicial y de mantenimiento y cada reposición (la barra roja va desde donde cayó el saldo hasta donde lo dejamos al reponer). Jueguen con los botones y vean el mundo bajista, el central y el alcista (según dónde termine el S&amp;P 500 en 2030).</figcaption></figure>
   <h3>El detalle mes a mes</h3>
-  <div class="tabs" data-group="mpath">
-    <button class="on" data-target="m_p50">Escenario central</button>
-    <button data-target="m_p5">Mercado bajista (P5)</button>
-    <button data-target="m_p95">Mercado alcista (P95)</button>
+  <div class="tabs" data-group="mpath" role="group" aria-label="Trayectoria">
+    <button data-target="m_p5">Bajista (P5)</button>
+    <button class="on" data-target="m_p50">Central (mediana)</button>
+    <button data-target="m_p95">Alcista (P95)</button>
   </div>
-  <div class="tabpane on scroll" id="m_p50">{{ tab.m_p50 }}</div>
-  <div class="tabpane scroll" id="m_p5">{{ tab.m_p5 }}</div>
-  <div class="tabpane scroll" id="m_p95">{{ tab.m_p95 }}</div>
+  <div class="tabpane" id="m_p5">{{ tab.m_p5 }}</div>
+  <div class="tabpane on" id="m_p50">{{ tab.m_p50 }}</div>
+  <div class="tabpane" id="m_p95">{{ tab.m_p95 }}</div>
   <h3>¿Y cuántas veces nos van a llamar? (en las {{ k.n_paths }} trayectorias)</h3>
   <div class="grid3">
     <div class="mini"><div class="l">Meses con llamado</div><div class="v">{{ k.m.p_month }}</div><div class="s">{{ k.m.n_calls }} llamados en promedio en 48 meses (P95: {{ k.m.n_calls_p95 }}), más {{ k.m.n_rdep }} depósitos por roll sin llamado</div></div>
     <div class="mini"><div class="l">Reposiciones y depósitos acumulados</div><div class="v">{{ k.m.dep_mean }}</div><div class="s">En promedio a 4 años; P95: {{ k.m.dep_p95 }}</div></div>
-    <div class="mini"><div class="l">Si se retirara el excedente</div><div class="v">{{ k.m.sweep }}</div><div class="s">de los meses tendría llamado (colchón de solo {{ k.cushion_pts }} puntos = {{ k.cushion_pct }} del índice)</div></div>
+    <div class="mini"><div class="l">Si se retirara el excedente</div><div class="v">{{ k.m.sweep }}</div><div class="s">de los meses tendría llamado (colchón de solo <span class="nw">{{ k.cushion_pts }} puntos = {{ k.cushion_pct }}</span> del índice)</div></div>
   </div>
   <p><b>La lectura honesta:</b> como lo normal es que el mercado suba, nuestro corto la pasa perdiendo la mayor parte del tiempo y los llamados llueven, sobre todo al principio, cuando todavía no hay ganancia acumulada que haga de colchón. Y ojo con lo flaquito que es ese colchón: entre el margen inicial y el de mantenimiento hay apenas {{ k.cushion_pct }} del índice. Si encima sacáramos los excedentes cada vez, cualquier subidita mensual nos dejaría en ceros. Moraleja: <b>esta cobertura se sostiene con liquidez o no se sostiene</b>. Toca tener guardada la reserva del margen inicial ({{ k.im_tot }}) y un plan B para reponer (una línea de crédito o vender acciones de vez en cuando, que en esos escenarios justamente van valorizadas). ¿Y si fuéramos largos? Nos llamarían menos ({{ k.ml.n_calls }} veces en promedio) porque ganaríamos con las subidas, claro, pero ya quedamos en que eso de cobertura no tiene nada.</p>
 </section>
@@ -293,21 +305,21 @@
   <span class="part-label">Punto 9</span>
   <h2><span class="num">9</span>A renovar el paraguas cada trimestre (y el riesgo de base)</h2>
   <p>Nuestro horizonte son cuatro años y ningún contrato dura tanto, así que toca ir renovando: eso es el famoso roll-over. Para no meternos en la semana de vencimiento, cuando todo se pone ilíquido y feo, hacemos el cambio el <b>último día hábil de febrero, mayo, agosto y noviembre</b>: cerramos el contrato que va de salida (le quedan menos de tres semanas) y vendemos el del trimestre siguiente. En total son {{ k.roll_n }} rolls, y el último contrato, {{ k.contract_final }}, lo cerramos el 30 de julio de 2030, {{ k.tau_final_d }} días antes de que se venza. En cada cambio, juiciosos, recalculamos cuántos contratos van con la fórmula de siempre y con la plata que valga el portafolio ese día.</p>
-  <div class="callout green"><span class="t">Y ya hicimos el primero, de verdad ✅</span>El 31 de agosto de 2026 cerramos el ESU26 en {{ k.roll1_old }} y vendimos el ESZ26 en {{ k.roll1_new }}. Esa diferencia de {{ k.roll1_spread }} puntos es el acarreo de un trimestre más (la tasa menos el dividendo, aplicada al índice). Para el que va corto no es un gasto, al contrario: vendemos el contrato nuevo más caro y esa primita se va desinflando a nuestro favor a medida que se acerca el vencimiento. En la simulación, ese spread promedia {{ k.roll_spread_mean }} puntos por roll.</div>
+  <div class="callout green"><span class="t">Y ya hicimos el primero, de verdad</span>El 31 de agosto de 2026 cerramos el ESU26 en {{ k.roll1_old }} y vendimos el ESZ26 en {{ k.roll1_new }}. Esa diferencia de {{ k.roll1_spread }} puntos es el acarreo de un trimestre más (la tasa menos el dividendo, aplicada al índice). Para el que va corto no es un gasto, al contrario: vendemos el contrato nuevo más caro y esa primita se va desinflando a nuestro favor a medida que se acerca el vencimiento. En la simulación, ese spread promedia {{ k.roll_spread_mean }} puntos por roll.</div>
   {{ tab.quarters }}
-  <div class="fig">{{ fig.p2_quarters }}<div class="cap"><b>Gráfico 9.1.</b> Resultado esperado (barras, P5–P95) de la posición corta en cada trimestre y spread de cada roll. Barra amarilla: trimestre con datos reales.</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 9.1</b></div>{{ fig.p2_quarters }}<figcaption class="cap">Resultado esperado de la posición corta en cada trimestre (punto) con su rango P5–P95 (barra) y, abajo, el spread de cada roll. En ocre, el tramo con datos reales. Ojo: el primer tramo (agosto de 2026) y el último (junio y julio de 2030) son más cortos que un trimestre.</figcaption></figure>
   <p><b>¿Renovar ayuda o estorba?</b> Ayuda, y de una forma hasta elegante: cada contrato nuevo lo vendemos por encima del índice (la base es positiva porque la tasa le gana al dividendo) y esa base se va cerrando sola hasta cero al acercarse el vencimiento. El corto, trimestre a trimestre, va cobrando esa convergencia. Si a eso le restamos lo que el corto pierde cuando el índice sube a su ritmo normal, el portafolio cubierto termina ganando {{ k.r_h_q }} por trimestre en promedio (contra {{ k.r_u_q }} sin nada). O sea, bien pegado a la tasa libre de riesgo trimestral ({{ k.rf_q }}) y lejos del retorno CAPM ({{ k.capm_q }}). Y con una volatilidad trimestral que baja de {{ k.sd_u_q }} a {{ k.sd_h_q }}.</p>
   <p><b>Pero perfecto no es: hablemos del riesgo de base.</b> Hay tres motivos:</p>
   <ul class="tight">
-    <li><b>La base no obedece al pie de la letra:</b> la de verdad se pasea alrededor de la teórica. Con los contratos ESZ26 y ESH27 estimamos un desvío típico de {{ k.basis_sd }} del índice, y ese ruido nos pega en cada precio de cierre y de apertura de los rolls.</li>
+    <li><b>La base no obedece al pie de la letra:</b> la de verdad se pasea alrededor de la teórica. Con los contratos ESZ26 y ESH27 estimamos un desvío típico de {{ k.basis_sd }} del índice, y ese ruido nos pega en cada liquidación. En los rolls, eso sí, el contrato que cerramos y el que abrimos lo comparten casi entero (en los datos se mueven juntos), así que el spread entre los dos queda cerca del acarreo.</li>
     <li><b>Cerramos antes de tiempo:</b> el último contrato lo cerramos con {{ k.tau_final_d }} días todavía por vencer. La base que esperamos a esa fecha es de {{ k.base_final }} puntos (más o menos {{ k.base_final_usd }} para la posición) y no va a haber alcanzado a cerrarse del todo.</li>
     <li><b>No somos el índice:</b> nuestras tres acciones no son las quinientas del S&amp;P 500, ni de broma. Este es el riesgo de base "cruzado" y es, de lejos, el más grande: ese riesgo propio de {{ k.resid_p }} al año que queda vivito y coleando.</li>
   </ul>
   <h3>¿Y si nos quedamos siempre cortos… o siempre largos?</h3>
   {{ tab.strategies }}
   <div class="grid2">
-    <div class="fig">{{ fig.p2_fan }}<div class="cap"><b>Gráfico 9.2.</b> Riqueza (acciones + resultado acumulado de futuros): mediana y banda P5–P95.</div></div>
-    <div class="fig">{{ fig.p2_terminal }}<div class="cap"><b>Gráfico 9.3.</b> Distribución del retorno acumulado a 4 años por estrategia.</div></div>
+    <figure class="fig"><div class="fig-label"><b>Gráfico 9.2</b></div>{{ fig.p2_fan }}<figcaption class="cap">Riqueza (acciones + resultado acumulado de futuros): mediana y banda P5–P95. La franja ocre: agosto y septiembre de 2026, con datos reales.</figcaption></figure>
+    <figure class="fig"><div class="fig-label"><b>Gráfico 9.3</b></div>{{ fig.p2_terminal }}<figcaption class="cap">Distribución del retorno acumulado a 4 años por estrategia.</figcaption></figure>
   </div>
   <p><b>Siempre cortos (la cobertura de verdad):</b> la plata final se vuelve mucho más predecible. Su desviación cae {{ k.sd_red }} (borramos el {{ k.var_red }} de la varianza) y el promedio de los peores mundos mejora un montón (el CVaR 5 % pasa de {{ k.T_sin.cvar }} a {{ k.T_corto.cvar }}). La contrapartida ya la conocen: ganamos menos en promedio (de {{ k.T_sin.ra }} bajamos a {{ k.T_corto.ra }} al año). Y pilas con esta paradoja: la probabilidad de terminar en rojo incluso sube un tris ({{ k.T_sin.ploss }} sin nada, contra {{ k.T_corto.ploss }} cubiertos), porque el riesgo propio sigue ahí y ahora ganamos más poquito para compensarlo. El paraguas nos salva de los aguaceros del mercado. De todo lo demás, no.</p>
   <p><b>Rebalancear no es decorativo, importa harto.</b> Ajustar la cantidad de contratos en cada roll nos baja la desviación otro {{ k.sd_reb_gain }} frente a dejar fijos los {{ k.n }} contratos. Y en la cola fea la diferencia es todavía más clara: con contratos fijos, el CVaR 5 % ({{ k.T_corto_fijo.cvar }}) sale incluso peor que sin cobertura. ¿Cómo así? Imagínense al índice disparado y a nuestras tres quedándose atrás: el nocional de esos {{ k.n }} contratos crece con el índice y, sin darnos cuenta, quedamos sobrecubiertos apostándole a la baja. Rebalancear en cada roll corrige justo ese desajuste.</p>
@@ -322,11 +334,11 @@
   {{ tab.rates }}
   <p>Ojo con un enredo del enunciado: sugiere ^TNX, pero ese índice de CBOE es el Tesoro a <b>10 años</b> ({{ k.tnx }}), más largo que todo nuestro horizonte. El que calza con la descripción de "3 a 5 años" es ^FVX, el Tesoro a 5 años: <b>{{ k.fvx }}</b> en rendimiento semestral, que equivale a <b>{{ k.rf_h }} efectivo anual</b>. La curva oficial del Tesoro nos da la razón (3 años en {{ R.tsy["3 Yr"] | pct }} y 5 años en {{ R.tsy["5 Yr"] | pct }}). Lo usamos por dos motivos de cajón: su plazo se parece a nuestros 4 años, y aproxima bien el promedio de las tasas corticas a las que iremos renovando la cobertura trimestre a trimestre. Si nos fuéramos con ^TNX, la tasa sería {{ k.tnx_ea }} ({{ k.tnx_diff }} puntos básicos más) y lo esperado del portafolio cubierto subiría más o menos eso mismo.</p>
   <h3>Trimestre a trimestre, ¿a dónde va la plata?</h3>
-  <p>Con CAPM en mano, cada trimestre el portafolio debería rendir la tasa libre de riesgo más beta por la prima de mercado. En números: {{ k.capm_q }} por trimestre. Y nuestro corto en futuros debería perder, en promedio, justo el pedazo de la prima (beta por el valor por el exceso del mercado), unos {{ k.pnl_q }} por trimestre. Resta va, resta viene, y al portafolio cubierto le queda más o menos la sola tasa libre de riesgo: {{ k.rf_q }} por trimestre.</p>
-  <div class="formula">$$E[V^{cub}_{T}] = E[V_T] + E[\text{G/P futuros}] \approx V_0\,(1+r_f)^{T} \qquad\text{porque}\qquad E[R_p - \beta(R_m - r_f)] = r_f + \alpha = r_f\ \text{bajo el CAPM } (\alpha = 0)$$</div>
+  <p>Con CAPM en mano, cada trimestre el portafolio debería rendir la tasa libre de riesgo más beta por la prima de mercado. En números: {{ k.capm_q }} por trimestre. Y nuestro corto en futuros debería perder, en promedio, justo el pedazo de la prima (beta por el valor por el exceso del mercado), unos {{ k.pnl_q_abs }} por trimestre. Resta va, resta viene, y al portafolio cubierto le queda más o menos la sola tasa libre de riesgo: {{ k.rf_q }} por trimestre.</p>
+  <div class="formula">$$\begin{aligned} E[V^{\text{cub}}_{T}] &= E[V_T] + E[\text{G/P futuros}] \\[2pt] &\approx V_0\,(1+r_f)^{T} \end{aligned}$$ <span class="f-word">porque</span> $$\begin{aligned} E[R_p - \beta(R_m - r_f)] &= r_f + \alpha \\[2pt] &= r_f, \end{aligned}$$ <span class="f-word">bajo el CAPM \((\alpha = 0)\)</span></div>
   <p>Y la simulación nos da la razón sin pelear: desde el último cierre real ({{ k.last_obs }}), la riqueza cubierta crece en promedio {{ k.fo_h }} al año, prácticamente calcada a la tasa libre de riesgo ({{ k.rf_h }}). Sin cobertura crecería {{ k.fo_u }}. Contando todo el horizonte, lo cubierto sale un tris más alto ({{ k.T_corto.ra }}) solo porque agosto y septiembre, ya con datos reales, nos dejaron {{ k.obs_gain }} de ñapa gracias al buen momento propio de las tres acciones.</p>
-  <div class="scroll">{{ tab.expected_q }}</div>
-  <div class="fig">{{ fig.p2_expected }}<div class="cap"><b>Gráfico 10.1.</b> Lo esperado sin paraguas y con paraguas (promedios de la simulación), lado a lado con las curvas de libro del CAPM y de la tasa libre de riesgo.</div></div>
+  {{ tab.expected_q }}
+  <figure class="fig"><div class="fig-label"><b>Gráfico 10.1</b></div>{{ fig.p2_expected }}<figcaption class="cap">Lo esperado sin paraguas y con paraguas (promedios de la simulación), lado a lado con las curvas de libro del CAPM y de la tasa libre de riesgo. La flecha marca cuánto menos esperamos tener en 2030 por cubrirnos: casi todo es la prima de mercado a la que renunciamos y el resto es lo que el corto ya perdió en agosto y septiembre.</figcaption></figure>
   <h3>¿Y si la prima de mercado fuera otra?</h3>
   {{ tab.sens_erp }}
   <div class="callout blue"><span class="t">¿Cubrirnos baja el riesgo, la rentabilidad o las dos?</span><b>Las dos, sin vueltas.</b> Sin cobertura, lo que esperamos tener en 2030 se pasea entre {{ k.Eu_lo }} y {{ k.Eu_hi }} según la prima que supongamos (entre {{ k.erp_lo }} y {{ k.erp_hi }}). Cubiertos, en cambio, casi ni se inmuta (entre {{ k.Eh_lo }} y {{ k.Eh_hi }}). La razón es de cuento infantil: la cobertura nos desconecta de la prima de riesgo, que es justamente el riesgo de mercado, y al desconectarnos del riesgo también nos desconecta de su recompensa. Y que quede claro: cubrirse no cuesta una factura (el futuro nace valiendo cero). El costo es invisible, pero real: la prima a la que renunciamos, más o menos beta por prima, o sea {{ k.beta_p2 }} por {{ k.erp }} cada año.</div>
@@ -337,14 +349,14 @@
   <span class="part-label">Punto 11</span>
   <h2><span class="num">11</span>El mes a mes esperado (y qué pinta el dividendo en todo esto)</h2>
   {{ tab.monthly }}
-  <p><b>Lo miramos de tres maneras.</b> Primero, <b>sin cobertura</b>: el CAPM nos promete {{ k.mm_u }} al mes (y un portafolio que valdría {{ k.mv_u }} al cerrar el primer mes). El promedio histórico presumiría {{ k.mm_hist }} (sí, el 20,96 % anual dividido entre 12, como en el punto 4), pero ese trae metida una alfa de época de vacas gordas que nadie nos garantiza. Segundo, <b>ya cubiertos</b>: lo esperado baja a {{ k.mm_h }} mensual, bien pegadito a la tasa libre de riesgo, y la volatilidad del mes se desploma de {{ k.msd_u }} a {{ k.msd_h }}. Y tercero, <b>con lupa de VaR</b>: la pérdida que solo superamos en 5 de cada 100 meses es {{ k.mvar95_u }} sin nada y {{ k.mvar95_h }} con paraguas; la que solo superamos 1 de 100 es {{ k.mvar99_u }} contra {{ k.mvar99_h }}. Que estos VaR no den exactos a los del punto 4 tiene explicación simple: aquí usamos la media del CAPM y allá la histórica.</p>
+  <p><b>Lo miramos de tres maneras.</b> Primero, <b>sin cobertura</b>: el CAPM nos promete {{ k.mm_u }} al mes (y un portafolio que valdría {{ k.mv_u }} al cerrar el primer mes). El promedio histórico presumiría {{ k.mm_hist }} (sí, el {{ k.ret }} anual dividido entre 12, como en el punto 4), pero ese trae metida una alfa de época de vacas gordas que nadie nos garantiza. Segundo, <b>ya cubiertos</b>: lo esperado baja a {{ k.mm_h }} mensual, bien pegadito a la tasa libre de riesgo, y la volatilidad del mes se desploma de {{ k.msd_u }} a {{ k.msd_h }}. Y tercero, <b>con lupa de VaR</b>: la pérdida que solo superamos en 5 de cada 100 meses es {{ k.mvar95_u }} sin nada y {{ k.mvar95_h }} con paraguas; la que solo superamos 1 de 100 es {{ k.mvar99_u }} contra {{ k.mvar99_h }}. Que estos VaR no den exactos a los del punto 4 tiene explicación simple: aquí usamos la media del CAPM y allá la histórica.</p>
   <h3>¿Y los dividendos? No son platica menor</h3>
   {{ tab.dividends }}
   <p>Las tres pagan dividendo cada trimestre, juiciosas. Ponderando por nuestros pesos, el portafolio rinde {{ k.q_p }} al año solo en dividendos (como {{ k.div_m }} al mes), algo así como {{ k.div_year }} anuales con las acciones que compramos. De hecho, en agosto de 2026 ya entraron {{ k.div_real }} de verdad. Así pegan en nuestras cuentas:</p>
   <ul class="tight">
     <li><b>Retorno total es precio más dividendo, no solo precio.</b> El día ex-dividendo la acción amanece más barata en más o menos lo que paga, y no perdemos nada porque el billete nos llega a la cuenta. Por eso estimamos todo con <b>precios ajustados</b>: retorno y beta ya traen el dividendo adentro. Sumarlo otra vez sería contarnos el cuento dos veces.</li>
     <li><b>En el valor esperado:</b> el retorno del CAPM ({{ k.capm_p }}) es total. De ahí, cerca de {{ k.q_p }} nos llega en efectivo y el resto es pura valorización. Por eso, para el precio esperado del punto 1 toca restarle el dividendo a la cuenta. Y en la simulación, cada dividendo que cae se reinvierte de una.</li>
-    <li><b>¿Y con los futuros qué?</b> El precio del futuro ya viene con los dividendos del índice descontados (en la fórmula van restando, con q = {{ k.q_idx }}). El que vende el futuro no sale a "pagarle" los dividendos a nadie: los cobra él por sus acciones y el futuro, al cotizar más barato, ya hizo el ajuste. Como nuestro dividendo ({{ k.q_p }}) se parece bastante al del índice ({{ k.q_idx }}), por este lado la cobertura ni gana ni pierde nada que importe.</li>
+    <li><b>¿Y con los futuros qué?</b> El precio del futuro ya viene con los dividendos del índice descontados (en la fórmula van restando, con <span class="nw">q = {{ k.q_idx }}</span>). El que vende el futuro no sale a "pagarle" los dividendos a nadie: los cobra él por sus acciones y el futuro, al cotizar más barato, ya hizo el ajuste. Como nuestro dividendo ({{ k.q_p }}) se parece bastante al del índice ({{ k.q_idx }}), por este lado la cobertura ni gana ni pierde nada que importe.</li>
   </ul>
 </section>
 
@@ -354,17 +366,17 @@
   <h2><span class="num">12</span>¿Y si la beta fuera 0,5 o 2?</h2>
   <p>Hagamos el experimento mental completo: dejamos quietico todo lo demás (los USD 20 millones, el futuro en {{ k.f0 }} y el riesgo propio en {{ k.resid_p }} al año) y jugamos solo con la beta.</p>
   {{ tab.beta_sens }}
-  <div class="fig">{{ fig.p2_beta_sens }}<div class="cap"><b>Gráfico 12.1.</b> Ganancia o pérdida sistemática según la beta, sin cobertura (línea continua) y con el número óptimo de contratos cortos (punteada).</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico 12.1</b></div>{{ fig.p2_beta_sens }}<figcaption class="cap">Ganancia o pérdida sistemática según la beta, sin cobertura (línea continua) y con el número óptimo de contratos cortos (punteadas verdes). Con cobertura las tres quedan pegadas al cero, una encima de otra: por eso la leyenda las junta en una sola entrada.</figcaption></figure>
   <div class="grid3">
     {% for s in k.sb %}
-    <div class="mini"><div class="l">β = {{ s.b }}</div><div class="v">{{ s.n }} contratos</div><div class="s">Exposición {{ s.exp }} · {{ s.dv }} por cada 1 % del índice · margen inicial {{ s.im }}</div></div>
+    <div class="mini"><div class="l"><span class="nc">β</span> = {{ s.b }}</div><div class="v">{{ s.n }} contratos</div><div class="s">Exposición {{ s.exp }} · {{ s.dv }} por cada 1 % del índice · margen inicial {{ s.im }}</div></div>
     {% endfor %}
   </div>
   <p><b>Si la beta fuera 0,5:</b> seríamos medio mercado. Una caída de 10 % del S&amp;P 500 nos quitaría, en promedio, apenas {{ k.sb[0].m10 }}. Con <b>{{ k.sb[0].n }} contratos</b> nos sobra, y aun así la cobertura solo borraría el {{ k.sb[0].red }} de la varianza, porque casi todo el riesgo sería asunto propio de las empresas. Es un portafolio tan de la defensiva que el paraguas ayuda, sí, pero poquito.</p>
   <p><b>Si la beta fuera 2:</b> seríamos el mercado con esteroides. Ese mismo bajonazo de 10 % del índice nos costaría {{ k.sb[2].m10 }} de pérdida. Tocarían <b>{{ k.sb[2].n }} contratos</b> (un nocional pegado a los USD 40 millones, el doble del portafolio entero), un margen inicial de {{ k.sb[2].im }} y, pilas, una billetera mucho más honda para aguantar los llamados. El premio: el paraguas borraría el {{ k.sb[2].red }} de la varianza y la volatilidad caería de {{ k.sb[2].sdu }} a {{ k.sb[2].sdh }}.</p>
-  <div class="callout"><span class="t">¿Por qué a más beta, más contratos (y mejor funciona)?</span>La cuenta es de cajón: el número de contratos crece derechito con la beta (N* = β·V/(F·50)), porque la beta es, justamente, qué tanto nos duele cada punto del índice. Con beta de 2 cada caída cuesta el doble, entonces toca vender el doble para taparla. Y hay ñapa: entre más alta la beta, más del riesgo total es de mercado, y por eso el paraguas rinde más. Al final, en los tres mundos el portafolio cubierto termina igualito (la misma volatilidad de {{ k.sb[1].sdh }}, que es el riesgo propio, y lo mismo esperado, como {{ k.rf_h }}). Lo único que cambia es cuánta plata y cuánto susto entregamos al cubrirnos (sin cobertura esperaríamos {{ k.sb[0].Eu }}, {{ k.sb[1].Eu }} o {{ k.sb[2].Eu }} al año, según el caso).</div>
+  <div class="callout"><span class="t">¿Por qué a más beta, más contratos (y mejor funciona)?</span>La cuenta es de cajón: el número de contratos crece derechito con la beta <span class="nw">(N* = β·V/(F·50))</span>, porque la beta es, justamente, qué tanto nos duele cada punto del índice. Con beta de 2 cada caída cuesta el doble, entonces toca vender el doble para taparla. Y hay ñapa: entre más alta la beta, más del riesgo total es de mercado, y por eso el paraguas rinde más. Al final, en los tres mundos el portafolio cubierto termina igualito (la misma volatilidad de {{ k.sb[1].sdh }}, que es el riesgo propio, y lo mismo esperado, como {{ k.rf_h }}). Lo único que cambia es cuánta plata y cuánto susto entregamos al cubrirnos (sin cobertura esperaríamos {{ k.sb[0].Eu }}, {{ k.sb[1].Eu }} o {{ k.sb[2].Eu }} al año, según el caso).</div>
   <h4>De ñapa: mover la beta sin tocar las acciones</h4>
-  <p>Con la mismita lógica del ejemplo de clase, la fórmula N = (β* − β)·V/(F·50) nos deja cambiar la beta sin comprar ni vender una sola acción. Para bajarnos de {{ k.beta_p2 }} a 0,5 tocaría vender {{ k.cb05 }} contratos. Y para subirnos a 2, comprar {{ k.cb2 }}.</p>
+  <p>Con la mismita lógica del ejemplo de clase, la fórmula <span class="nw">N = (β* − β)·V/(F·50)</span> nos deja cambiar la beta sin comprar ni vender una sola acción. Para bajarnos de {{ k.beta_p2 }} a 0,5 tocaría vender {{ k.cb05 }} contratos. Y para subirnos a 2, comprar {{ k.cb2 }}.</p>
   {{ tab.change_beta }}
 </section>
 
@@ -374,11 +386,11 @@
   <h2>¿Funcionó de verdad? La prueba con precios reales</h2>
   <p>Del 30 de julio al {{ k.ep.fecha }} ya no hablamos de simulaciones: son precios que sí pasaron. Ojo, con ellos no decidimos nada (decidimos antes, como toca), pero son el examen perfecto para ver si el paraguas aguanta un aguacero de verdad.</p>
   <div class="grid3">
-    <div class="mini"><div class="l">Portafolio sin cobertura</div><div class="v">{{ k.ep.r }}</div><div class="s">{{ k.ep.v0 }} → {{ k.ep.v }} (MSFT {{ k.MSFT.post }}, WMT {{ k.WMT.post }}, XOM {{ k.XOM.post }} en precio)</div></div>
-    <div class="mini"><div class="l">S&amp;P 500</div><div class="v">{{ k.ep.spx }}</div><div class="s">Componente sistemático esperado: β × {{ k.ep.spx }} = {{ k.ep.sys }}</div></div>
+    <div class="mini"><div class="l">Portafolio sin cobertura</div><div class="v">{{ k.ep.r }}</div><div class="s">{{ k.ep.v0 }} → {{ k.ep.v }} (MSFT&nbsp;{{ k.MSFT.post }}, WMT&nbsp;{{ k.WMT.post }}, XOM&nbsp;{{ k.XOM.post }} en precio)</div></div>
+    <div class="mini"><div class="l">S&amp;P 500</div><div class="v">{{ k.ep.spx }}</div><div class="s">Componente sistemático esperado: <span class="nw">β × {{ k.ep.spx }} = {{ k.ep.sys }}</span></div></div>
     <div class="mini"><div class="l">Portafolio cubierto</div><div class="v">{{ k.ep.rh }}</div><div class="s">Futuros: {{ k.ep.u6 }} (ESU26) y {{ k.ep.z6 }} (ESZ26, {{ k.ep.n_roll }} contratos)</div></div>
   </div>
-  <div class="fig">{{ fig.p2_expost }}<div class="cap"><b>Gráfico E.1.</b> Valor diario del portafolio con y sin cobertura (precios reales).</div></div>
+  <figure class="fig"><div class="fig-label"><b>Gráfico E.1</b></div>{{ fig.p2_expost }}<figcaption class="cap">Valor diario del portafolio con cobertura (verde) y sin ella (gris), con precios reales. La punteada es lo que habrían hecho los mismos USD 20 millones en el S&amp;P 500 (solo precio) y la vertical marca el roll del 31 de agosto.</figcaption></figure>
   <p>Y el examen salió como en los libros, qué dicha. El mercado subió poquito, pero nuestras acciones subieron un montón: un desempeño propio de {{ k.ep.alpha }}, jalado por Microsoft ({{ k.MSFT.post }}) y ExxonMobil ({{ k.XOM.post }}) desde el precio al que compramos. La cobertura hizo su única tarea y la hizo bien: <b>nos quitó de encima al mercado</b> (los futuros perdieron {{ k.ep.fut_abs }}) y <b>nos dejó intacto ese buen momento propio</b>. Ni más ni menos que para lo que sirve un futuro sobre el índice: protege del mercado, sin meterse ni a favor ni en contra de haber escogido bien las acciones.</p>
 </section>
 
@@ -400,8 +412,8 @@
   <span class="part-label">Anexo A</span>
   <h2>¿Cómo hicimos las cuentas? (metodología)</h2>
   <ul class="tight">
-    <li><b>La simulación:</b> avanzamos mes a mes (cada paso vale Δt = 21/252). El log-retorno total del mercado va con \((\ln(1 + r_f + \text{prima}) - \sigma_m^2/2)\Delta t + \sigma_m\sqrt{\Delta t}\,\varepsilon\), con \(\sigma_m\) = {{ k.mkt_vol }}. Al índice de precio le quitamos el dividendo (q = {{ k.q_idx }}). Y nuestro portafolio rinde \(r_f\Delta t + \beta(R_m - r_f\Delta t) + \sigma_\varepsilon\sqrt{\Delta t}\,\eta\), con el ruido propio \(\sigma_\varepsilon\) = {{ k.resid_p }} que salió de la regresión. Corremos {{ k.n_paths }} futuros posibles, siempre con la misma semilla para que cualquiera nos pueda replicar.</li>
-    <li><b>Los futuros:</b> cada uno vale \(F = S\cdot\exp[(\ln(1+r_f) - \ln(1+q))\tau]\cdot(1 + u)\), con τ en días calendario sobre 365 hasta el tercer viernes de su mes. Ese \(u\) es un errorcito de base aleatorio de desviación {{ k.basis_sd }}, metido a propósito, para no creernos que la paridad calza perfecto en el mundo real.</li>
+    <li><b>La simulación:</b> avanzamos mes a mes (cada paso vale <span class="nw">Δt = 21/252</span>). El log-retorno total del mercado va con \((\ln(1 + r_f + \text{prima}) - \sigma_m^2/2)\Delta t + \sigma_m\sqrt{\Delta t}\,\varepsilon\), con <span class="nw">\(\sigma_m\) = {{ k.mkt_vol }}</span>. Al índice de precio le quitamos el dividendo <span class="nw">(q = {{ k.q_idx }})</span>. Y nuestro portafolio rinde \(r_f\Delta t + \beta(R_m - r_f\Delta t) + \sigma_\varepsilon\sqrt{\Delta t}\,\eta\), con el ruido propio <span class="nw">\(\sigma_\varepsilon\) = {{ k.resid_p }}</span> que salió de la regresión. Corremos {{ k.n_paths }} futuros posibles, siempre con la misma semilla para que cualquiera nos pueda replicar.</li>
+    <li><b>Los futuros:</b> cada uno vale \(F = S\cdot\exp[(\ln(1+r_f) - \ln(1+q))\tau]\cdot(1 + u)\), con τ en días calendario sobre 365 hasta el tercer viernes de su mes. Ese \(u\) es un errorcito de base aleatorio de desviación {{ k.basis_sd }}, metido a propósito, para no creernos que la paridad calza perfecto en el mundo real. El día de cada roll los dos contratos comparten ese error salvo una parte pequeña (un {{ k.basis_cal }} de su desvío), como pasó con ESZ26 y ESH27.</li>
     <li><b>El margen:</b> usamos el de mantenimiento que pide CME para el corto, con inicial del 110 % de ese valor. Liquidamos y revisamos llamados una vez al mes, reponemos hasta el inicial cuando toca y nunca sacamos excedentes.</li>
     <li><b>La "riqueza" de la que tanto hablamos:</b> son las acciones a retorno total más una cuentica de efectivo donde se va acumulando lo de los futuros, capitalizando a la tasa libre de riesgo (lo que se pierde se financia a esa tasa y lo que se gana se invierte a esa tasa). Ojo: lo consignado en margen no es un gasto, es una garantía. La suponemos puesta en T-bills de una reserva aparte, sin tocar los USD 20 millones invertidos.</li>
     <li><b>El CVaR 5 %:</b> sin tecnicismos, es el promedio de la plata final en el 5 % de los mundos más feos. Los que de verdad quitan el sueño.</li>
@@ -426,23 +438,12 @@
   {{ tab.sources }}
   <footer>
     Hecho con Python (NumPy, pandas, SciPy y Plotly) y harta paciencia. Aquí solo van los resultados; el código y los datos viven en el repositorio, por si quieren replicar cada cuenta.<br>
-    {{ k.members | join(" · ") }} · Instrumentos derivados financieros · Parte 2.
+    {% for m in k.members %}{% if loop.last and not loop.first %} y&nbsp;{% elif not loop.first %}, {% endif %}<span class="nw">{{ m }}</span>{% endfor %}.
+    <div class="sl"><span>Instrumentos derivados financieros</span><span>Parte&nbsp;2</span></div>
   </footer>
 </section>
 </div>
 </main>
-<script>
-document.querySelectorAll('.tabs').forEach(function (g) {
-  g.querySelectorAll('button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      g.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
-      b.classList.add('on');
-      var sec = g.parentElement;
-      g.querySelectorAll('button').forEach(function (x) { var p = sec.querySelector('#' + x.dataset.target); if (p) p.classList.remove('on'); });
-      var t = sec.querySelector('#' + b.dataset.target); if (t) t.classList.add('on');
-    });
-  });
-});
-</script>
+{% include "_scripts.html.j2" %}
 </body>
 </html>

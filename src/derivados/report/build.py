@@ -13,8 +13,8 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from .. import forwards as fw
 from ..analysis import build
 from ..data import ROOT
-from . import figures, tables
-from .fmt import FILTERS, fecha, mcop, num, pct, usd
+from . import figures, tables, theme, typo
+from .fmt import FILTERS, fecha, mcop, mes, num, pct, usd
 
 TEMPLATES = Path(__file__).parent / "templates"
 OUTPUT = ROOT / "docs" / "index.html"
@@ -37,6 +37,8 @@ def key_numbers(R: dict) -> dict:
     k["spread_pb"] = num(inp["credito"]["spread"] * 1e4)
     k["rate"] = pct(loan.nominal_rate)
     k["iq"] = pct(loan.periodic_rate, 3)
+    k["iq_num"] = num(loan.periodic_rate, 5)  # para la fórmula de la cuota (A.2), pasar por texnum
+    k["iq1_num"] = num(1 + loan.periodic_rate, 5)
     k["ea"] = pct(loan.effective_annual_rate)
     k["cuota_usd"] = usd(loan.installment)
     k["p_usd_num"] = num(loan.principal_usd, 2)
@@ -143,6 +145,7 @@ def key_numbers(R: dict) -> dict:
     k["dev_lt"] = pct(R["dev_lt"])
     k["tes10"] = pct(t["tes_jun2032"]["valor"])
     k["ust10"] = pct(t["ust_10y"]["valor"])
+    k["tes_ust_pb"] = num((t["tes_jun2032"]["valor"] - t["ust_10y"]["valor"]) * 1e4)  # brecha TES–Tesoro a 10 años
     k["disc"] = pct(R["disc_rate"])
     per = R["b2"][("central", "normal")]["per"]
     k["f7_mean"] = num(per["forward_media"].iloc[0])
@@ -157,7 +160,7 @@ def key_numbers(R: dict) -> dict:
     k["sigma"] = pct(cal.sigma)
     k["nu"] = num(cal.nu, 2)
     k["n_obs"] = num(cal.n_obs)
-    k["cal_start"], k["cal_end"] = cal.start, cal.end
+    k["cal_start"], k["cal_end"] = mes(cal.start), mes(cal.end)  # "2000-01" → "ene-2000", como el resto del informe
     k["exkurt_m"] = num(cal.ex_kurt, 2)
     k["skew_m"] = num(cal.skew, 2)
     k["sigma_d"] = pct(cal.sigma_daily)
@@ -175,14 +178,15 @@ def key_numbers(R: dict) -> dict:
                 "eff": pct(p["proteccion_efectiva"], 1), "opp_pure": pct(p["costo_op_puro"], 1),
                 "payoff": mcop(p["payoff_media"], 2), "payoff_total": mcop(p["payoff_total_media"], 1),
                 "p_neg": pct(p["prob_total_negativo"], 1), "cvar": mcop(p["payoff_cvar"], 1),
-                "dev_u": pct(p["dev_u_sd"], 1), "dev_h": pct(p["dev_h_sd"], 1),
-                "dev_u10": pct(p["dev_u_10"], 1), "dev_h10": pct(p["dev_h_10"], 2),
+                # Desviación presupuestal y P(sobrecosto > 10 %): siempre con dos decimales, igual que en las tablas.
+                "dev_u": pct(p["dev_u_sd"], 2), "dev_h": pct(p["dev_h_sd"], 2),
+                "dev_u10": pct(p["dev_u_10"], 2), "dev_h10": pct(p["dev_h_10"], 2),
             }
     tl = R["tails"].set_index(["dist", "horizonte"])
     for dist, tag in (("Normal", "n"), ("t de Student", "t")):
         for hzn in (1, 3, 12):
             k[f"tail_{tag}{hzn}"] = {"kurt": num(tl.loc[(dist, hzn), "curtosis"], 2),
-                                     "p3": pct(tl.loc[(dist, hzn), "p_3sd"], 2),
+                                     "p3": pct(tl.loc[(dist, hzn), "p_3sd"], 3),
                                      "q": num(tl.loc[(dist, hzn), "q999"], 2)}
 
     # B.3
@@ -209,8 +213,8 @@ def key_numbers(R: dict) -> dict:
                 "y710_cond_chg": pct(h["y710_sd_cond"] / u["y710_sd_cond"] - 1, 1, True),
                 "y710_cvar_u": mcop(u["y710_cvar95"]), "y710_cvar_h": mcop(h["y710_cvar95"]),
                 "cvar_u": mcop(u["total_cvar95"]), "cvar_h": mcop(h["total_cvar95"]),
-                "dev_u": pct(u["dev_sd"], 1), "dev_h": pct(h["dev_sd"], 2),
-                "dev10_u": pct(u["dev_10"], 1), "dev10_h": pct(h["dev_10"], 2),
+                "dev_u": pct(u["dev_sd"], 2), "dev_h": pct(h["dev_sd"], 2),
+                "dev10_u": pct(u["dev_10"], 2), "dev10_h": pct(h["dev_10"], 2),
                 "fwd": mcop(h["forward_neto"], 1), "fwd_share": pct(h["forward_neto"] / u["total_media"], 2, True),
                 "y16_sd": mcop(u["y16_sd"]),
                 "p95_u": mcop(u["total_p95"]), "p95_h": mcop(h["total_p95"]),
@@ -228,7 +232,7 @@ def key_numbers(R: dict) -> dict:
     k["roll_dev"] = pct(strat.iloc[1]["dev_sd"], 2)
     k["roll_cond"] = mcop(strat.iloc[1]["sd_cond"])
     hr = s["hedge_ratio"].set_index("ratio")
-    k["dev_hr100"] = pct(hr.loc[1.0, "dev_sd"], 1)
+    k["dev_hr100"] = pct(hr.loc[1.0, "dev_sd"], 2)
     k["dev_hr625"] = pct(hr.loc[0.625, "dev_sd"], 2)
     k["dev_hr50"] = pct(hr.loc[0.5, "dev_sd"], 2)
     d = s["d"]
@@ -260,10 +264,11 @@ def render(R: dict) -> str:
                       trim_blocks=True, lstrip_blocks=True)
     env.filters.update(FILTERS)
     tpl = env.get_template("report.html.j2")
-    return tpl.render(
-        R=R, k=key_numbers(R), fig=figures.build_all(R), tab=tables.build_all(R),
+    figs = figures.build_all(R)
+    return typo.polish(tpl.render(
+        R=R, k=key_numbers(R), fig=figs, tab=tables.build_all(R), dv_map=theme.dark_map_json(),
         plotly_js=f"https://cdn.plot.ly/plotly-{po.get_plotlyjs_version()}.min.js",
-    )
+    ))
 
 
 def main() -> None:

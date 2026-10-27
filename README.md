@@ -46,6 +46,7 @@ Los datos tienen corte al **15 de octubre de 2026**:
 - **Integrantes:** edite `meta.integrantes` en `data/manual/market_inputs.yaml` y regenere el informe.
 - **Supuestos** (tasa del crédito, escenarios, tasas de largo plazo de los forwards): están en el mismo YAML.
 - **Textos del análisis:** en `src/derivados/report/templates/report.html.j2`. Las cifras se insertan automáticamente desde los cálculos.
+- **Diseño:** el CSS y el JavaScript compartidos están en `templates/_head.html.j2` y `templates/_scripts.html.j2`; la paleta de las gráficas (modo claro y oscuro, validada para daltonismo) y su plantilla Plotly, en `src/derivados/report/theme.py`. Las gráficas solo usan colores de esa paleta: `uv run pytest` lo verifica sobre el HTML publicado.
 
 ## Estructura
 
@@ -58,7 +59,9 @@ src/derivados/
   forwards.py             paridad cubierta, conversiones de tasas y estrategias NDF
   cashflows.py            flujo consolidado, TIR y valor presente
   analysis.py             orquestación de las partes A y B
-  report/                 gráficos Plotly, tablas, plantilla y generador del HTML
+  report/                 gráficos Plotly, tablas, plantillas y generador del HTML
+    theme.py              paleta validada (claro/oscuro), plantilla Plotly y paso de figuras a HTML
+    typo.py               pulido tipográfico del HTML final (espacios duros, signo menos, comillas)
   parte2/                 Parte 2: datos, optimización, VaR, beta, simulación, margen y roll-over
 docs/index.html           informe publicado, Parte 1 (GitHub Pages)
 docs/parte2.html          informe publicado, Parte 2
