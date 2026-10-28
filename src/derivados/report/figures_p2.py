@@ -628,7 +628,7 @@ def beta_sens(R: dict) -> go.Figure:
         lab = f"β = {num(b, 2)}"
         col = colors[j]
         y = b * x * v0 / 1e6 + 0.0
-        fig.add_trace(go.Scatter(x=100 * x, y=y, name=lab + (" (nuestra)" if j == 1 else "") + " sin cobertura",
+        fig.add_trace(go.Scatter(x=100 * x, y=y, name=lab + (" (caso base)" if j == 1 else "") + " sin cobertura",
                                  legendrank=1 + j, line=dict(color=col, width=2.5 if j == 1 else 2),
                                  customdata=_signed_m(y, 2),
                                  hovertemplate=f"<b>USD %{{customdata}} M</b>  {lab} sin cubrir<extra></extra>"))

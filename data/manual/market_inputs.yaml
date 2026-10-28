@@ -202,16 +202,16 @@ escenarios:
       trm_12m: 3050
       deriva_lp: 0.000
       probabilidad: 0.25
-      narrativa: "Se calma Medio Oriente pero el Brent se sostiene sobre USD 85, pasa la Ley Fiscal con recortes creíbles que nos salvan la calificación, el carry trade sigue vivito y la Fed entra en pausa. En plata blanca: el peso se aprecia en términos reales ~1,5 % al año."
+      narrativa: "Se produce un desescalamiento del conflicto en Medio Oriente, aunque el Brent se mantiene por encima de USD 85. El Congreso aprueba la Ley Fiscal con recortes creíbles que preservan la calificación soberana, el carry trade conserva su atractivo y la Reserva Federal hace una pausa en las alzas. En conjunto, el peso registra una apreciación real cercana a 1,5 % anual."
     - key: central
       nombre: "Central"
       trm_12m: 3400
       deriva_lp: 0.030
       probabilidad: 0.50
-      narrativa: "Nuestro mundo más probable: el peso corrige de a poquitos hacia su valor justo porque lo externo y lo fiscal pesan, el petróleo se normaliza (EIA: Brent en USD 84 para 2027) y la Fed se mantiene dura, con el diferencial de tasas aguantando el golpe. A largo plazo manda la PPP relativa más una primita de riesgo moderada."
+      narrativa: "Escenario considerado más probable: el peso corrige gradualmente hacia su valor de equilibrio ante el deterioro de las cuentas externa y fiscal, el precio del petróleo se normaliza (la EIA proyecta un Brent de USD 84 en 2027) y la Reserva Federal preserva una postura restrictiva, amortiguada parcialmente por el diferencial de tasas. En el largo plazo rige la paridad del poder adquisitivo en su forma relativa, más una prima de riesgo moderada."
     - key: adverso
       nombre: "Adverso (depreciación)"
       trm_12m: 3850
       deriva_lp: 0.070
       probabilidad: 0.25
-      narrativa: "El mundo feo: el hueco fiscal se va a más de 8 % del PIB, perdemos el último grado de inversión, el crudo se cae rapidito hacia USD 70, la Fed sube dos veces más y la plata de portafolio sale corriendo. Sería revivir la depreciación terca de 2012–2022."
+      narrativa: "Se materializa un desvío fiscal severo, con un déficit superior a 8 % del PIB, acompañado de la pérdida del último grado de inversión, una caída acelerada del crudo hacia USD 70, dos incrementos adicionales de la tasa de la Reserva Federal y salidas significativas de capital de portafolio. La dinámica resultante reproduciría la depreciación persistente observada entre 2012 y 2022."
